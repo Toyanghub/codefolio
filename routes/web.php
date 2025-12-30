@@ -14,6 +14,10 @@ Route::get('/observatory', function () {
     return Inertia::render('observatory');
 })->name('observatory');
 
+Route::get('/works', function () {
+    return Inertia::render('works');
+})->name('works');
+
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', function () {
         return Inertia::render('dashboard');
