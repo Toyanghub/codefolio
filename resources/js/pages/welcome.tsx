@@ -36,9 +36,9 @@ function Navbar({ canRegister = true }: { canRegister?: boolean }) {
                 {/* Navigation Links */}
                 <div className="hidden items-center space-x-1 md:flex">
                     {[
-                        { href: '/', label: 'Home' },
-                        { href: '/explore', label: 'Explore' },
-                        { href: '/projects', label: 'Projects' },
+                        { href: '/', label: 'Lobby' },
+                        { href: '/observatory', label: 'Observatory' },
+                        { href: '/works', label: 'Works' },
                     ].map((item, index) => (
                         <motion.div
                             key={item.label}
@@ -241,9 +241,9 @@ function Navbar({ canRegister = true }: { canRegister?: boolean }) {
                         <div className="flex flex-col space-y-6">
                             {/* Mobile Navigation Links */}
                             {[
-                                { href: '/', label: 'Home' },
-                                { href: '/explore', label: 'Explore' },
-                                { href: '/projects', label: 'Projects' },
+                                { href: '/', label: 'Lobby' },
+                                { href: '/observatory', label: 'Observatory' },
+                                { href: '/works', label: 'Works' },
                             ].map((item, index) => (
                                 <motion.div
                                     key={item.label}
