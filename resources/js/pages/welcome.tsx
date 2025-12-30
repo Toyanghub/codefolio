@@ -68,16 +68,8 @@ function Navbar({ canRegister = true }: { canRegister?: boolean }) {
                             <motion.button
                                 onClick={() => setUserMenuOpen(!userMenuOpen)}
                                 whileHover={{ scale: 1.05 }}
-                                className="flex items-center gap-2 rounded-full px-3 py-1.5 text-sm transition-colors hover:bg-zinc-100 dark:hover:bg-zinc-800"
+                                className="flex items-center gap-2 rounded-full p-1 text-sm transition-colors hover:bg-zinc-100 dark:hover:bg-zinc-800"
                             >
-                                <div className="flex flex-col items-end text-sm">
-                                    <span className="font-medium text-zinc-900 dark:text-zinc-100">
-                                        {auth.user.name}
-                                    </span>
-                                    <span className="text-xs text-zinc-500 dark:text-zinc-400">
-                                        @{auth.user.email.split('@')[0]}
-                                    </span>
-                                </div>
                                 <div className="flex h-8 w-8 items-center justify-center rounded-full bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900">
                                     <span className="text-sm font-semibold">
                                         {auth.user.name.charAt(0).toUpperCase()}
