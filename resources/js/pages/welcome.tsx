@@ -1,4 +1,14 @@
 import FaqSection from '@/components/faq-sections';
+import {
+    Stories,
+    StoriesContent,
+    Story,
+    StoryAuthor,
+    StoryAuthorImage,
+    StoryAuthorName,
+    StoryImage,
+    StoryOverlay,
+} from '@/components/stories-carousel';
 import { Footerdemo } from '@/components/ui/footer-section';
 import { dashboard, login, logout, register } from '@/routes';
 import { type SharedData } from '@/types';
@@ -313,6 +323,70 @@ function Navbar({ canRegister = true }: { canRegister?: boolean }) {
     );
 }
 
+// Sample portfolio data
+const portfolioData = [
+    {
+        name: 'rizamb',
+        role: 'Fullstack Developer',
+        avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=rizamb',
+        image: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=400&h=300&fit=crop',
+    },
+    {
+        name: 'elliottprgrammer',
+        role: 'Fullstack Developer',
+        avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=elliott',
+        image: 'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=400&h=300&fit=crop',
+    },
+    {
+        name: 'Jammore123',
+        role: 'Fullstack Developer',
+        avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=jammore',
+        image: 'https://images.unsplash.com/photo-1484417894907-623942c8ee29?w=400&h=300&fit=crop',
+    },
+    {
+        name: 'Deepak',
+        role: 'Web Developer',
+        avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=deepak',
+        image: 'https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7?w=400&h=300&fit=crop',
+    },
+    {
+        name: 'samilanojeff98',
+        role: 'Web Developer',
+        avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=samilano',
+        image: 'https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?w=400&h=300&fit=crop',
+    },
+    {
+        name: 'elkoh',
+        role: 'Fullstack Developer',
+        avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=elkoh',
+        image: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=400&h=300&fit=crop',
+    },
+    {
+        name: 'JazzMase',
+        role: 'Fullstack Developer',
+        avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=jazzmase',
+        image: 'https://images.unsplash.com/photo-1510915361894-db8b60106cb1?w=400&h=300&fit=crop',
+    },
+    {
+        name: 'Dock',
+        role: 'Frontend Developer',
+        avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=dock',
+        image: 'https://images.unsplash.com/photo-1547658719-da2b51169166?w=400&h=300&fit=crop',
+    },
+    {
+        name: 'quinchy',
+        role: 'Fullstack Developer',
+        avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=quinchy',
+        image: 'https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=400&h=300&fit=crop',
+    },
+    {
+        name: 'klynesjido',
+        role: 'Software Developer',
+        avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=klynes',
+        image: 'https://images.unsplash.com/photo-1504639725590-34d0984388bd?w=400&h=300&fit=crop',
+    },
+];
+
 export default function Welcome({
     canRegister = true,
 }: {
@@ -335,6 +409,53 @@ export default function Welcome({
                             Showcase your projects and connect with developers
                         </p>
                     </div>
+                </div>
+            </div>
+
+            {/* Latest Portfolios Section */}
+            <div className="bg-zinc-100 py-16 dark:bg-zinc-950">
+                <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                    <div className="mb-8 flex items-center justify-between">
+                        <h2 className="text-3xl font-bold text-zinc-900 dark:text-white">
+                            Latest Codefolios
+                        </h2>
+                        <Link
+                            href="/works"
+                            className="text-sm font-medium text-zinc-700 transition-colors hover:text-zinc-900 dark:text-white dark:hover:text-zinc-300"
+                        >
+                            Explore More
+                        </Link>
+                    </div>
+
+                    <Stories>
+                        <StoriesContent>
+                            {portfolioData.map((portfolio, index) => (
+                                <Story key={index}>
+                                    <div className="relative h-[200px] w-[280px] overflow-hidden rounded-xl">
+                                        <StoryImage
+                                            src={portfolio.image}
+                                            alt={`${portfolio.name}'s portfolio`}
+                                        />
+                                        <StoryOverlay side="bottom" />
+                                        <StoryAuthor>
+                                            <StoryAuthorImage
+                                                src={portfolio.avatar}
+                                                name={portfolio.name}
+                                            />
+                                            <div className="flex flex-col">
+                                                <StoryAuthorName className="font-semibold drop-shadow-lg">
+                                                    {portfolio.name}
+                                                </StoryAuthorName>
+                                                <span className="text-xs text-white/70">
+                                                    {portfolio.role}
+                                                </span>
+                                            </div>
+                                        </StoryAuthor>
+                                    </div>
+                                </Story>
+                            ))}
+                        </StoriesContent>
+                    </Stories>
                 </div>
             </div>
 

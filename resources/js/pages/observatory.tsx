@@ -241,7 +241,179 @@ function Navbar({ canRegister = true }: { canRegister?: boolean }) {
     );
 }
 
+// Sample portfolio data for Observatory
+const observatoryPortfolios = [
+    {
+        id: 1,
+        name: 'rizamb',
+        role: 'Fullstack Developer',
+        avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=rizamb',
+        image: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=400&h=300&fit=crop',
+        skills: ['Web', 'Fullstack'],
+        techStack: ['JavaScript', 'React'],
+    },
+    {
+        id: 2,
+        name: 'elliottprgrammer',
+        role: 'Fullstack Developer',
+        avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=elliott',
+        image: 'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=400&h=300&fit=crop',
+        skills: ['Web', 'Backend'],
+        techStack: ['TypeScript', 'Node.js'],
+    },
+    {
+        id: 3,
+        name: 'Jammore123',
+        role: 'Fullstack Developer',
+        avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=jammore',
+        image: 'https://images.unsplash.com/photo-1484417894907-623942c8ee29?w=400&h=300&fit=crop',
+        skills: ['Web', 'Mobile'],
+        techStack: ['JavaScript', 'React'],
+    },
+    {
+        id: 4,
+        name: 'Deepak',
+        role: 'Web Developer',
+        avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=deepak',
+        image: 'https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7?w=400&h=300&fit=crop',
+        skills: ['Frontend', 'Web'],
+        techStack: ['HTML', 'CSS'],
+    },
+    {
+        id: 5,
+        name: 'samilanojeff98',
+        role: 'Web Developer',
+        avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=samilano',
+        image: 'https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?w=400&h=300&fit=crop',
+        skills: ['Web', 'Fullstack'],
+        techStack: ['React', 'TypeScript'],
+    },
+    {
+        id: 6,
+        name: 'elkoh',
+        role: 'Fullstack Developer',
+        avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=elkoh',
+        image: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=400&h=300&fit=crop',
+        skills: ['Backend', 'Fullstack'],
+        techStack: ['Python', 'Django'],
+    },
+    {
+        id: 7,
+        name: 'JazzMase',
+        role: 'Fullstack Developer',
+        avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=jazzmase',
+        image: 'https://images.unsplash.com/photo-1510915361894-db8b60106cb1?w=400&h=300&fit=crop',
+        skills: ['Web', 'Data'],
+        techStack: ['JavaScript', 'Node.js'],
+    },
+    {
+        id: 8,
+        name: 'Dock',
+        role: 'Frontend Developer',
+        avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=dock',
+        image: 'https://images.unsplash.com/photo-1547658719-da2b51169166?w=400&h=300&fit=crop',
+        skills: ['Frontend', 'Web'],
+        techStack: ['React', 'CSS'],
+    },
+    {
+        id: 9,
+        name: 'quinchy',
+        role: 'Fullstack Developer',
+        avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=quinchy',
+        image: 'https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=400&h=300&fit=crop',
+        skills: ['Fullstack', 'Mobile'],
+        techStack: ['JavaScript', 'React'],
+    },
+    {
+        id: 10,
+        name: 'klynesjido',
+        role: 'Software Developer',
+        avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=klynes',
+        image: 'https://images.unsplash.com/photo-1504639725590-34d0984388bd?w=400&h=300&fit=crop',
+        skills: ['Software', 'Backend'],
+        techStack: ['C++', 'Python'],
+    },
+];
+
+const filterCategories = {
+    skills: [
+        'Web',
+        'Frontend',
+        'Backend',
+        'Fullstack',
+        'Mobile',
+        'Data',
+        'Software',
+    ],
+    techStack: [
+        'JavaScript',
+        'TypeScript',
+        'React',
+        'Node.js',
+        'Python',
+        'HTML',
+        'CSS',
+        'Django',
+        'C++',
+    ],
+    profession: [
+        'Fullstack Developer',
+        'Frontend Developer',
+        'Web Developer',
+        'Software Developer',
+    ],
+};
+
 export default function Observatory() {
+    const [selectedFilters, setSelectedFilters] = useState<{
+        skills: string[];
+        techStack: string[];
+        profession: string[];
+    }>({
+        skills: [],
+        techStack: [],
+        profession: [],
+    });
+    const [sidebarOpen, setSidebarOpen] = useState(false);
+
+    const toggleFilter = (
+        category: 'skills' | 'techStack' | 'profession',
+        value: string,
+    ) => {
+        setSelectedFilters((prev) => ({
+            ...prev,
+            [category]: prev[category].includes(value)
+                ? prev[category].filter((item) => item !== value)
+                : [...prev[category], value],
+        }));
+    };
+
+    const clearFilters = () => {
+        setSelectedFilters({
+            skills: [],
+            techStack: [],
+            profession: [],
+        });
+    };
+
+    const filteredPortfolios = observatoryPortfolios.filter((portfolio) => {
+        const skillMatch =
+            selectedFilters.skills.length === 0 ||
+            selectedFilters.skills.some((skill) =>
+                portfolio.skills.includes(skill),
+            );
+        const techMatch =
+            selectedFilters.techStack.length === 0 ||
+            selectedFilters.techStack.some((tech) =>
+                portfolio.techStack.includes(tech),
+            );
+        const professionMatch =
+            selectedFilters.profession.length === 0 ||
+            selectedFilters.profession.includes(portfolio.role);
+
+        return skillMatch && techMatch && professionMatch;
+    });
+
     return (
         <>
             <Head title="Observatory" />
@@ -249,12 +421,220 @@ export default function Observatory() {
             <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950">
                 <Navbar />
 
-                {/* Observatory Content */}
-                <div className="mx-auto max-w-6xl px-4 py-12">
-                    <div className="text-center">
-                        <h1 className="text-4xl font-bold text-zinc-900 dark:text-zinc-100">
-                            Here is the Observatory page
+                <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+                    {/* Page Header */}
+                    <div className="mb-8">
+                        <h1 className="text-3xl font-bold text-zinc-900 dark:text-zinc-100">
+                            Explore
                         </h1>
+                        <p className="mt-2 text-zinc-600 dark:text-zinc-400">
+                            Discover amazing portfolios from developers around
+                            the world
+                        </p>
+                    </div>
+
+                    <div className="flex flex-col gap-6 lg:flex-row">
+                        {/* Mobile Filter Toggle */}
+                        <button
+                            onClick={() => setSidebarOpen(!sidebarOpen)}
+                            className="flex items-center gap-2 rounded-lg border border-zinc-200 bg-white px-4 py-2 text-sm font-medium text-zinc-900 transition-colors hover:bg-zinc-50 lg:hidden dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-100 dark:hover:bg-zinc-800"
+                        >
+                            <svg
+                                className="h-5 w-5"
+                                fill="none"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                            >
+                                <path d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+                            </svg>
+                            Hide Filter
+                        </button>
+
+                        {/* Sidebar */}
+                        <aside
+                            className={`${
+                                sidebarOpen ? 'block' : 'hidden'
+                            } w-full space-y-6 lg:block lg:w-64`}
+                        >
+                            <div className="rounded-lg border border-zinc-200 bg-white p-4 dark:border-zinc-800 dark:bg-zinc-900">
+                                <div className="mb-4 flex items-center justify-between">
+                                    <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100">
+                                        Filters
+                                    </h2>
+                                    {(selectedFilters.skills.length > 0 ||
+                                        selectedFilters.techStack.length > 0 ||
+                                        selectedFilters.profession.length >
+                                            0) && (
+                                        <button
+                                            onClick={clearFilters}
+                                            className="text-xs text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
+                                        >
+                                            Clear all
+                                        </button>
+                                    )}
+                                </div>
+
+                                {/* Skills Filter */}
+                                <div className="mb-6">
+                                    <h3 className="mb-3 text-sm font-medium text-zinc-900 dark:text-zinc-100">
+                                        Skills
+                                    </h3>
+                                    <div className="space-y-2">
+                                        {filterCategories.skills.map(
+                                            (skill) => (
+                                                <label
+                                                    key={skill}
+                                                    className="flex cursor-pointer items-center gap-2 text-sm text-zinc-700 dark:text-zinc-300"
+                                                >
+                                                    <input
+                                                        type="checkbox"
+                                                        checked={selectedFilters.skills.includes(
+                                                            skill,
+                                                        )}
+                                                        onChange={() =>
+                                                            toggleFilter(
+                                                                'skills',
+                                                                skill,
+                                                            )
+                                                        }
+                                                        className="h-4 w-4 rounded border-zinc-300 text-zinc-900 focus:ring-2 focus:ring-zinc-900 dark:border-zinc-700 dark:bg-zinc-800"
+                                                    />
+                                                    {skill}
+                                                </label>
+                                            ),
+                                        )}
+                                    </div>
+                                </div>
+
+                                {/* Tech Stack Filter */}
+                                <div className="mb-6">
+                                    <h3 className="mb-3 text-sm font-medium text-zinc-900 dark:text-zinc-100">
+                                        Tech Stack
+                                    </h3>
+                                    <div className="space-y-2">
+                                        {filterCategories.techStack.map(
+                                            (tech) => (
+                                                <label
+                                                    key={tech}
+                                                    className="flex cursor-pointer items-center gap-2 text-sm text-zinc-700 dark:text-zinc-300"
+                                                >
+                                                    <input
+                                                        type="checkbox"
+                                                        checked={selectedFilters.techStack.includes(
+                                                            tech,
+                                                        )}
+                                                        onChange={() =>
+                                                            toggleFilter(
+                                                                'techStack',
+                                                                tech,
+                                                            )
+                                                        }
+                                                        className="h-4 w-4 rounded border-zinc-300 text-zinc-900 focus:ring-2 focus:ring-zinc-900 dark:border-zinc-700 dark:bg-zinc-800"
+                                                    />
+                                                    {tech}
+                                                </label>
+                                            ),
+                                        )}
+                                    </div>
+                                </div>
+
+                                {/* Profession Filter */}
+                                <div>
+                                    <h3 className="mb-3 text-sm font-medium text-zinc-900 dark:text-zinc-100">
+                                        Profession
+                                    </h3>
+                                    <div className="space-y-2">
+                                        {filterCategories.profession.map(
+                                            (profession) => (
+                                                <label
+                                                    key={profession}
+                                                    className="flex cursor-pointer items-center gap-2 text-sm text-zinc-700 dark:text-zinc-300"
+                                                >
+                                                    <input
+                                                        type="checkbox"
+                                                        checked={selectedFilters.profession.includes(
+                                                            profession,
+                                                        )}
+                                                        onChange={() =>
+                                                            toggleFilter(
+                                                                'profession',
+                                                                profession,
+                                                            )
+                                                        }
+                                                        className="h-4 w-4 rounded border-zinc-300 text-zinc-900 focus:ring-2 focus:ring-zinc-900 dark:border-zinc-700 dark:bg-zinc-800"
+                                                    />
+                                                    {profession}
+                                                </label>
+                                            ),
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
+                        </aside>
+
+                        {/* Portfolio Grid */}
+                        <div className="flex-1">
+                            <div className="mb-4 text-sm text-zinc-600 dark:text-zinc-400">
+                                Showing {filteredPortfolios.length} of{' '}
+                                {observatoryPortfolios.length} portfolios
+                            </div>
+
+                            {filteredPortfolios.length === 0 ? (
+                                <div className="flex min-h-[400px] items-center justify-center rounded-lg border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900">
+                                    <div className="text-center">
+                                        <p className="text-lg font-medium text-zinc-900 dark:text-zinc-100">
+                                            No portfolios found
+                                        </p>
+                                        <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
+                                            Try adjusting your filters
+                                        </p>
+                                    </div>
+                                </div>
+                            ) : (
+                                <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3">
+                                    {filteredPortfolios.map((portfolio) => (
+                                        <motion.div
+                                            key={portfolio.id}
+                                            initial={{ opacity: 0, y: 20 }}
+                                            animate={{ opacity: 1, y: 0 }}
+                                            transition={{ duration: 0.3 }}
+                                            className="group cursor-pointer overflow-hidden rounded-lg border border-zinc-200 bg-white shadow-sm transition-all hover:shadow-md dark:border-zinc-800 dark:bg-zinc-900"
+                                        >
+                                            {/* Portfolio Image */}
+                                            <div className="relative h-48 overflow-hidden bg-zinc-100 dark:bg-zinc-800">
+                                                <img
+                                                    src={portfolio.image}
+                                                    alt={`${portfolio.name}'s portfolio`}
+                                                    className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                                                />
+                                            </div>
+
+                                            {/* Portfolio Info */}
+                                            <div className="p-4">
+                                                <div className="flex items-center gap-3">
+                                                    <img
+                                                        src={portfolio.avatar}
+                                                        alt={portfolio.name}
+                                                        className="h-10 w-10 rounded-full"
+                                                    />
+                                                    <div className="flex-1">
+                                                        <h3 className="font-semibold text-zinc-900 dark:text-zinc-100">
+                                                            {portfolio.name}
+                                                        </h3>
+                                                        <p className="text-sm text-zinc-600 dark:text-zinc-400">
+                                                            {portfolio.role}
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </motion.div>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
                     </div>
                 </div>
 
