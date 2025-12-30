@@ -1,3 +1,4 @@
+import FaqSection from '@/components/faq-sections';
 import { Footerdemo } from '@/components/ui/footer-section';
 import { dashboard, login, logout, register } from '@/routes';
 import { type SharedData } from '@/types';
@@ -335,6 +336,11 @@ export default function Welcome({
                         </p>
                     </div>
                 </div>
+            </div>
+
+            {/* FAQ Section */}
+            <div className="bg-white py-16 dark:bg-zinc-950">
+                <FaqSection />
             </div>
 
             {/* Footer */}
