@@ -1,13 +1,10 @@
+import { Footerdemo } from '@/components/ui/footer-section';
 import { dashboard, login, logout, register } from '@/routes';
 import { type SharedData } from '@/types';
-import { Link, router, usePage } from '@inertiajs/react';
+import { Head, Link, router, usePage } from '@inertiajs/react';
 import { useState } from 'react';
 
-export default function Navbar({
-    canRegister = true,
-}: {
-    canRegister?: boolean;
-}) {
+function Navbar({ canRegister = true }: { canRegister?: boolean }) {
     const { auth } = usePage<SharedData>().props;
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const [userMenuOpen, setUserMenuOpen] = useState(false);
@@ -267,5 +264,36 @@ export default function Navbar({
                 </div>
             )}
         </nav>
+    );
+}
+
+export default function Welcome({
+    canRegister = true,
+}: {
+    canRegister?: boolean;
+}) {
+    return (
+        <>
+            <Head title="Welcome to Codefolio" />
+
+            <Navbar canRegister={canRegister} />
+
+            {/* Main Content */}
+            <div className="min-h-screen pt-16">
+                <div className="flex min-h-[calc(100vh-4rem)] flex-col items-center justify-center bg-zinc-50 p-6 dark:bg-zinc-950">
+                    <div className="w-full max-w-4xl text-center">
+                        <h1 className="mb-4 text-5xl font-bold tracking-tight text-zinc-900 dark:text-zinc-100">
+                            Welcome to Codefolio
+                        </h1>
+                        <p className="mb-8 text-lg text-zinc-600 dark:text-zinc-400">
+                            Showcase your projects and connect with developers
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            {/* Footer */}
+            <Footerdemo />
+        </>
     );
 }
