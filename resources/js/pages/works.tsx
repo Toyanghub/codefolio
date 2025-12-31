@@ -95,6 +95,12 @@ function Navbar({ canRegister = true }: { canRegister?: boolean }) {
                                             </p>
                                         </div>
                                         <div className="p-1">
+                                            <Link
+                                                href="/settings/profile"
+                                                className="block rounded-md px-3 py-2 text-sm text-zinc-700 hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-800"
+                                            >
+                                                Settings
+                                            </Link>
                                             <button
                                                 onClick={handleLogout}
                                                 className="w-full rounded-md px-3 py-2 text-left text-sm text-zinc-700 hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-800"
@@ -194,6 +200,12 @@ function Navbar({ canRegister = true }: { canRegister?: boolean }) {
                                                     {auth.user.email}
                                                 </p>
                                             </div>
+                                            <Link
+                                                href="/settings/profile"
+                                                className="block rounded-md px-4 py-2 text-sm font-medium text-zinc-700 transition-colors hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800 dark:hover:text-zinc-100"
+                                            >
+                                                Settings
+                                            </Link>
                                             <button
                                                 onClick={handleLogout}
                                                 className="w-full rounded-md px-4 py-2 text-left text-sm font-medium text-zinc-700 transition-colors hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800 dark:hover:text-zinc-100"
