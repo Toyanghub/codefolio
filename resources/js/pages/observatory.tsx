@@ -375,6 +375,20 @@ export default function Observatory() {
         profession: [],
     });
     const [sidebarOpen, setSidebarOpen] = useState(false);
+    const [dropdownsOpen, setDropdownsOpen] = useState({
+        skills: true,
+        techStack: true,
+        profession: true,
+    });
+
+    const toggleDropdown = (
+        category: 'skills' | 'techStack' | 'profession',
+    ) => {
+        setDropdownsOpen((prev) => ({
+            ...prev,
+            [category]: !prev[category],
+        }));
+    };
 
     const toggleFilter = (
         category: 'skills' | 'techStack' | 'profession',
@@ -479,98 +493,162 @@ export default function Observatory() {
 
                                 {/* Skills Filter */}
                                 <div className="mb-6">
-                                    <h3 className="mb-3 text-sm font-medium text-zinc-900 dark:text-zinc-100">
-                                        Skills
-                                    </h3>
-                                    <div className="space-y-2">
-                                        {filterCategories.skills.map(
-                                            (skill) => (
-                                                <label
-                                                    key={skill}
-                                                    className="flex cursor-pointer items-center gap-2 text-sm text-zinc-700 dark:text-zinc-300"
-                                                >
-                                                    <input
-                                                        type="checkbox"
-                                                        checked={selectedFilters.skills.includes(
-                                                            skill,
-                                                        )}
-                                                        onChange={() =>
-                                                            toggleFilter(
-                                                                'skills',
+                                    <button
+                                        onClick={() => toggleDropdown('skills')}
+                                        className="mb-3 flex w-full items-center justify-between text-sm font-medium text-zinc-900 transition-colors hover:text-zinc-700 dark:text-zinc-100 dark:hover:text-zinc-300"
+                                    >
+                                        <span>Skills</span>
+                                        <svg
+                                            className={`h-4 w-4 transition-transform ${
+                                                dropdownsOpen.skills
+                                                    ? 'rotate-180'
+                                                    : ''
+                                            }`}
+                                            fill="none"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            strokeWidth={2}
+                                            viewBox="0 0 24 24"
+                                            stroke="currentColor"
+                                        >
+                                            <path d="M19 9l-7 7-7-7" />
+                                        </svg>
+                                    </button>
+                                    {dropdownsOpen.skills && (
+                                        <div className="space-y-2">
+                                            {filterCategories.skills.map(
+                                                (skill) => (
+                                                    <label
+                                                        key={skill}
+                                                        className="flex cursor-pointer items-center gap-2 text-sm text-zinc-700 dark:text-zinc-300"
+                                                    >
+                                                        <input
+                                                            type="checkbox"
+                                                            checked={selectedFilters.skills.includes(
                                                                 skill,
-                                                            )
-                                                        }
-                                                        className="h-4 w-4 rounded border-zinc-300 text-zinc-900 focus:ring-2 focus:ring-zinc-900 dark:border-zinc-700 dark:bg-zinc-800"
-                                                    />
-                                                    {skill}
-                                                </label>
-                                            ),
-                                        )}
-                                    </div>
+                                                            )}
+                                                            onChange={() =>
+                                                                toggleFilter(
+                                                                    'skills',
+                                                                    skill,
+                                                                )
+                                                            }
+                                                            className="h-4 w-4 rounded border-zinc-300 text-zinc-900 focus:ring-2 focus:ring-zinc-900 dark:border-zinc-700 dark:bg-zinc-800"
+                                                        />
+                                                        {skill}
+                                                    </label>
+                                                ),
+                                            )}
+                                        </div>
+                                    )}
                                 </div>
 
                                 {/* Tech Stack Filter */}
                                 <div className="mb-6">
-                                    <h3 className="mb-3 text-sm font-medium text-zinc-900 dark:text-zinc-100">
-                                        Tech Stack
-                                    </h3>
-                                    <div className="space-y-2">
-                                        {filterCategories.techStack.map(
-                                            (tech) => (
-                                                <label
-                                                    key={tech}
-                                                    className="flex cursor-pointer items-center gap-2 text-sm text-zinc-700 dark:text-zinc-300"
-                                                >
-                                                    <input
-                                                        type="checkbox"
-                                                        checked={selectedFilters.techStack.includes(
-                                                            tech,
-                                                        )}
-                                                        onChange={() =>
-                                                            toggleFilter(
-                                                                'techStack',
+                                    <button
+                                        onClick={() =>
+                                            toggleDropdown('techStack')
+                                        }
+                                        className="mb-3 flex w-full items-center justify-between text-sm font-medium text-zinc-900 transition-colors hover:text-zinc-700 dark:text-zinc-100 dark:hover:text-zinc-300"
+                                    >
+                                        <span>Tech Stack</span>
+                                        <svg
+                                            className={`h-4 w-4 transition-transform ${
+                                                dropdownsOpen.techStack
+                                                    ? 'rotate-180'
+                                                    : ''
+                                            }`}
+                                            fill="none"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            strokeWidth={2}
+                                            viewBox="0 0 24 24"
+                                            stroke="currentColor"
+                                        >
+                                            <path d="M19 9l-7 7-7-7" />
+                                        </svg>
+                                    </button>
+                                    {dropdownsOpen.techStack && (
+                                        <div className="space-y-2">
+                                            {filterCategories.techStack.map(
+                                                (tech) => (
+                                                    <label
+                                                        key={tech}
+                                                        className="flex cursor-pointer items-center gap-2 text-sm text-zinc-700 dark:text-zinc-300"
+                                                    >
+                                                        <input
+                                                            type="checkbox"
+                                                            checked={selectedFilters.techStack.includes(
                                                                 tech,
-                                                            )
-                                                        }
-                                                        className="h-4 w-4 rounded border-zinc-300 text-zinc-900 focus:ring-2 focus:ring-zinc-900 dark:border-zinc-700 dark:bg-zinc-800"
-                                                    />
-                                                    {tech}
-                                                </label>
-                                            ),
-                                        )}
-                                    </div>
+                                                            )}
+                                                            onChange={() =>
+                                                                toggleFilter(
+                                                                    'techStack',
+                                                                    tech,
+                                                                )
+                                                            }
+                                                            className="h-4 w-4 rounded border-zinc-300 text-zinc-900 focus:ring-2 focus:ring-zinc-900 dark:border-zinc-700 dark:bg-zinc-800"
+                                                        />
+                                                        {tech}
+                                                    </label>
+                                                ),
+                                            )}
+                                        </div>
+                                    )}
                                 </div>
 
                                 {/* Profession Filter */}
                                 <div>
-                                    <h3 className="mb-3 text-sm font-medium text-zinc-900 dark:text-zinc-100">
-                                        Profession
-                                    </h3>
-                                    <div className="space-y-2">
-                                        {filterCategories.profession.map(
-                                            (profession) => (
-                                                <label
-                                                    key={profession}
-                                                    className="flex cursor-pointer items-center gap-2 text-sm text-zinc-700 dark:text-zinc-300"
-                                                >
-                                                    <input
-                                                        type="checkbox"
-                                                        checked={selectedFilters.profession.includes(
-                                                            profession,
-                                                        )}
-                                                        onChange={() =>
-                                                            toggleFilter(
-                                                                'profession',
+                                    <button
+                                        onClick={() =>
+                                            toggleDropdown('profession')
+                                        }
+                                        className="mb-3 flex w-full items-center justify-between text-sm font-medium text-zinc-900 transition-colors hover:text-zinc-700 dark:text-zinc-100 dark:hover:text-zinc-300"
+                                    >
+                                        <span>Profession</span>
+                                        <svg
+                                            className={`h-4 w-4 transition-transform ${
+                                                dropdownsOpen.profession
+                                                    ? 'rotate-180'
+                                                    : ''
+                                            }`}
+                                            fill="none"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            strokeWidth={2}
+                                            viewBox="0 0 24 24"
+                                            stroke="currentColor"
+                                        >
+                                            <path d="M19 9l-7 7-7-7" />
+                                        </svg>
+                                    </button>
+                                    {dropdownsOpen.profession && (
+                                        <div className="space-y-2">
+                                            {filterCategories.profession.map(
+                                                (profession) => (
+                                                    <label
+                                                        key={profession}
+                                                        className="flex cursor-pointer items-center gap-2 text-sm text-zinc-700 dark:text-zinc-300"
+                                                    >
+                                                        <input
+                                                            type="checkbox"
+                                                            checked={selectedFilters.profession.includes(
                                                                 profession,
-                                                            )
-                                                        }
-                                                        className="h-4 w-4 rounded border-zinc-300 text-zinc-900 focus:ring-2 focus:ring-zinc-900 dark:border-zinc-700 dark:bg-zinc-800"
-                                                    />
-                                                    {profession}
-                                                </label>
-                                            ),
-                                        )}
-                                    </div>
+                                                            )}
+                                                            onChange={() =>
+                                                                toggleFilter(
+                                                                    'profession',
+                                                                    profession,
+                                                                )
+                                                            }
+                                                            className="h-4 w-4 rounded border-zinc-300 text-zinc-900 focus:ring-2 focus:ring-zinc-900 dark:border-zinc-700 dark:bg-zinc-800"
+                                                        />
+                                                        {profession}
+                                                    </label>
+                                                ),
+                                            )}
+                                        </div>
+                                    )}
                                 </div>
                             </div>
                         </aside>
