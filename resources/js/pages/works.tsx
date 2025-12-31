@@ -333,93 +333,99 @@ export default function Works() {
 
                         <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
                             {cotdPortfolios.map((portfolio, index) => (
-                                <motion.div
+                                <Link
                                     key={portfolio.id}
-                                    initial={{ opacity: 0, y: 20 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    transition={{
-                                        duration: 0.5,
-                                        delay: 0.4 + index * 0.1,
-                                    }}
-                                    className="group relative overflow-hidden rounded-lg border border-amber-400 bg-white shadow-sm ring-2 ring-amber-400/20 transition-all hover:shadow-xl dark:border-amber-500 dark:bg-zinc-900 dark:ring-amber-500/20"
+                                    href={`/portfolio/${portfolio.id}`}
                                 >
-                                    {/* COTD Badge */}
-                                    <div className="absolute top-3 right-3 z-10">
-                                        <span className="inline-flex items-center gap-1 rounded-full bg-amber-500 px-3 py-1 text-xs font-semibold text-white shadow-lg">
-                                            <svg
-                                                className="h-3 w-3"
-                                                fill="currentColor"
-                                                viewBox="0 0 20 20"
-                                            >
-                                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                                            </svg>
-                                            COTD
-                                        </span>
-                                    </div>
+                                    <motion.div
+                                        initial={{ opacity: 0, y: 20 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        transition={{
+                                            duration: 0.5,
+                                            delay: 0.4 + index * 0.1,
+                                        }}
+                                        className="group relative overflow-hidden rounded-lg border border-amber-400 bg-white shadow-sm ring-2 ring-amber-400/20 transition-all hover:shadow-xl dark:border-amber-500 dark:bg-zinc-900 dark:ring-amber-500/20"
+                                    >
+                                        {/* COTD Badge */}
+                                        <div className="absolute top-3 right-3 z-10">
+                                            <span className="inline-flex items-center gap-1 rounded-full bg-amber-500 px-3 py-1 text-xs font-semibold text-white shadow-lg">
+                                                <svg
+                                                    className="h-3 w-3"
+                                                    fill="currentColor"
+                                                    viewBox="0 0 20 20"
+                                                >
+                                                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                                </svg>
+                                                COTD
+                                            </span>
+                                        </div>
 
-                                    {/* Portfolio Image */}
-                                    <div className="relative h-56 overflow-hidden bg-zinc-100 dark:bg-zinc-800">
-                                        <img
-                                            src={portfolio.image}
-                                            alt={`${portfolio.name}'s portfolio`}
-                                            className="h-full w-full object-cover"
-                                        />
-                                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-                                    </div>
-
-                                    {/* Portfolio Info */}
-                                    <div className="p-6">
-                                        <div className="mb-4 flex items-center gap-3">
+                                        {/* Portfolio Image */}
+                                        <div className="relative h-56 overflow-hidden bg-zinc-100 dark:bg-zinc-800">
                                             <img
-                                                src={portfolio.avatar}
-                                                alt={portfolio.name}
-                                                className="h-12 w-12 rounded-full ring-2 ring-amber-400 dark:ring-amber-500"
+                                                src={portfolio.image}
+                                                alt={`${portfolio.name}'s portfolio`}
+                                                className="h-full w-full object-cover"
                                             />
-                                            <div>
-                                                <h3 className="font-semibold text-zinc-900 dark:text-zinc-100">
-                                                    {portfolio.name}
-                                                </h3>
-                                                <p className="text-sm text-zinc-600 dark:text-zinc-400">
-                                                    {portfolio.role}
-                                                </p>
+                                            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                                        </div>
+
+                                        {/* Portfolio Info */}
+                                        <div className="p-6">
+                                            <div className="mb-4 flex items-center gap-3">
+                                                <img
+                                                    src={portfolio.avatar}
+                                                    alt={portfolio.name}
+                                                    className="h-12 w-12 rounded-full ring-2 ring-amber-400 dark:ring-amber-500"
+                                                />
+                                                <div>
+                                                    <h3 className="font-semibold text-zinc-900 dark:text-zinc-100">
+                                                        {portfolio.name}
+                                                    </h3>
+                                                    <p className="text-sm text-zinc-600 dark:text-zinc-400">
+                                                        {portfolio.role}
+                                                    </p>
+                                                </div>
+                                            </div>
+
+                                            <p className="mb-4 text-sm text-zinc-600 dark:text-zinc-400">
+                                                {portfolio.description}
+                                            </p>
+
+                                            {/* Tech Stack Pills */}
+                                            <div className="flex flex-wrap gap-2">
+                                                {portfolio.techStack.map(
+                                                    (tech) => (
+                                                        <span
+                                                            key={tech}
+                                                            className="inline-flex items-center rounded-full bg-zinc-100 px-3 py-1 text-xs font-medium text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300"
+                                                        >
+                                                            {tech}
+                                                        </span>
+                                                    ),
+                                                )}
                                             </div>
                                         </div>
 
-                                        <p className="mb-4 text-sm text-zinc-600 dark:text-zinc-400">
-                                            {portfolio.description}
-                                        </p>
-
-                                        {/* Tech Stack Pills */}
-                                        <div className="flex flex-wrap gap-2">
-                                            {portfolio.techStack.map((tech) => (
-                                                <span
-                                                    key={tech}
-                                                    className="inline-flex items-center rounded-full bg-zinc-100 px-3 py-1 text-xs font-medium text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300"
+                                        {/* View Portfolio Link */}
+                                        <div className="border-t border-zinc-200 px-6 py-4 dark:border-zinc-800">
+                                            <div className="flex w-full items-center justify-center gap-2 text-sm font-medium text-amber-600 transition-colors hover:text-amber-700 dark:text-amber-400 dark:hover:text-amber-300">
+                                                <span>View Portfolio</span>
+                                                <svg
+                                                    className="h-4 w-4 transition-transform group-hover:translate-x-1"
+                                                    fill="none"
+                                                    strokeLinecap="round"
+                                                    strokeLinejoin="round"
+                                                    strokeWidth={2}
+                                                    viewBox="0 0 24 24"
+                                                    stroke="currentColor"
                                                 >
-                                                    {tech}
-                                                </span>
-                                            ))}
+                                                    <path d="M9 5l7 7-7 7" />
+                                                </svg>
+                                            </div>
                                         </div>
-                                    </div>
-
-                                    {/* View Portfolio Link */}
-                                    <div className="border-t border-zinc-200 px-6 py-4 dark:border-zinc-800">
-                                        <button className="flex w-full items-center justify-center gap-2 text-sm font-medium text-amber-600 transition-colors hover:text-amber-700 dark:text-amber-400 dark:hover:text-amber-300">
-                                            <span>View Portfolio</span>
-                                            <svg
-                                                className="h-4 w-4 transition-transform group-hover:translate-x-1"
-                                                fill="none"
-                                                strokeLinecap="round"
-                                                strokeLinejoin="round"
-                                                strokeWidth={2}
-                                                viewBox="0 0 24 24"
-                                                stroke="currentColor"
-                                            >
-                                                <path d="M9 5l7 7-7 7" />
-                                            </svg>
-                                        </button>
-                                    </div>
-                                </motion.div>
+                                    </motion.div>
+                                </Link>
                             ))}
                         </div>
                     </div>
