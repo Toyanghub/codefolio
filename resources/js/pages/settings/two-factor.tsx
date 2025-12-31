@@ -45,7 +45,9 @@ export default function TwoFactor({
             <SettingsLayout>
                 <div>
                     <div className="mb-6">
-                        <h2 className="text-xl font-semibold">Two-Factor Authentication</h2>
+                        <h2 className="text-xl font-semibold">
+                            Two-Factor Authentication
+                        </h2>
                         <p className="mt-1 text-sm text-muted-foreground">
                             Manage your two-factor authentication settings
                         </p>

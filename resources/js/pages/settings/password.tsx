@@ -30,9 +30,12 @@ export default function Password() {
             <SettingsLayout>
                 <div>
                     <div className="mb-6">
-                        <h2 className="text-xl font-semibold">Update Password</h2>
+                        <h2 className="text-xl font-semibold">
+                            Update Password
+                        </h2>
                         <p className="mt-1 text-sm text-muted-foreground">
-                            Ensure your account is using a long, random password to stay secure
+                            Ensure your account is using a long, random password
+                            to stay secure
                         </p>
                     </div>
 

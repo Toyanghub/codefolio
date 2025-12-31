@@ -89,35 +89,70 @@ function Navbar({ canRegister = true }: { canRegister?: boolean }) {
                         <div className="relative">
                             <motion.button
                                 onClick={() => setUserMenuOpen(!userMenuOpen)}
-                                className="flex items-center space-x-2 rounded-full border border-zinc-200 bg-white px-3 py-2 transition-colors hover:border-zinc-300 dark:border-zinc-700 dark:bg-zinc-900 dark:hover:border-zinc-600"
+                                className="flex items-center gap-2 rounded-full p-1 text-sm transition-colors hover:bg-zinc-100 dark:hover:bg-zinc-800"
                                 whileHover={{ scale: 1.05 }}
                                 whileTap={{ scale: 0.95 }}
                             >
-                                <div className="h-6 w-6 rounded-full bg-gradient-to-r from-blue-500 to-purple-500" />
+                                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900">
+                                    <span className="text-sm font-semibold">
+                                        {auth.user.name.charAt(0).toUpperCase()}
+                                    </span>
+                                </div>
                             </motion.button>
 
                             <AnimatePresence>
                                 {userMenuOpen && (
-                                    <motion.div
-                                        className="absolute top-12 right-0 z-50 w-48 rounded-xl border border-zinc-200 bg-white p-2 shadow-xl dark:border-zinc-700 dark:bg-zinc-900"
-                                        initial={{ opacity: 0, y: -10 }}
-                                        animate={{ opacity: 1, y: 0 }}
-                                        exit={{ opacity: 0, y: -10 }}
-                                        transition={{ duration: 0.2 }}
-                                    >
-                                        <Link
-                                            href="/settings/profile"
-                                            className="block rounded-lg px-4 py-2 text-sm text-zinc-700 transition-colors hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-800"
+                                    <>
+                                        <div
+                                            className="fixed inset-0 z-10"
+                                            onClick={() =>
+                                                setUserMenuOpen(false)
+                                            }
+                                        />
+                                        <motion.div
+                                            className="absolute top-12 right-0 z-50 w-56 rounded-md border border-zinc-200 bg-white shadow-xl dark:border-zinc-800 dark:bg-zinc-950"
+                                            initial={{ opacity: 0, y: -10 }}
+                                            animate={{ opacity: 1, y: 0 }}
+                                            exit={{ opacity: 0, y: -10 }}
+                                            transition={{ duration: 0.2 }}
                                         >
-                                            Settings
-                                        </Link>
-                                        <button
-                                            onClick={handleLogout}
-                                            className="w-full rounded-lg px-4 py-2 text-left text-sm text-red-600 transition-colors hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-950"
-                                        >
-                                            Logout
-                                        </button>
-                                    </motion.div>
+                                            <div className="space-y-1 p-2">
+                                                {/* User Info Header */}
+                                                <div className="flex items-center gap-3 px-2 py-3">
+                                                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900">
+                                                        <span className="font-semibold">
+                                                            {auth.user.name
+                                                                .charAt(0)
+                                                                .toUpperCase()}
+                                                        </span>
+                                                    </div>
+                                                    <div className="flex flex-col">
+                                                        <span className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
+                                                            {auth.user.name}
+                                                        </span>
+                                                        <span className="text-xs text-zinc-500 dark:text-zinc-400">
+                                                            {auth.user.email}
+                                                        </span>
+                                                    </div>
+                                                </div>
+
+                                                <div className="border-t border-zinc-200 dark:border-zinc-800" />
+
+                                                <Link
+                                                    href="/settings/profile"
+                                                    className="block rounded-lg px-4 py-2 text-sm text-zinc-700 transition-colors hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-800"
+                                                >
+                                                    Settings
+                                                </Link>
+                                                <button
+                                                    onClick={handleLogout}
+                                                    className="w-full rounded-lg px-4 py-2 text-left text-sm text-red-600 transition-colors hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-950"
+                                                >
+                                                    Logout
+                                                </button>
+                                            </div>
+                                        </motion.div>
+                                    </>
                                 )}
                             </AnimatePresence>
                         </div>
@@ -232,6 +267,25 @@ function Navbar({ canRegister = true }: { canRegister?: boolean }) {
 
                         {auth.user ? (
                             <div className="mt-8 border-t border-zinc-200 pt-8 dark:border-zinc-700">
+                                {/* User Info in Mobile Menu */}
+                                <div className="mb-4 flex items-center gap-3 rounded-lg bg-zinc-50 px-4 py-3 dark:bg-zinc-900">
+                                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900">
+                                        <span className="font-semibold">
+                                            {auth.user.name
+                                                .charAt(0)
+                                                .toUpperCase()}
+                                        </span>
+                                    </div>
+                                    <div className="flex flex-col">
+                                        <span className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
+                                            {auth.user.name}
+                                        </span>
+                                        <span className="text-xs text-zinc-500 dark:text-zinc-400">
+                                            {auth.user.email}
+                                        </span>
+                                    </div>
+                                </div>
+
                                 <Link
                                     href="/settings/profile"
                                     className="block rounded-lg px-4 py-3 text-base font-medium text-zinc-900 hover:bg-zinc-100 dark:text-zinc-100 dark:hover:bg-zinc-800"

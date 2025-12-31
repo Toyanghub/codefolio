@@ -64,11 +64,12 @@ export default function SettingsLayout({ children }: PropsWithChildren) {
                                 variant="ghost"
                                 asChild
                                 className={cn(
-                                    'relative flex-1 min-w-[120px] rounded-none border-b-2 border-transparent px-4 py-6 transition-all duration-200',
+                                    'relative min-w-[120px] flex-1 rounded-none border-b-2 border-transparent px-4 py-6 transition-all duration-200',
                                     {
-                                        'border-primary bg-muted/50 font-semibold': isActive,
+                                        'border-primary bg-muted/50 font-semibold':
+                                            isActive,
                                         'hover:bg-muted/50': !isActive,
-                                    }
+                                    },
                                 )}
                             >
                                 <Link
@@ -79,7 +80,8 @@ export default function SettingsLayout({ children }: PropsWithChildren) {
                                         <item.icon
                                             className={cn('h-5 w-5', {
                                                 'text-primary': isActive,
-                                                'text-muted-foreground': !isActive,
+                                                'text-muted-foreground':
+                                                    !isActive,
                                             })}
                                         />
                                     )}
