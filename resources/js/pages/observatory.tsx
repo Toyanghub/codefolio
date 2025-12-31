@@ -251,6 +251,7 @@ const observatoryPortfolios = [
         image: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=400&h=300&fit=crop',
         skills: ['Web', 'Fullstack'],
         techStack: ['JavaScript', 'React'],
+        isCotd: true,
     },
     {
         id: 2,
@@ -278,6 +279,7 @@ const observatoryPortfolios = [
         image: 'https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7?w=400&h=300&fit=crop',
         skills: ['Frontend', 'Web'],
         techStack: ['HTML', 'CSS'],
+        isCotd: true,
     },
     {
         id: 5,
@@ -305,6 +307,7 @@ const observatoryPortfolios = [
         image: 'https://images.unsplash.com/photo-1510915361894-db8b60106cb1?w=400&h=300&fit=crop',
         skills: ['Web', 'Data'],
         techStack: ['JavaScript', 'Node.js'],
+        isCotd: true,
     },
     {
         id: 8,
@@ -679,7 +682,11 @@ export default function Observatory() {
                                             initial={{ opacity: 0, y: 20 }}
                                             animate={{ opacity: 1, y: 0 }}
                                             transition={{ duration: 0.3 }}
-                                            className="group cursor-pointer overflow-hidden rounded-lg border border-zinc-200 bg-white shadow-sm transition-all hover:shadow-md dark:border-zinc-800 dark:bg-zinc-900"
+                                            className={`group cursor-pointer overflow-hidden rounded-lg border bg-white shadow-sm transition-all hover:shadow-md dark:bg-zinc-900 ${
+                                                portfolio.isCotd
+                                                    ? 'border-amber-400 ring-2 ring-amber-400/20 dark:border-amber-500 dark:ring-amber-500/20'
+                                                    : 'border-zinc-200 dark:border-zinc-800'
+                                            }`}
                                         >
                                             {/* Portfolio Image */}
                                             <div className="relative h-48 overflow-hidden bg-zinc-100 dark:bg-zinc-800">
@@ -688,6 +695,20 @@ export default function Observatory() {
                                                     alt={`${portfolio.name}'s portfolio`}
                                                     className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                                                 />
+                                                {portfolio.isCotd && (
+                                                    <div className="absolute top-3 right-3">
+                                                        <span className="inline-flex items-center gap-1 rounded-full bg-amber-500 px-3 py-1 text-xs font-semibold text-white shadow-lg">
+                                                            <svg
+                                                                className="h-3 w-3"
+                                                                fill="currentColor"
+                                                                viewBox="0 0 20 20"
+                                                            >
+                                                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                                            </svg>
+                                                            COTD
+                                                        </span>
+                                                    </div>
+                                                )}
                                             </div>
 
                                             {/* Portfolio Info */}
