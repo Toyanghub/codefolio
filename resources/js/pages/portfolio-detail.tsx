@@ -1,5 +1,5 @@
 import { Footerdemo } from '@/components/ui/footer-section';
-import { dashboard, login, logout, register } from '@/routes';
+import { login, logout, register } from '@/routes';
 import { type SharedData } from '@/types';
 import { Head, Link, router, usePage } from '@inertiajs/react';
 import { AnimatePresence, motion } from 'motion/react';
@@ -105,12 +105,6 @@ function Navbar({ canRegister = true }: { canRegister?: boolean }) {
                                         exit={{ opacity: 0, y: -10 }}
                                         transition={{ duration: 0.2 }}
                                     >
-                                        <Link
-                                            href={dashboard.url()}
-                                            className="block rounded-lg px-4 py-2 text-sm text-zinc-700 transition-colors hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-800"
-                                        >
-                                            Dashboard
-                                        </Link>
                                         <button
                                             onClick={handleLogout}
                                             className="w-full rounded-lg px-4 py-2 text-left text-sm text-red-600 transition-colors hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-950"
@@ -232,16 +226,9 @@ function Navbar({ canRegister = true }: { canRegister?: boolean }) {
 
                         {auth.user ? (
                             <div className="mt-8 border-t border-zinc-200 pt-8 dark:border-zinc-700">
-                                <Link
-                                    href={dashboard.url()}
-                                    className="block rounded-lg px-4 py-3 text-base font-medium text-zinc-900 hover:bg-zinc-100 dark:text-zinc-100 dark:hover:bg-zinc-800"
-                                    onClick={() => setMobileMenuOpen(false)}
-                                >
-                                    Dashboard
-                                </Link>
                                 <button
                                     onClick={handleLogout}
-                                    className="mt-2 w-full rounded-lg px-4 py-3 text-left text-base font-medium text-red-600 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-950"
+                                    className="w-full rounded-lg px-4 py-3 text-left text-base font-medium text-red-600 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-950"
                                 >
                                     Logout
                                 </button>

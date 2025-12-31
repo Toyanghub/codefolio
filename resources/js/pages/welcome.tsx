@@ -10,7 +10,7 @@ import {
     StoryOverlay,
 } from '@/components/stories-carousel';
 import { Footerdemo } from '@/components/ui/footer-section';
-import { dashboard, login, logout, register } from '@/routes';
+import { login, logout, register } from '@/routes';
 import { type SharedData } from '@/types';
 import { Head, Link, router, usePage } from '@inertiajs/react';
 import { AnimatePresence, motion } from 'motion/react';
@@ -283,13 +283,12 @@ function Navbar({ canRegister = true }: { canRegister?: boolean }) {
                                 className="space-y-3 pt-6"
                             >
                                 {auth.user ? (
-                                    <Link
-                                        href={dashboard()}
-                                        className="inline-flex w-full items-center justify-center rounded-full bg-zinc-900 px-5 py-3 text-base font-medium text-white transition-colors hover:bg-zinc-800 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200"
-                                        onClick={() => setMobileMenuOpen(false)}
+                                    <button
+                                        onClick={handleLogout}
+                                        className="w-full rounded-full bg-red-600 px-5 py-3 text-base font-medium text-white transition-colors hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600"
                                     >
-                                        Dashboard
-                                    </Link>
+                                        Logout
+                                    </button>
                                 ) : (
                                     <>
                                         <Link

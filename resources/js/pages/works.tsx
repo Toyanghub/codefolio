@@ -1,5 +1,5 @@
 import { Footerdemo } from '@/components/ui/footer-section';
-import { dashboard, login, logout, register } from '@/routes';
+import { login, logout, register } from '@/routes';
 import { type SharedData } from '@/types';
 import { Head, Link, router, usePage } from '@inertiajs/react';
 import { AnimatePresence, motion } from 'motion/react';
@@ -95,12 +95,6 @@ function Navbar({ canRegister = true }: { canRegister?: boolean }) {
                                             </p>
                                         </div>
                                         <div className="p-1">
-                                            <Link
-                                                href={dashboard.url()}
-                                                className="block rounded-md px-3 py-2 text-sm text-zinc-700 hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-800"
-                                            >
-                                                Dashboard
-                                            </Link>
                                             <button
                                                 onClick={handleLogout}
                                                 className="w-full rounded-md px-3 py-2 text-left text-sm text-zinc-700 hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-800"
@@ -200,12 +194,6 @@ function Navbar({ canRegister = true }: { canRegister?: boolean }) {
                                                     {auth.user.email}
                                                 </p>
                                             </div>
-                                            <Link
-                                                href={dashboard.url()}
-                                                className="block rounded-md px-4 py-2 text-sm font-medium text-zinc-700 transition-colors hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800 dark:hover:text-zinc-100"
-                                            >
-                                                Dashboard
-                                            </Link>
                                             <button
                                                 onClick={handleLogout}
                                                 className="w-full rounded-md px-4 py-2 text-left text-sm font-medium text-zinc-700 transition-colors hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800 dark:hover:text-zinc-100"
