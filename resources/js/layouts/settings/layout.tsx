@@ -1,6 +1,5 @@
-import Heading from '@/components/heading';
 import { Button } from '@/components/ui/button';
-import { Separator } from '@/components/ui/separator';
+import { Card } from '@/components/ui/card';
 import { cn, isSameUrl, resolveUrl } from '@/lib/utils';
 import { edit as editAppearance } from '@/routes/appearance';
 import { edit } from '@/routes/profile';
@@ -8,28 +7,29 @@ import { show } from '@/routes/two-factor';
 import { edit as editPassword } from '@/routes/user-password';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
+import { KeyRound, Palette, ShieldCheck, User } from 'lucide-react';
 import { type PropsWithChildren } from 'react';
 
 const sidebarNavItems: NavItem[] = [
     {
         title: 'Profile',
         href: edit(),
-        icon: null,
+        icon: User,
     },
     {
         title: 'Password',
         href: editPassword(),
-        icon: null,
+        icon: KeyRound,
     },
     {
-        title: 'Two-Factor Auth',
+        title: 'Two-Factor',
         href: show(),
-        icon: null,
+        icon: ShieldCheck,
     },
     {
         title: 'Appearance',
         href: editAppearance(),
-        icon: null,
+        icon: Palette,
     },
 ];
 
@@ -42,47 +42,63 @@ export default function SettingsLayout({ children }: PropsWithChildren) {
     const currentPath = window.location.pathname;
 
     return (
-        <div className="px-4 py-6">
-            <Heading
-                title="Settings"
-                description="Manage your profile and account settings"
-            />
+        <div className="w-full">
+            {/* Header */}
+            <div className="mb-8 text-center">
+                <h1 className="text-3xl font-bold tracking-tight md:text-4xl">
+                    Settings
+                </h1>
+                <p className="mt-2 text-sm text-muted-foreground md:text-base">
+                    Manage your profile and account settings
+                </p>
+            </div>
 
-            <div className="flex flex-col lg:flex-row lg:space-x-12">
-                <aside className="w-full max-w-xl lg:w-48">
-                    <nav className="flex flex-col space-y-1 space-x-0">
-                        {sidebarNavItems.map((item, index) => (
+            {/* Navigation Tabs - Horizontal on desktop, scrollable on mobile */}
+            <Card className="mb-8 overflow-hidden">
+                <nav className="flex overflow-x-auto">
+                    {sidebarNavItems.map((item, index) => {
+                        const isActive = isSameUrl(currentPath, item.href);
+                        return (
                             <Button
                                 key={`${resolveUrl(item.href)}-${index}`}
-                                size="sm"
                                 variant="ghost"
                                 asChild
-                                className={cn('w-full justify-start', {
-                                    'bg-muted': isSameUrl(
-                                        currentPath,
-                                        item.href,
-                                    ),
-                                })}
+                                className={cn(
+                                    'relative flex-1 min-w-[120px] rounded-none border-b-2 border-transparent px-4 py-6 transition-all duration-200',
+                                    {
+                                        'border-primary bg-muted/50 font-semibold': isActive,
+                                        'hover:bg-muted/50': !isActive,
+                                    }
+                                )}
                             >
-                                <Link href={item.href}>
+                                <Link
+                                    href={item.href}
+                                    className="flex flex-col items-center gap-2"
+                                >
                                     {item.icon && (
-                                        <item.icon className="h-4 w-4" />
+                                        <item.icon
+                                            className={cn('h-5 w-5', {
+                                                'text-primary': isActive,
+                                                'text-muted-foreground': !isActive,
+                                            })}
+                                        />
                                     )}
-                                    {item.title}
+                                    <span className="text-sm whitespace-nowrap">
+                                        {item.title}
+                                    </span>
                                 </Link>
                             </Button>
-                        ))}
-                    </nav>
-                </aside>
+                        );
+                    })}
+                </nav>
+            </Card>
 
-                <Separator className="my-6 lg:hidden" />
-
-                <div className="flex-1 md:max-w-2xl">
-                    <section className="max-w-xl space-y-12">
-                        {children}
-                    </section>
+            {/* Content Card */}
+            <Card className="mx-auto max-w-3xl">
+                <div className="p-6 md:p-8 lg:p-10">
+                    <div className="space-y-8">{children}</div>
                 </div>
-            </div>
+            </Card>
         </div>
     );
 }
