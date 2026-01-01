@@ -53,9 +53,10 @@ export default function SettingsLayout({ children }: PropsWithChildren) {
                 </p>
             </div>
 
-            {/* Navigation Tabs - Horizontal on desktop, scrollable on mobile */}
+            {/* Navigation - Vertical on mobile, Horizontal on desktop */}
             <Card className="mb-8 overflow-hidden">
-                <nav className="flex overflow-x-auto">
+                {/* Mobile Navigation - Vertical List */}
+                <nav className="flex flex-col md:hidden">
                     {sidebarNavItems.map((item, index) => {
                         const isActive = isSameUrl(currentPath, item.href);
                         return (
@@ -64,7 +65,47 @@ export default function SettingsLayout({ children }: PropsWithChildren) {
                                 variant="ghost"
                                 asChild
                                 className={cn(
-                                    'relative min-w-[120px] flex-1 rounded-none border-b-2 border-transparent px-4 py-6 transition-all duration-200',
+                                    'relative h-auto justify-start rounded-none border-l-4 border-transparent px-4 py-4 transition-all duration-200',
+                                    {
+                                        'border-primary bg-muted/50 font-semibold':
+                                            isActive,
+                                        'hover:bg-muted/50': !isActive,
+                                    },
+                                )}
+                            >
+                                <Link
+                                    href={item.href}
+                                    className="flex items-center gap-3"
+                                >
+                                    {item.icon && (
+                                        <item.icon
+                                            className={cn('h-5 w-5', {
+                                                'text-primary': isActive,
+                                                'text-muted-foreground':
+                                                    !isActive,
+                                            })}
+                                        />
+                                    )}
+                                    <span className="text-sm">
+                                        {item.title}
+                                    </span>
+                                </Link>
+                            </Button>
+                        );
+                    })}
+                </nav>
+
+                {/* Desktop Navigation - Horizontal Tabs */}
+                <nav className="hidden md:flex">
+                    {sidebarNavItems.map((item, index) => {
+                        const isActive = isSameUrl(currentPath, item.href);
+                        return (
+                            <Button
+                                key={`${resolveUrl(item.href)}-${index}`}
+                                variant="ghost"
+                                asChild
+                                className={cn(
+                                    'relative flex-1 rounded-none border-b-2 border-transparent px-4 py-6 transition-all duration-200',
                                     {
                                         'border-primary bg-muted/50 font-semibold':
                                             isActive,
