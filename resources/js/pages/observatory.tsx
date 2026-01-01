@@ -9,9 +9,21 @@ function Navbar({ canRegister = true }: { canRegister?: boolean }) {
     const { auth } = usePage<SharedData>().props;
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const [userMenuOpen, setUserMenuOpen] = useState(false);
+    const [searchQuery, setSearchQuery] = useState('');
+    const [searchOpen, setSearchOpen] = useState(false);
+    const [showSearchResults, setShowSearchResults] = useState(false);
 
     const handleLogout = () => {
         router.post(logout.url());
+    };
+
+    const handleSearch = (e: React.FormEvent) => {
+        e.preventDefault();
+        if (searchQuery.trim()) {
+            router.get('/observatory', { search: searchQuery });
+            setSearchQuery('');
+            setShowSearchResults(false);
+        }
     };
 
     return (
@@ -63,6 +75,60 @@ function Navbar({ canRegister = true }: { canRegister?: boolean }) {
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.3, delay: 0.2 }}
                 >
+                    {/* Search Icon/Bar */}
+                    <div className="relative">
+                        <motion.button
+                            onClick={() => setSearchOpen(true)}
+                            className="rounded-full p-2 text-zinc-700 transition-colors hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-800"
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                        >
+                            <svg
+                                className="h-5 w-5"
+                                fill="none"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                            >
+                                <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                            </svg>
+                        </motion.button>
+
+                        <AnimatePresence>
+                            {searchOpen && (
+                                <motion.form
+                                    onSubmit={handleSearch}
+                                    className="absolute top-0 right-0 z-50"
+                                    initial={{ width: 40, opacity: 0 }}
+                                    animate={{ width: 240, opacity: 1 }}
+                                    exit={{ width: 40, opacity: 0 }}
+                                    transition={{ duration: 0.2 }}
+                                >
+                                    <input
+                                        type="text"
+                                        value={searchQuery}
+                                        onChange={(e) =>
+                                            setSearchQuery(e.target.value)
+                                        }
+                                        onBlur={() => {
+                                            setTimeout(() => {
+                                                if (!searchQuery) {
+                                                    setSearchOpen(false);
+                                                }
+                                                setShowSearchResults(false);
+                                            }, 200);
+                                        }}
+                                        autoFocus
+                                        placeholder="Search portfolios..."
+                                        className="w-full rounded-full border border-zinc-200 bg-white py-1.5 pr-4 pl-4 text-sm text-zinc-900 placeholder-zinc-500 shadow-lg transition-all focus:border-zinc-300 focus:ring-2 focus:ring-zinc-200 focus:outline-none dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-100 dark:placeholder-zinc-400 dark:focus:border-zinc-700 dark:focus:ring-zinc-800"
+                                    />
+                                </motion.form>
+                            )}
+                        </AnimatePresence>
+                    </div>
+
                     {auth.user ? (
                         <div className="relative">
                             <motion.button
@@ -132,108 +198,146 @@ function Navbar({ canRegister = true }: { canRegister?: boolean }) {
                     )}
                 </motion.div>
 
-                {/* Mobile Menu Button */}
+                {/* Mobile Menu Toggle */}
                 <motion.button
+                    className="rounded-md p-2 text-zinc-700 hover:bg-zinc-100 md:hidden dark:text-zinc-300 dark:hover:bg-zinc-800"
                     onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                    className="flex h-10 w-10 items-center justify-center rounded-lg text-zinc-700 hover:bg-zinc-100 md:hidden dark:text-zinc-300 dark:hover:bg-zinc-800"
-                    whileTap={{ scale: 0.95 }}
+                    whileTap={{ scale: 0.9 }}
                 >
                     <svg
                         className="h-6 w-6"
                         fill="none"
                         strokeLinecap="round"
                         strokeLinejoin="round"
-                        strokeWidth="2"
+                        strokeWidth={2}
                         viewBox="0 0 24 24"
                         stroke="currentColor"
                     >
-                        <path d="M4 6h16M4 12h16M4 18h16"></path>
+                        {mobileMenuOpen ? (
+                            <path d="M6 18L18 6M6 6l12 12" />
+                        ) : (
+                            <path d="M4 6h16M4 12h16M4 18h16" />
+                        )}
                     </svg>
                 </motion.button>
             </nav>
 
-            {/* Mobile Menu */}
+            {/* Mobile Menu Overlay */}
             <AnimatePresence>
                 {mobileMenuOpen && (
                     <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        className="fixed inset-0 z-40 bg-black/50 md:hidden"
-                        onClick={() => setMobileMenuOpen(false)}
+                        className="fixed inset-0 z-50 bg-white px-6 pt-24 md:hidden dark:bg-zinc-950"
+                        initial={{ opacity: 0, x: '100%' }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: '100%' }}
+                        transition={{
+                            type: 'spring',
+                            damping: 25,
+                            stiffness: 300,
+                        }}
                     >
-                        <motion.div
-                            initial={{ x: '100%' }}
-                            animate={{ x: 0 }}
-                            exit={{ x: '100%' }}
-                            transition={{ type: 'spring', damping: 25 }}
-                            className="absolute top-0 right-0 h-full w-64 bg-white p-6 shadow-xl dark:bg-zinc-950"
-                            onClick={(e) => e.stopPropagation()}
+                        <motion.button
+                            className="absolute top-6 right-6 rounded-md p-2 text-zinc-700 hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-800"
+                            onClick={() => setMobileMenuOpen(false)}
+                            whileTap={{ scale: 0.9 }}
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            transition={{ delay: 0.2 }}
                         >
-                            <div className="flex flex-col space-y-4">
-                                <Link
-                                    href="/"
-                                    className="rounded-md px-4 py-2 text-sm font-medium text-zinc-700 transition-colors hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800 dark:hover:text-zinc-100"
+                            <svg
+                                className="h-6 w-6"
+                                fill="none"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                            >
+                                <path d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </motion.button>
+
+                        <div className="space-y-2">
+                            {[
+                                { href: '/', label: 'Lobby' },
+                                { href: '/observatory', label: 'Observatory' },
+                                { href: '/works', label: 'Works' },
+                            ].map((item, index) => (
+                                <motion.div
+                                    key={item.label}
+                                    initial={{ opacity: 0, x: -20 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    transition={{
+                                        duration: 0.3,
+                                        delay: index * 0.1,
+                                    }}
                                 >
-                                    Lobby
-                                </Link>
-                                <Link
-                                    href="/observatory"
-                                    className="rounded-md px-4 py-2 text-sm font-medium text-zinc-700 transition-colors hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800 dark:hover:text-zinc-100"
-                                >
-                                    Observatory
-                                </Link>
-                                <Link
-                                    href="/works"
-                                    className="rounded-md px-4 py-2 text-sm font-medium text-zinc-700 transition-colors hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800 dark:hover:text-zinc-100"
-                                >
-                                    Works
-                                </Link>
-                                <div className="border-t border-zinc-200 pt-4 dark:border-zinc-800">
-                                    {auth.user ? (
-                                        <>
-                                            <div className="mb-4 px-4">
-                                                <p className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">
-                                                    {auth.user.name}
-                                                </p>
-                                                <p className="text-xs text-zinc-500 dark:text-zinc-400">
-                                                    {auth.user.email}
-                                                </p>
-                                            </div>
-                                            <Link
-                                                href="/settings/profile"
-                                                className="block rounded-md px-4 py-2 text-sm font-medium text-zinc-700 transition-colors hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800 dark:hover:text-zinc-100"
-                                            >
-                                                Settings
-                                            </Link>
-                                            <button
-                                                onClick={handleLogout}
-                                                className="w-full rounded-md px-4 py-2 text-left text-sm font-medium text-zinc-700 transition-colors hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800 dark:hover:text-zinc-100"
-                                            >
-                                                Log out
-                                            </button>
-                                        </>
-                                    ) : (
-                                        <>
-                                            <Link
-                                                href={login.url()}
-                                                className="block rounded-md px-4 py-2 text-sm font-medium text-zinc-700 transition-colors hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800 dark:hover:text-zinc-100"
-                                            >
-                                                Log in
-                                            </Link>
-                                            {canRegister && (
-                                                <Link
-                                                    href={register.url()}
-                                                    className="mt-2 block rounded-lg bg-zinc-900 px-4 py-2 text-center text-sm font-medium text-white transition-colors hover:bg-zinc-700 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-300"
-                                                >
-                                                    Sign up
-                                                </Link>
-                                            )}
-                                        </>
-                                    )}
+                                    <Link
+                                        href={item.href}
+                                        className="block rounded-lg px-4 py-3 text-base font-medium text-zinc-900 hover:bg-zinc-100 dark:text-zinc-100 dark:hover:bg-zinc-800"
+                                        onClick={() => setMobileMenuOpen(false)}
+                                    >
+                                        {item.label}
+                                    </Link>
+                                </motion.div>
+                            ))}
+                        </div>
+
+                        {auth.user ? (
+                            <div className="mt-8 border-t border-zinc-200 pt-8 dark:border-zinc-700">
+                                {/* User Info in Mobile Menu */}
+                                <div className="mb-4 flex items-center gap-3 rounded-lg bg-zinc-50 px-4 py-3 dark:bg-zinc-900">
+                                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900">
+                                        <span className="font-semibold">
+                                            {auth.user.name
+                                                .charAt(0)
+                                                .toUpperCase()}
+                                        </span>
+                                    </div>
+                                    <div className="flex flex-col">
+                                        <span className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
+                                            {auth.user.name}
+                                        </span>
+                                        <span className="text-xs text-zinc-500 dark:text-zinc-400">
+                                            {auth.user.email}
+                                        </span>
+                                    </div>
                                 </div>
+
+                                <Link
+                                    href="/settings/profile"
+                                    className="block rounded-lg px-4 py-3 text-base font-medium text-zinc-900 hover:bg-zinc-100 dark:text-zinc-100 dark:hover:bg-zinc-800"
+                                    onClick={() => setMobileMenuOpen(false)}
+                                >
+                                    Settings
+                                </Link>
+                                <button
+                                    onClick={handleLogout}
+                                    className="mt-2 w-full rounded-lg px-4 py-3 text-left text-base font-medium text-red-600 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-950"
+                                >
+                                    Logout
+                                </button>
                             </div>
-                        </motion.div>
+                        ) : (
+                            <div className="mt-8 space-y-2 border-t border-zinc-200 pt-8 dark:border-zinc-700">
+                                <Link
+                                    href={login.url()}
+                                    className="block rounded-lg px-4 py-3 text-center text-base font-medium text-zinc-900 hover:bg-zinc-100 dark:text-zinc-100 dark:hover:bg-zinc-800"
+                                    onClick={() => setMobileMenuOpen(false)}
+                                >
+                                    Log in
+                                </Link>
+                                {canRegister && (
+                                    <Link
+                                        href={register.url()}
+                                        className="block rounded-lg bg-zinc-900 px-4 py-3 text-center text-base font-medium text-white hover:bg-zinc-800 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200"
+                                        onClick={() => setMobileMenuOpen(false)}
+                                    >
+                                        Sign up
+                                    </Link>
+                                )}
+                            </div>
+                        )}
                     </motion.div>
                 )}
             </AnimatePresence>
@@ -368,6 +472,10 @@ const filterCategories = {
 };
 
 export default function Observatory() {
+    const { url } = usePage();
+    const searchParams = new URLSearchParams(url.split('?')[1] || '');
+    const searchQuery = searchParams.get('search') || '';
+
     const [selectedFilters, setSelectedFilters] = useState<{
         skills: string[];
         techStack: string[];
@@ -414,6 +522,22 @@ export default function Observatory() {
     };
 
     const filteredPortfolios = observatoryPortfolios.filter((portfolio) => {
+        // Search query filter
+        if (searchQuery) {
+            const query = searchQuery.toLowerCase();
+            const matchesSearch =
+                portfolio.name.toLowerCase().includes(query) ||
+                portfolio.role.toLowerCase().includes(query) ||
+                portfolio.skills.some((skill) =>
+                    skill.toLowerCase().includes(query),
+                ) ||
+                portfolio.techStack.some((tech) =>
+                    tech.toLowerCase().includes(query),
+                );
+            if (!matchesSearch) return false;
+        }
+
+        // Filter by selected categories
         const skillMatch =
             selectedFilters.skills.length === 0 ||
             selectedFilters.skills.some((skill) =>
@@ -442,12 +566,28 @@ export default function Observatory() {
                     {/* Page Header */}
                     <div className="mb-8">
                         <h1 className="text-3xl font-bold text-zinc-900 dark:text-zinc-100">
-                            Explore
+                            Observe
                         </h1>
                         <p className="mt-2 text-zinc-600 dark:text-zinc-400">
                             Discover amazing portfolios from developers around
                             the world
                         </p>
+                        {searchQuery && (
+                            <div className="mt-4 flex items-center gap-2">
+                                <span className="text-sm text-zinc-600 dark:text-zinc-400">
+                                    Search results for:{' '}
+                                    <span className="font-semibold text-zinc-900 dark:text-zinc-100">
+                                        "{searchQuery}"
+                                    </span>
+                                </span>
+                                <Link
+                                    href="/observatory"
+                                    className="text-sm text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
+                                >
+                                    Clear search
+                                </Link>
+                            </div>
+                        )}
                     </div>
 
                     <div className="flex flex-col gap-6 lg:flex-row">
