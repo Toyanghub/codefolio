@@ -331,7 +331,7 @@ export default function Works() {
                             Standout Portfolios
                         </motion.h2>
 
-                        <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
+                        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
                             {cotdPortfolios.map((portfolio, index) => (
                                 <Link
                                     key={portfolio.id}
@@ -347,8 +347,8 @@ export default function Works() {
                                         className="group relative overflow-hidden rounded-lg border border-amber-400 bg-white shadow-sm ring-2 ring-amber-400/20 transition-all hover:shadow-xl dark:border-amber-500 dark:bg-zinc-900 dark:ring-amber-500/20"
                                     >
                                         {/* COTD Badge */}
-                                        <div className="absolute top-3 right-3 z-10">
-                                            <span className="inline-flex items-center gap-1 rounded-full bg-amber-500 px-3 py-1 text-xs font-semibold text-white shadow-lg">
+                                        <div className="absolute top-2 right-2 z-10">
+                                            <span className="inline-flex items-center gap-1 rounded-full bg-amber-500 px-2.5 py-0.5 text-xs font-semibold text-white shadow-lg">
                                                 <svg
                                                     className="h-3 w-3"
                                                     fill="currentColor"
@@ -361,7 +361,7 @@ export default function Works() {
                                         </div>
 
                                         {/* Portfolio Image */}
-                                        <div className="relative h-56 overflow-hidden bg-zinc-100 dark:bg-zinc-800">
+                                        <div className="relative h-40 overflow-hidden bg-zinc-100 dark:bg-zinc-800">
                                             <img
                                                 src={portfolio.image}
                                                 alt={`${portfolio.name}'s portfolio`}
@@ -371,48 +371,56 @@ export default function Works() {
                                         </div>
 
                                         {/* Portfolio Info */}
-                                        <div className="p-6">
-                                            <div className="mb-4 flex items-center gap-3">
+                                        <div className="p-4">
+                                            <div className="mb-3 flex items-center gap-2.5">
                                                 <img
                                                     src={portfolio.avatar}
                                                     alt={portfolio.name}
-                                                    className="h-12 w-12 rounded-full ring-2 ring-amber-400 dark:ring-amber-500"
+                                                    className="h-10 w-10 rounded-full ring-2 ring-amber-400 dark:ring-amber-500"
                                                 />
                                                 <div>
-                                                    <h3 className="font-semibold text-zinc-900 dark:text-zinc-100">
+                                                    <h3 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">
                                                         {portfolio.name}
                                                     </h3>
-                                                    <p className="text-sm text-zinc-600 dark:text-zinc-400">
+                                                    <p className="text-xs text-zinc-600 dark:text-zinc-400">
                                                         {portfolio.role}
                                                     </p>
                                                 </div>
                                             </div>
 
-                                            <p className="mb-4 text-sm text-zinc-600 dark:text-zinc-400">
+                                            <p className="mb-3 line-clamp-2 text-xs text-zinc-600 dark:text-zinc-400">
                                                 {portfolio.description}
                                             </p>
 
                                             {/* Tech Stack Pills */}
-                                            <div className="flex flex-wrap gap-2">
-                                                {portfolio.techStack.map(
-                                                    (tech) => (
+                                            <div className="flex flex-wrap gap-1.5">
+                                                {portfolio.techStack
+                                                    .slice(0, 3)
+                                                    .map((tech) => (
                                                         <span
                                                             key={tech}
-                                                            className="inline-flex items-center rounded-full bg-zinc-100 px-3 py-1 text-xs font-medium text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300"
+                                                            className="inline-flex items-center rounded-full bg-zinc-100 px-2 py-0.5 text-xs font-medium text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300"
                                                         >
                                                             {tech}
                                                         </span>
-                                                    ),
+                                                    ))}
+                                                {portfolio.techStack.length >
+                                                    3 && (
+                                                    <span className="inline-flex items-center rounded-full bg-zinc-100 px-2 py-0.5 text-xs font-medium text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300">
+                                                        +
+                                                        {portfolio.techStack
+                                                            .length - 3}
+                                                    </span>
                                                 )}
                                             </div>
                                         </div>
 
                                         {/* View Portfolio Link */}
-                                        <div className="border-t border-zinc-200 px-6 py-4 dark:border-zinc-800">
-                                            <div className="flex w-full items-center justify-center gap-2 text-sm font-medium text-amber-600 transition-colors hover:text-amber-700 dark:text-amber-400 dark:hover:text-amber-300">
+                                        <div className="border-t border-zinc-200 px-4 py-3 dark:border-zinc-800">
+                                            <div className="flex w-full items-center justify-center gap-2 text-xs font-medium text-amber-600 transition-colors hover:text-amber-700 dark:text-amber-400 dark:hover:text-amber-300">
                                                 <span>View Portfolio</span>
                                                 <svg
-                                                    className="h-4 w-4 transition-transform group-hover:translate-x-1"
+                                                    className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1"
                                                     fill="none"
                                                     strokeLinecap="round"
                                                     strokeLinejoin="round"
