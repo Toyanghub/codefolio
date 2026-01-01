@@ -675,7 +675,7 @@ export default function Observatory() {
                                     </div>
                                 </div>
                             ) : (
-                                <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3">
+                                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
                                     {filteredPortfolios.map((portfolio) => (
                                         <Link
                                             key={portfolio.id}
@@ -692,15 +692,15 @@ export default function Observatory() {
                                                 }`}
                                             >
                                                 {/* Portfolio Image */}
-                                                <div className="relative h-48 overflow-hidden bg-zinc-100 dark:bg-zinc-800">
+                                                <div className="relative h-32 overflow-hidden bg-zinc-100 dark:bg-zinc-800">
                                                     <img
                                                         src={portfolio.image}
                                                         alt={`${portfolio.name}'s portfolio`}
                                                         className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                                                     />
                                                     {portfolio.isCotd && (
-                                                        <div className="absolute top-3 right-3">
-                                                            <span className="inline-flex items-center gap-1 rounded-full bg-amber-500 px-3 py-1 text-xs font-semibold text-white shadow-lg">
+                                                        <div className="absolute top-2 right-2">
+                                                            <span className="inline-flex items-center gap-1 rounded-full bg-amber-500 px-2 py-0.5 text-xs font-semibold text-white shadow-lg">
                                                                 <svg
                                                                     className="h-3 w-3"
                                                                     fill="currentColor"
@@ -715,20 +715,20 @@ export default function Observatory() {
                                                 </div>
 
                                                 {/* Portfolio Info */}
-                                                <div className="p-4">
-                                                    <div className="flex items-center gap-3">
+                                                <div className="p-3">
+                                                    <div className="flex items-center gap-2">
                                                         <img
                                                             src={
                                                                 portfolio.avatar
                                                             }
                                                             alt={portfolio.name}
-                                                            className="h-10 w-10 rounded-full"
+                                                            className="h-8 w-8 rounded-full"
                                                         />
                                                         <div className="flex-1">
-                                                            <h3 className="font-semibold text-zinc-900 dark:text-zinc-100">
+                                                            <h3 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">
                                                                 {portfolio.name}
                                                             </h3>
-                                                            <p className="text-sm text-zinc-600 dark:text-zinc-400">
+                                                            <p className="text-xs text-zinc-600 dark:text-zinc-400">
                                                                 {portfolio.role}
                                                             </p>
                                                         </div>
