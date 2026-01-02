@@ -1,7 +1,5 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Switch } from '@/components/ui/switch';
 import {
     Tooltip,
     TooltipContent,
@@ -49,7 +47,7 @@ function Footerdemo() {
                             <Input
                                 type="email"
                                 placeholder="Enter your email"
-                                className="pr-12 backdrop-blur-sm"
+                                className="pr-12 backdrop-blur-sm selection:bg-zinc-900 selection:text-white dark:selection:bg-zinc-100 dark:selection:text-zinc-900"
                             />
                             <Button
                                 type="submit"
@@ -129,7 +127,7 @@ function Footerdemo() {
                                             </span>
                                         </Button>
                                     </TooltipTrigger>
-                                    <TooltipContent>
+                                    <TooltipContent className="bg-zinc-900 px-3 py-2 text-sm font-medium text-white dark:bg-zinc-100 dark:text-zinc-900">
                                         <p>Follow us on Facebook</p>
                                     </TooltipContent>
                                 </Tooltip>
@@ -148,7 +146,7 @@ function Footerdemo() {
                                             </span>
                                         </Button>
                                     </TooltipTrigger>
-                                    <TooltipContent>
+                                    <TooltipContent className="bg-zinc-900 px-3 py-2 text-sm font-medium text-white dark:bg-zinc-100 dark:text-zinc-900">
                                         <p>Follow us on Twitter</p>
                                     </TooltipContent>
                                 </Tooltip>
@@ -167,7 +165,7 @@ function Footerdemo() {
                                             </span>
                                         </Button>
                                     </TooltipTrigger>
-                                    <TooltipContent>
+                                    <TooltipContent className="bg-zinc-900 px-3 py-2 text-sm font-medium text-white dark:bg-zinc-100 dark:text-zinc-900">
                                         <p>Follow us on Instagram</p>
                                     </TooltipContent>
                                 </Tooltip>
@@ -186,24 +184,39 @@ function Footerdemo() {
                                             </span>
                                         </Button>
                                     </TooltipTrigger>
-                                    <TooltipContent>
+                                    <TooltipContent className="bg-zinc-900 px-3 py-2 text-sm font-medium text-white dark:bg-zinc-100 dark:text-zinc-900">
                                         <p>Connect with us on LinkedIn</p>
                                     </TooltipContent>
                                 </Tooltip>
                             </TooltipProvider>
                         </div>
-                        <div className="flex items-center space-x-2">
-                            <Sun className="h-4 w-4" />
-                            <Switch
-                                id="dark-mode"
-                                checked={isDarkMode}
-                                onCheckedChange={toggleDarkMode}
-                            />
-                            <Moon className="h-4 w-4" />
-                            <Label htmlFor="dark-mode" className="sr-only">
-                                Toggle dark mode
-                            </Label>
-                        </div>
+                        <TooltipProvider>
+                            <Tooltip>
+                                <TooltipTrigger asChild>
+                                    <button
+                                        onClick={() =>
+                                            toggleDarkMode(!isDarkMode)
+                                        }
+                                        className="group relative inline-flex h-10 items-center gap-2 rounded-full border border-zinc-200 bg-white px-4 transition-all hover:border-zinc-300 hover:shadow-sm dark:border-zinc-700 dark:bg-zinc-900 dark:hover:border-zinc-600"
+                                        aria-label="Toggle theme"
+                                    >
+                                        <div className="relative h-5 w-5">
+                                            <Sun className="absolute inset-0 h-5 w-5 scale-100 rotate-0 text-zinc-900 transition-all duration-300 dark:scale-0 dark:-rotate-90" />
+                                            <Moon className="absolute inset-0 h-5 w-5 scale-0 rotate-90 text-zinc-100 transition-all duration-300 dark:scale-100 dark:rotate-0" />
+                                        </div>
+                                        <span className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
+                                            {isDarkMode ? 'Dark' : 'Light'}
+                                        </span>
+                                    </button>
+                                </TooltipTrigger>
+                                <TooltipContent className="bg-zinc-900 px-3 py-2 text-sm font-medium text-white dark:bg-zinc-100 dark:text-zinc-900">
+                                    <p>
+                                        Switch to{' '}
+                                        {isDarkMode ? 'light' : 'dark'} mode
+                                    </p>
+                                </TooltipContent>
+                            </Tooltip>
+                        </TooltipProvider>
                     </div>
                 </div>
                 <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t pt-8 text-center md:flex-row">
