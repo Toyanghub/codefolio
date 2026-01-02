@@ -1,4 +1,5 @@
 import FaqSection from '@/components/faq-sections';
+import { MagneticText } from '@/components/morphing-cursor';
 import {
     Stories,
     StoriesContent,
@@ -564,17 +565,113 @@ export default function Welcome({
 
             <Navbar canRegister={canRegister} />
 
-            {/* Main Content */}
-            <div className="min-h-screen">
-                <div className="flex min-h-[calc(100vh-8rem)] flex-col items-center justify-center bg-zinc-50 p-6 dark:bg-zinc-950">
-                    <div className="w-full max-w-4xl text-center">
-                        <h1 className="mb-4 text-5xl font-bold tracking-tight text-zinc-900 dark:text-zinc-100">
-                            Welcome to Codefolio
-                        </h1>
-                        <p className="mb-8 text-lg text-zinc-600 dark:text-zinc-400">
-                            Showcase your projects and connect with developers
-                        </p>
-                    </div>
+            {/* Hero Section with Morphing Cursor */}
+            <div className="relative min-h-screen overflow-hidden bg-gradient-to-br from-zinc-50 via-white to-zinc-100 dark:from-zinc-950 dark:via-zinc-900 dark:to-zinc-950">
+                <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"></div>
+
+                <div className="relative flex min-h-screen flex-col items-center justify-center px-4 py-20">
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.8 }}
+                        className="text-center"
+                    >
+                        {/* Morphing Text Effect */}
+                        <div className="mb-8 flex flex-col items-center gap-4">
+                            <MagneticText
+                                text="CODEFOLIO"
+                                hoverText="CODEFOLIO"
+                                className="mb-2"
+                            />
+                            <motion.div
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                transition={{ delay: 0.3, duration: 0.8 }}
+                                className="flex flex-wrap items-center justify-center gap-4"
+                            >
+                                <MagneticText
+                                    text="BUILD"
+                                    hoverText="CREATE"
+                                    className="text-2xl md:text-3xl"
+                                />
+                                <span className="text-2xl font-bold text-zinc-400 md:text-3xl dark:text-zinc-600">
+                                    •
+                                </span>
+                                <MagneticText
+                                    text="SHOWCASE"
+                                    hoverText="INSPIRE"
+                                    className="text-2xl md:text-3xl"
+                                />
+                                <span className="text-2xl font-bold text-zinc-400 md:text-3xl dark:text-zinc-600">
+                                    •
+                                </span>
+                                <MagneticText
+                                    text="CONNECT"
+                                    hoverText="COLLABORATE"
+                                    className="text-2xl md:text-3xl"
+                                />
+                            </motion.div>
+                        </div>
+
+                        {/* Description */}
+                        <motion.p
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.5, duration: 0.8 }}
+                            className="mx-auto mb-12 max-w-2xl text-lg leading-relaxed text-zinc-600 dark:text-zinc-400"
+                        >
+                            A modern platform for developers to showcase their
+                            projects, connect with peers, and discover amazing
+                            portfolios from around the world.
+                        </motion.p>
+
+                        {/* CTA Buttons */}
+                        <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.7, duration: 0.8 }}
+                            className="flex flex-col items-center justify-center gap-4 sm:flex-row"
+                        >
+                            <Link
+                                href="/observatory"
+                                className="group relative inline-flex items-center justify-center overflow-hidden rounded-full bg-zinc-900 px-8 py-3 font-medium text-white transition-all hover:bg-zinc-800 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200"
+                            >
+                                <span className="relative z-10">
+                                    Explore Portfolios
+                                </span>
+                            </Link>
+                            <Link
+                                href="/works"
+                                className="group inline-flex items-center justify-center rounded-full border-2 border-zinc-900 bg-transparent px-8 py-3 font-medium text-zinc-900 transition-all hover:bg-zinc-900 hover:text-white dark:border-zinc-100 dark:text-zinc-100 dark:hover:bg-zinc-100 dark:hover:text-zinc-900"
+                            >
+                                View COTD
+                            </Link>
+                        </motion.div>
+
+                        {/* Stats */}
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            transition={{ delay: 0.9, duration: 0.8 }}
+                            className="mt-16 grid grid-cols-2 gap-8 sm:grid-cols-4"
+                        >
+                            {[
+                                { label: 'Portfolios', value: '500+' },
+                                { label: 'Developers', value: '1K+' },
+                                { label: 'Projects', value: '2K+' },
+                                { label: 'Countries', value: '50+' },
+                            ].map((stat, index) => (
+                                <div key={index} className="text-center">
+                                    <div className="text-3xl font-bold text-zinc-900 dark:text-zinc-100">
+                                        {stat.value}
+                                    </div>
+                                    <div className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
+                                        {stat.label}
+                                    </div>
+                                </div>
+                            ))}
+                        </motion.div>
+                    </motion.div>
                 </div>
             </div>
 
