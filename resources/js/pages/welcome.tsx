@@ -31,19 +31,25 @@ function Navbar({ canRegister = true }: { canRegister?: boolean }) {
 
     return (
         <div className="flex w-full justify-center px-4 py-6">
-            <nav className="relative z-50 flex w-full max-w-6xl items-center justify-between rounded-full bg-white px-6 py-3 shadow-lg dark:bg-zinc-950">
+            <nav className="relative z-50 flex w-full max-w-6xl items-center justify-between rounded-full bg-white px-6 py-3 shadow-lg dark:border dark:border-zinc-800 dark:bg-zinc-950">
                 {/* Logo/Brand */}
                 <motion.div
                     initial={{ scale: 0.8 }}
                     animate={{ scale: 1 }}
-                    whileHover={{ scale: 1.05 }}
                     transition={{ duration: 0.3 }}
                 >
                     <Link
                         href="/"
-                        className="flex items-center space-x-2 text-xl font-semibold tracking-tight text-zinc-900 transition-colors hover:text-zinc-700 dark:text-zinc-100 dark:hover:text-zinc-300"
+                        className="flex items-center space-x-2 text-xl font-semibold tracking-tight transition-colors"
                     >
-                        <span>Codefolio</span>
+                        <span>
+                            <span className="text-zinc-900 hover:text-zinc-700 dark:text-zinc-100 dark:hover:text-zinc-300">
+                                Code
+                            </span>
+                            <span className="text-zinc-400 hover:text-zinc-500 dark:text-zinc-500 dark:hover:text-zinc-400">
+                                folio
+                            </span>
+                        </span>
                     </Link>
                 </motion.div>
 
