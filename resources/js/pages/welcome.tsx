@@ -796,58 +796,6 @@ export default function Welcome({
                 </div>
             </div>
 
-            {/* Latest Portfolios Section */}
-            {/* <div className="bg-zinc-100 py-16 dark:bg-zinc-950">
-                <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                    <div className="mb-8 flex items-center justify-between">
-                        <h2 className="text-3xl font-bold text-zinc-900 dark:text-white">
-                            Latest Codefolios
-                        </h2>
-                        <Link
-                            href="/works"
-                            className="text-sm font-medium text-zinc-700 transition-colors hover:text-zinc-900 dark:text-white dark:hover:text-zinc-300"
-                        >
-                            Explore More
-                        </Link>
-                    </div>
-
-                    <Stories>
-                        <StoriesContent>
-                            {portfolioData.map((portfolio, index) => (
-                                <Link
-                                    key={index}
-                                    href={`/portfolio/${portfolio.id}`}
-                                >
-                                    <Story>
-                                        <div className="relative h-[200px] w-[280px] overflow-hidden rounded-xl">
-                                            <StoryImage
-                                                src={portfolio.image}
-                                                alt={`${portfolio.name}'s portfolio`}
-                                            />
-                                            <StoryOverlay side="bottom" />
-                                            <StoryAuthor>
-                                                <StoryAuthorImage
-                                                    src={portfolio.avatar}
-                                                    name={portfolio.name}
-                                                />
-                                                <div className="flex flex-col">
-                                                    <StoryAuthorName className="font-semibold drop-shadow-lg">
-                                                        {portfolio.name}
-                                                    </StoryAuthorName>
-                                                    <span className="text-xs text-white/70">
-                                                        {portfolio.role}
-                                                    </span>
-                                                </div>
-                                            </StoryAuthor>
-                                        </div>
-                                    </Story>
-                                </Link>
-                            ))}
-                        </StoriesContent>
-                    </Stories>
-                </div>
-            </div> */}
-
             {/* FAQ Section */}
             <div className="bg-white py-16 dark:bg-zinc-950">
                 <FaqSection />
