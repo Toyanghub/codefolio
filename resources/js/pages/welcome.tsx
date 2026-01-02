@@ -323,11 +323,11 @@ function Navbar({ canRegister = true }: { canRegister?: boolean }) {
                                     }
                                     autoFocus
                                     placeholder="Search portfolios..."
-                                    className="w-full rounded-full border border-zinc-200 bg-white py-3 pr-12 pl-5 text-base text-zinc-900 placeholder-zinc-500 shadow-2xl transition-all focus:border-zinc-300 focus:ring-2 focus:ring-zinc-200 focus:outline-none dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100 dark:placeholder-zinc-400 dark:focus:border-zinc-600 dark:focus:ring-zinc-700"
+                                    className="w-full rounded-full border border-zinc-200 bg-white py-3 pr-12 pl-5 text-base text-zinc-900 placeholder-zinc-500 shadow-2xl transition-all focus:border-zinc-300 focus:ring-2 focus:ring-zinc-200 focus:outline-none dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-100 dark:placeholder-zinc-400 dark:focus:border-zinc-600 dark:focus:ring-zinc-700"
                                 />
                                 <button
                                     type="submit"
-                                    className="absolute top-1/2 right-3 -translate-y-1/2 rounded-full p-2 text-zinc-600 hover:bg-zinc-100 dark:text-zinc-400 dark:hover:bg-zinc-800"
+                                    className="absolute top-1/2 right-3 -translate-y-1/2 rounded-full p-2 text-zinc-600 hover:bg-zinc-100 dark:text-zinc-400 dark:hover:bg-zinc-900"
                                 >
                                     <svg
                                         className="h-5 w-5"
@@ -412,7 +412,7 @@ function Navbar({ canRegister = true }: { canRegister?: boolean }) {
                         {auth.user ? (
                             <div className="mt-8 border-t border-zinc-200 pt-8 dark:border-zinc-700">
                                 {/* User Info in Mobile Menu */}
-                                <div className="mb-4 flex items-center gap-3 rounded-lg bg-zinc-50 px-4 py-3 dark:bg-zinc-900">
+                                <div className="mb-4 flex items-center gap-3 rounded-lg bg-zinc-50 px-4 py-3 dark:bg-zinc-950">
                                     <div className="flex h-10 w-10 items-center justify-center rounded-full bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900">
                                         <span className="font-semibold">
                                             {auth.user.name
@@ -557,10 +557,10 @@ export default function Welcome({
             <Navbar canRegister={canRegister} />
 
             {/* Hero Section with Morphing Cursor */}
-            <div className="relative overflow-hidden bg-gradient-to-br from-zinc-50 via-white to-zinc-100 dark:from-zinc-950 dark:via-zinc-900 dark:to-zinc-950">
-                <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"></div>
+            <div className="relative overflow-hidden bg-gradient-to-br from-zinc-50 via-white to-zinc-100 dark:from-zinc-950 dark:via-zinc-950 dark:to-zinc-950">
+                <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px] dark:bg-[linear-gradient(to_right,#ffffff08_1px,transparent_1px),linear-gradient(to_bottom,#ffffff08_1px,transparent_1px)]"></div>
 
-                <div className="relative flex min-h-[85vh] flex-col items-center justify-center px-4 py-16 md:py-20">
+                <div className="relative flex flex-col items-center justify-start px-4 pt-16 pb-12 md:pt-20 md:pb-16">
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -667,7 +667,7 @@ export default function Welcome({
             </div>
 
             {/* Key Benefits Section */}
-            <div className="bg-white py-16 md:py-20 dark:bg-zinc-900">
+            <div className="bg-white py-12 md:py-16 dark:bg-zinc-950">
                 <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
@@ -769,14 +769,14 @@ export default function Welcome({
             </div>
 
             {/* Testimonials Section */}
-            <div className="bg-zinc-50 py-20 dark:bg-zinc-950">
+            <div className="bg-zinc-50 py-8 md:py-12 dark:bg-zinc-950">
                 <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
                         transition={{ duration: 0.6 }}
-                        className="mb-12 text-center"
+                        className="mb-8 text-center"
                     >
                         <h2 className="text-3xl font-bold tracking-tight text-zinc-900 sm:text-4xl dark:text-zinc-100">
                             Loved by Developers
@@ -797,7 +797,7 @@ export default function Welcome({
             </div>
 
             {/* FAQ Section */}
-            <div className="bg-white py-16 dark:bg-zinc-950">
+            <div className="bg-white py-12 md:py-16 dark:bg-zinc-950">
                 <FaqSection />
             </div>
 

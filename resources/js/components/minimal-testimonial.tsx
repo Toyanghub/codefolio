@@ -67,7 +67,7 @@ export function TestimonialsMinimal() {
     const [active, setActive] = useState(0);
 
     return (
-        <div className="mx-auto w-full max-w-xl px-6 py-16">
+        <div className="mx-auto w-full max-w-xl px-6 py-8">
             {/* Quote */}
             <div className="relative mb-12 min-h-[80px]">
                 {testimonials.map((t, i) => (
