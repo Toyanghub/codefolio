@@ -675,6 +675,108 @@ export default function Welcome({
                 </div>
             </div>
 
+            {/* Key Benefits Section */}
+            <div className="bg-white py-24 dark:bg-zinc-900">
+                <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.6 }}
+                        className="text-center"
+                    >
+                        <h2 className="text-3xl font-bold tracking-tight text-zinc-900 sm:text-4xl dark:text-zinc-100">
+                            Why Choose Codefolio?
+                        </h2>
+                        <p className="mt-4 text-lg text-zinc-600 dark:text-zinc-400">
+                            Everything you need to showcase your work and grow
+                            your network
+                        </p>
+                    </motion.div>
+
+                    <div className="mt-16 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+                        {[
+                            {
+                                icon: (
+                                    <svg
+                                        className="h-6 w-6"
+                                        fill="none"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth={2}
+                                        viewBox="0 0 24 24"
+                                        stroke="currentColor"
+                                    >
+                                        <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                ),
+                                title: 'Easy Portfolio Creation',
+                                description:
+                                    'Build stunning portfolios in minutes with our intuitive interface. No coding required.',
+                            },
+                            {
+                                icon: (
+                                    <svg
+                                        className="h-6 w-6"
+                                        fill="none"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth={2}
+                                        viewBox="0 0 24 24"
+                                        stroke="currentColor"
+                                    >
+                                        <path d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                                    </svg>
+                                ),
+                                title: 'Connect with Developers',
+                                description:
+                                    'Network with talented developers from around the globe and collaborate on projects.',
+                            },
+                            {
+                                icon: (
+                                    <svg
+                                        className="h-6 w-6"
+                                        fill="none"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth={2}
+                                        viewBox="0 0 24 24"
+                                        stroke="currentColor"
+                                    >
+                                        <path d="M13 10V3L4 14h7v7l9-11h-7z" />
+                                    </svg>
+                                ),
+                                title: 'Get Discovered',
+                                description:
+                                    'Increase your visibility with our featured section and reach potential employers.',
+                            },
+                        ].map((benefit, index) => (
+                            <motion.div
+                                key={index}
+                                initial={{ opacity: 0, y: 20 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                viewport={{ once: true }}
+                                transition={{
+                                    duration: 0.5,
+                                    delay: index * 0.1,
+                                }}
+                                className="group relative rounded-2xl border border-zinc-200 bg-zinc-50 p-8 transition-all hover:border-zinc-300 hover:shadow-lg dark:border-zinc-800 dark:bg-zinc-950 dark:hover:border-zinc-700"
+                            >
+                                <div className="mb-4 inline-flex rounded-lg bg-zinc-900 p-3 text-white dark:bg-zinc-100 dark:text-zinc-900">
+                                    {benefit.icon}
+                                </div>
+                                <h3 className="mb-2 text-xl font-semibold text-zinc-900 dark:text-zinc-100">
+                                    {benefit.title}
+                                </h3>
+                                <p className="text-zinc-600 dark:text-zinc-400">
+                                    {benefit.description}
+                                </p>
+                            </motion.div>
+                        ))}
+                    </div>
+                </div>
+            </div>
+
             {/* Latest Portfolios Section */}
             <div className="bg-zinc-100 py-16 dark:bg-zinc-950">
                 <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
