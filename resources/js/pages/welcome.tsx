@@ -566,10 +566,10 @@ export default function Welcome({
             <Navbar canRegister={canRegister} />
 
             {/* Hero Section with Morphing Cursor */}
-            <div className="relative min-h-screen overflow-hidden bg-gradient-to-br from-zinc-50 via-white to-zinc-100 dark:from-zinc-950 dark:via-zinc-900 dark:to-zinc-950">
+            <div className="relative overflow-hidden bg-gradient-to-br from-zinc-50 via-white to-zinc-100 dark:from-zinc-950 dark:via-zinc-900 dark:to-zinc-950">
                 <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"></div>
 
-                <div className="relative flex min-h-screen flex-col items-center justify-center px-4 py-20">
+                <div className="relative flex min-h-[85vh] flex-col items-center justify-center px-4 py-16 md:py-20">
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -676,7 +676,7 @@ export default function Welcome({
             </div>
 
             {/* Key Benefits Section */}
-            <div className="bg-white py-24 dark:bg-zinc-900">
+            <div className="bg-white py-16 md:py-20 dark:bg-zinc-900">
                 <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
