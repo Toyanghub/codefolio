@@ -1,15 +1,6 @@
 import FaqSection from '@/components/faq-sections';
+import { TestimonialsMinimal } from '@/components/minimal-testimonial';
 import { MagneticText } from '@/components/morphing-cursor';
-import {
-    Stories,
-    StoriesContent,
-    Story,
-    StoryAuthor,
-    StoryAuthorImage,
-    StoryAuthorName,
-    StoryImage,
-    StoryOverlay,
-} from '@/components/stories-carousel';
 import { Footerdemo } from '@/components/ui/footer-section';
 import { login, logout, register } from '@/routes';
 import { type SharedData } from '@/types';
@@ -777,8 +768,36 @@ export default function Welcome({
                 </div>
             </div>
 
+            {/* Testimonials Section */}
+            <div className="bg-zinc-50 py-20 dark:bg-zinc-950">
+                <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.6 }}
+                        className="mb-12 text-center"
+                    >
+                        <h2 className="text-3xl font-bold tracking-tight text-zinc-900 sm:text-4xl dark:text-zinc-100">
+                            Loved by Developers
+                        </h2>
+                        <p className="mt-4 text-lg text-zinc-600 dark:text-zinc-400">
+                            Join thousands of developers who trust Codefolio
+                        </p>
+                    </motion.div>
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ delay: 0.2, duration: 0.6 }}
+                    >
+                        <TestimonialsMinimal />
+                    </motion.div>
+                </div>
+            </div>
+
             {/* Latest Portfolios Section */}
-            <div className="bg-zinc-100 py-16 dark:bg-zinc-950">
+            {/* <div className="bg-zinc-100 py-16 dark:bg-zinc-950">
                 <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                     <div className="mb-8 flex items-center justify-between">
                         <h2 className="text-3xl font-bold text-zinc-900 dark:text-white">
@@ -827,7 +846,7 @@ export default function Welcome({
                         </StoriesContent>
                     </Stories>
                 </div>
-            </div>
+            </div> */}
 
             {/* FAQ Section */}
             <div className="bg-white py-16 dark:bg-zinc-950">
