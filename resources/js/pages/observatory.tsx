@@ -198,29 +198,105 @@ function Navbar({ canRegister = true }: { canRegister?: boolean }) {
                     )}
                 </motion.div>
 
-                {/* Mobile Menu Toggle */}
-                <motion.button
-                    className="rounded-md p-2 text-zinc-700 hover:bg-zinc-100 md:hidden dark:text-zinc-300 dark:hover:bg-zinc-800"
-                    onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                    whileTap={{ scale: 0.9 }}
-                >
-                    <svg
-                        className="h-6 w-6"
-                        fill="none"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
+                {/* Mobile Search & Menu Buttons */}
+                <div className="flex items-center gap-2 md:hidden">
+                    {/* Mobile Search Button */}
+                    <motion.button
+                        onClick={() => setSearchOpen(true)}
+                        whileTap={{ scale: 0.9 }}
+                        className="inline-flex items-center justify-center rounded-md p-2 text-zinc-700 transition-colors hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800 dark:hover:text-zinc-100"
+                        aria-label="Search"
                     >
-                        {mobileMenuOpen ? (
-                            <path d="M6 18L18 6M6 6l12 12" />
-                        ) : (
-                            <path d="M4 6h16M4 12h16M4 18h16" />
-                        )}
-                    </svg>
-                </motion.button>
+                        <svg
+                            className="h-5 w-5"
+                            fill="none"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                        >
+                            <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                        </svg>
+                    </motion.button>
+
+                    {/* Mobile Menu Toggle */}
+                    <motion.button
+                        className="rounded-md p-2 text-zinc-700 hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-800"
+                        onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                        whileTap={{ scale: 0.9 }}
+                    >
+                        <svg
+                            className="h-6 w-6"
+                            fill="none"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                        >
+                            {mobileMenuOpen ? (
+                                <path d="M6 18L18 6M6 6l12 12" />
+                            ) : (
+                                <path d="M4 6h16M4 12h16M4 18h16" />
+                            )}
+                        </svg>
+                    </motion.button>
+                </div>
             </nav>
+
+            {/* Mobile Search Overlay */}
+            <AnimatePresence>
+                {searchOpen && (
+                    <motion.div
+                        className="fixed inset-0 z-[9999] flex items-start justify-center bg-black/50 px-4 pt-24 md:hidden"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        onClick={() => {
+                            setSearchOpen(false);
+                            setSearchQuery('');
+                        }}
+                    >
+                        <motion.div
+                            initial={{ scale: 0.9, y: -20 }}
+                            animate={{ scale: 1, y: 0 }}
+                            exit={{ scale: 0.9, y: -20 }}
+                            onClick={(e) => e.stopPropagation()}
+                            className="w-full max-w-md"
+                        >
+                            <form onSubmit={handleSearch} className="relative">
+                                <input
+                                    type="text"
+                                    value={searchQuery}
+                                    onChange={(e) =>
+                                        setSearchQuery(e.target.value)
+                                    }
+                                    autoFocus
+                                    placeholder="Search portfolios..."
+                                    className="w-full rounded-full border border-zinc-200 bg-white py-3 pr-12 pl-5 text-base text-zinc-900 placeholder-zinc-500 shadow-2xl transition-all focus:border-zinc-300 focus:ring-2 focus:ring-zinc-200 focus:outline-none dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100 dark:placeholder-zinc-400 dark:focus:border-zinc-600 dark:focus:ring-zinc-700"
+                                />
+                                <button
+                                    type="submit"
+                                    className="absolute top-1/2 right-3 -translate-y-1/2 rounded-full p-2 text-zinc-600 hover:bg-zinc-100 dark:text-zinc-400 dark:hover:bg-zinc-800"
+                                >
+                                    <svg
+                                        className="h-5 w-5"
+                                        fill="none"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth={2}
+                                        viewBox="0 0 24 24"
+                                        stroke="currentColor"
+                                    >
+                                        <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                                    </svg>
+                                </button>
+                            </form>
+                        </motion.div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
 
             {/* Mobile Menu Overlay */}
             <AnimatePresence>
