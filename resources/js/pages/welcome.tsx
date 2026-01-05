@@ -634,7 +634,7 @@ export default function Welcome({
                                 className="group relative inline-flex items-center justify-center overflow-hidden rounded-full bg-zinc-900 px-8 py-3 font-medium text-white transition-all hover:bg-zinc-800 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200"
                             >
                                 <span className="relative z-10">
-                                    Explore Portfolios
+                                    Observe Codefolios
                                 </span>
                             </Link>
                             <Link
