@@ -29,6 +29,8 @@ interface PortfolioProps {
     selectedSkills?: string[];
     availableTechStacks?: MultiSelectOption[];
     selectedTechStacks?: string[];
+    availableProfessions?: MultiSelectOption[];
+    selectedProfessions?: string[];
 }
 
 export default function Portfolio({
@@ -39,6 +41,8 @@ export default function Portfolio({
     selectedSkills = [],
     availableTechStacks = [],
     selectedTechStacks = [],
+    availableProfessions = [],
+    selectedProfessions = [],
 }: PortfolioProps) {
     const { auth } = usePage<SharedData>().props;
     const [desktopPreview, setDesktopPreview] = useState<string | null>(null);
@@ -87,6 +91,17 @@ export default function Portfolio({
         tech_stacks: selectedTechStacks,
     });
 
+    const {
+        data: professionsData,
+        setData: setProfessionsData,
+        patch: patchProfessions,
+        processing: processingProfessions,
+        errors: professionsErrors,
+        recentlySuccessful: professionsRecentlySuccessful,
+    } = useForm({
+        professions: selectedProfessions,
+    });
+
     const handleWebsiteUrlSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         patch('/settings/portfolio/website-url');
@@ -100,6 +115,11 @@ export default function Portfolio({
     const handleTechStacksSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         patchTechStacks('/settings/portfolio/tech-stacks');
+    };
+
+    const handleProfessionsSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        patchProfessions('/settings/portfolio/professions');
     };
 
     const handleDesktopChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -576,6 +596,64 @@ export default function Portfolio({
                                         : 'Save Tech Stack'}
                                 </Button>
                                 {techStacksRecentlySuccessful && (
+                                    <p className="text-sm text-muted-foreground">
+                                        Saved successfully!
+                                    </p>
+                                )}
+                            </div>
+                        </form>
+                    </div>
+
+                    {/* Profession Section */}
+                    <div className="mt-8 space-y-4">
+                        <div className="mb-6">
+                            <h3 className="text-lg font-semibold">
+                                Profession
+                            </h3>
+                            <p className="mt-1 text-sm text-muted-foreground">
+                                Select your professional roles and titles
+                            </p>
+                        </div>
+
+                        <form
+                            onSubmit={handleProfessionsSubmit}
+                            className="space-y-4"
+                        >
+                            <div className="grid gap-2">
+                                <Label htmlFor="professions">
+                                    Select Professions
+                                </Label>
+                                <MultiSelect
+                                    options={availableProfessions}
+                                    selected={professionsData.professions}
+                                    onChange={(professions) =>
+                                        setProfessionsData(
+                                            'professions',
+                                            professions,
+                                        )
+                                    }
+                                    placeholder="Choose your professions..."
+                                    className="max-w-xl"
+                                />
+                                <p className="text-xs text-muted-foreground">
+                                    Your professional roles and job titles
+                                </p>
+                                <InputError
+                                    className="mt-2"
+                                    message={professionsErrors.professions}
+                                />
+                            </div>
+
+                            <div className="flex items-center gap-4">
+                                <Button
+                                    type="submit"
+                                    disabled={processingProfessions}
+                                >
+                                    {processingProfessions
+                                        ? 'Saving...'
+                                        : 'Save Professions'}
+                                </Button>
+                                {professionsRecentlySuccessful && (
                                     <p className="text-sm text-muted-foreground">
                                         Saved successfully!
                                     </p>

@@ -22,6 +22,7 @@ Route::middleware('auth')->group(function () {
     Route::patch('settings/portfolio/website-url', [PortfolioController::class, 'updateWebsiteUrl'])->name('portfolio.website-url.update');
     Route::patch('settings/portfolio/skills', [PortfolioController::class, 'updateSkills'])->name('portfolio.skills.update');
     Route::patch('settings/portfolio/tech-stacks', [PortfolioController::class, 'updateTechStacks'])->name('portfolio.tech-stacks.update');
+    Route::patch('settings/portfolio/professions', [PortfolioController::class, 'updateProfessions'])->name('portfolio.professions.update');
 
     Route::get('settings/password', [PasswordController::class, 'edit'])->name('user-password.edit');
 

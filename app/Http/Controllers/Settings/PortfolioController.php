@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Settings;
 use App\Http\Controllers\Controller;
 use App\Models\Skill;
 use App\Models\TechStack;
+use App\Models\Profession;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -19,7 +20,7 @@ class PortfolioController extends Controller
     public function edit(Request $request): Response
     {
         $user = $request->user();
-        $user->load(['skills', 'techStacks']);
+        $user->load(['skills', 'techStacks', 'professions']);
 
         return Inertia::render('settings/portfolio', [
             'portfolio_desktop_image' => $user->portfolio_desktop_image,
@@ -36,6 +37,11 @@ class PortfolioController extends Controller
                 'value' => (string) $tech->id,
             ]),
             'selectedTechStacks' => $user->techStacks->pluck('id')->map(fn($id) => (string) $id)->toArray(),
+            'availableProfessions' => Profession::all()->map(fn($profession) => [
+                'label' => $profession->name,
+                'value' => (string) $profession->id,
+            ]),
+            'selectedProfessions' => $user->professions->pluck('id')->map(fn($id) => (string) $id)->toArray(),
         ]);
     }
 
@@ -83,6 +89,21 @@ class PortfolioController extends Controller
         $request->user()->techStacks()->sync($request->tech_stacks);
 
         return back()->with('status', 'tech-stacks-updated');
+    }
+
+    /**
+     * Update the user's professions.
+     */
+    public function updateProfessions(Request $request): RedirectResponse
+    {
+        $request->validate([
+            'professions' => ['required', 'array'],
+            'professions.*' => ['exists:professions,id'],
+        ]);
+
+        $request->user()->professions()->sync($request->professions);
+
+        return back()->with('status', 'professions-updated');
     }
 
     /**
