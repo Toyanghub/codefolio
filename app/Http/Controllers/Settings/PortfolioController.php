@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Settings;
 
 use App\Http\Controllers\Controller;
 use App\Models\Skill;
+use App\Models\TechStack;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -18,7 +19,7 @@ class PortfolioController extends Controller
     public function edit(Request $request): Response
     {
         $user = $request->user();
-        $user->load('skills');
+        $user->load(['skills', 'techStacks']);
 
         return Inertia::render('settings/portfolio', [
             'portfolio_desktop_image' => $user->portfolio_desktop_image,
@@ -30,6 +31,11 @@ class PortfolioController extends Controller
                 'category' => $skill->category,
             ]),
             'selectedSkills' => $user->skills->pluck('id')->map(fn($id) => (string) $id)->toArray(),
+            'availableTechStacks' => TechStack::all()->map(fn($tech) => [
+                'label' => $tech->name,
+                'value' => (string) $tech->id,
+            ]),
+            'selectedTechStacks' => $user->techStacks->pluck('id')->map(fn($id) => (string) $id)->toArray(),
         ]);
     }
 
@@ -62,6 +68,21 @@ class PortfolioController extends Controller
         $request->user()->skills()->sync($request->skills);
 
         return back()->with('status', 'skills-updated');
+    }
+
+    /**
+     * Update the user's tech stacks.
+     */
+    public function updateTechStacks(Request $request): RedirectResponse
+    {
+        $request->validate([
+            'tech_stacks' => ['required', 'array'],
+            'tech_stacks.*' => ['exists:tech_stacks,id'],
+        ]);
+
+        $request->user()->techStacks()->sync($request->tech_stacks);
+
+        return back()->with('status', 'tech-stacks-updated');
     }
 
     /**

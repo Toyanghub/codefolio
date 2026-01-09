@@ -33,6 +33,11 @@ class User extends Authenticatable
         return $this->belongsToMany(Skill::class);
     }
 
+    public function techStacks(): BelongsToMany
+    {
+        return $this->belongsToMany(TechStack::class);
+    }
+
     /**
      * The attributes that should be hidden for serialization.
      *

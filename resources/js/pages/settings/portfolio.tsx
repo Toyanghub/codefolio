@@ -27,6 +27,8 @@ interface PortfolioProps {
     website_url?: string | null;
     availableSkills?: MultiSelectOption[];
     selectedSkills?: string[];
+    availableTechStacks?: MultiSelectOption[];
+    selectedTechStacks?: string[];
 }
 
 export default function Portfolio({
@@ -35,6 +37,8 @@ export default function Portfolio({
     website_url,
     availableSkills = [],
     selectedSkills = [],
+    availableTechStacks = [],
+    selectedTechStacks = [],
 }: PortfolioProps) {
     const { auth } = usePage<SharedData>().props;
     const [desktopPreview, setDesktopPreview] = useState<string | null>(null);
@@ -72,6 +76,17 @@ export default function Portfolio({
         skills: selectedSkills,
     });
 
+    const {
+        data: techStacksData,
+        setData: setTechStacksData,
+        patch: patchTechStacks,
+        processing: processingTechStacks,
+        errors: techStacksErrors,
+        recentlySuccessful: techStacksRecentlySuccessful,
+    } = useForm({
+        tech_stacks: selectedTechStacks,
+    });
+
     const handleWebsiteUrlSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         patch('/settings/portfolio/website-url');
@@ -80,6 +95,11 @@ export default function Portfolio({
     const handleSkillsSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         patchSkills('/settings/portfolio/skills');
+    };
+
+    const handleTechStacksSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        patchTechStacks('/settings/portfolio/tech-stacks');
     };
 
     const handleDesktopChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -497,6 +517,65 @@ export default function Portfolio({
                                         : 'Save Skills'}
                                 </Button>
                                 {skillsRecentlySuccessful && (
+                                    <p className="text-sm text-muted-foreground">
+                                        Saved successfully!
+                                    </p>
+                                )}
+                            </div>
+                        </form>
+                    </div>
+
+                    {/* Tech Stack Section */}
+                    <div className="mt-8 space-y-4">
+                        <div className="mb-6">
+                            <h3 className="text-lg font-semibold">
+                                Tech Stack
+                            </h3>
+                            <p className="mt-1 text-sm text-muted-foreground">
+                                Select the technologies and tools you use
+                            </p>
+                        </div>
+
+                        <form
+                            onSubmit={handleTechStacksSubmit}
+                            className="space-y-4"
+                        >
+                            <div className="grid gap-2">
+                                <Label htmlFor="tech_stacks">
+                                    Select Technologies
+                                </Label>
+                                <MultiSelect
+                                    options={availableTechStacks}
+                                    selected={techStacksData.tech_stacks}
+                                    onChange={(techStacks) =>
+                                        setTechStacksData(
+                                            'tech_stacks',
+                                            techStacks,
+                                        )
+                                    }
+                                    placeholder="Choose your tech stack..."
+                                    className="max-w-xl"
+                                />
+                                <p className="text-xs text-muted-foreground">
+                                    Programming languages, frameworks, tools,
+                                    and platforms
+                                </p>
+                                <InputError
+                                    className="mt-2"
+                                    message={techStacksErrors.tech_stacks}
+                                />
+                            </div>
+
+                            <div className="flex items-center gap-4">
+                                <Button
+                                    type="submit"
+                                    disabled={processingTechStacks}
+                                >
+                                    {processingTechStacks
+                                        ? 'Saving...'
+                                        : 'Save Tech Stack'}
+                                </Button>
+                                {techStacksRecentlySuccessful && (
                                     <p className="text-sm text-muted-foreground">
                                         Saved successfully!
                                     </p>

@@ -21,6 +21,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('settings/portfolio/mobile-image', [PortfolioController::class, 'deleteMobileImage'])->name('portfolio.mobile-image.delete');
     Route::patch('settings/portfolio/website-url', [PortfolioController::class, 'updateWebsiteUrl'])->name('portfolio.website-url.update');
     Route::patch('settings/portfolio/skills', [PortfolioController::class, 'updateSkills'])->name('portfolio.skills.update');
+    Route::patch('settings/portfolio/tech-stacks', [PortfolioController::class, 'updateTechStacks'])->name('portfolio.tech-stacks.update');
 
     Route::get('settings/password', [PasswordController::class, 'edit'])->name('user-password.edit');
 
