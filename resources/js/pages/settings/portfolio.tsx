@@ -1,11 +1,16 @@
 import { type BreadcrumbItem, type SharedData } from '@/types';
-import { Head, router, usePage } from '@inertiajs/react';
+import { Head, router, useForm, usePage } from '@inertiajs/react';
 import { Monitor, Smartphone, Upload, X } from 'lucide-react';
 import { useRef, useState } from 'react';
 
 import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import {
+    MultiSelect,
+    type MultiSelectOption,
+} from '@/components/ui/multi-select';
 import SettingsAppLayout from '@/layouts/settings-app-layout';
 import SettingsLayout from '@/layouts/settings/layout';
 
@@ -19,11 +24,17 @@ const breadcrumbs: BreadcrumbItem[] = [
 interface PortfolioProps {
     portfolio_desktop_image?: string | null;
     portfolio_mobile_image?: string | null;
+    website_url?: string | null;
+    availableSkills?: MultiSelectOption[];
+    selectedSkills?: string[];
 }
 
 export default function Portfolio({
     portfolio_desktop_image,
     portfolio_mobile_image,
+    website_url,
+    availableSkills = [],
+    selectedSkills = [],
 }: PortfolioProps) {
     const { auth } = usePage<SharedData>().props;
     const [desktopPreview, setDesktopPreview] = useState<string | null>(null);
@@ -38,6 +49,38 @@ export default function Portfolio({
 
     const desktopInputRef = useRef<HTMLInputElement>(null);
     const mobileInputRef = useRef<HTMLInputElement>(null);
+
+    const {
+        data,
+        setData,
+        patch,
+        processing,
+        errors: formErrors,
+        recentlySuccessful,
+    } = useForm({
+        website_url: website_url || '',
+    });
+
+    const {
+        data: skillsData,
+        setData: setSkillsData,
+        patch: patchSkills,
+        processing: processingSkills,
+        errors: skillsErrors,
+        recentlySuccessful: skillsRecentlySuccessful,
+    } = useForm({
+        skills: selectedSkills,
+    });
+
+    const handleWebsiteUrlSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        patch('/settings/portfolio/website-url');
+    };
+
+    const handleSkillsSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        patchSkills('/settings/portfolio/skills');
+    };
 
     const handleDesktopChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
@@ -359,6 +402,107 @@ export default function Portfolio({
                                 />
                             </div>
                         </div>
+                    </div>
+
+                    {/* Website URL Section */}
+                    <div className="mt-8 space-y-4">
+                        <div className="mb-6">
+                            <h3 className="text-lg font-semibold">
+                                Portfolio Link
+                            </h3>
+                            <p className="mt-1 text-sm text-muted-foreground">
+                                Enter the URL of your portfolio website
+                            </p>
+                        </div>
+
+                        <form
+                            onSubmit={handleWebsiteUrlSubmit}
+                            className="space-y-4"
+                        >
+                            <div className="grid gap-2">
+                                <Label htmlFor="website_url">Website URL</Label>
+                                <Input
+                                    id="website_url"
+                                    type="url"
+                                    value={data.website_url}
+                                    onChange={(e) =>
+                                        setData('website_url', e.target.value)
+                                    }
+                                    placeholder="https://yourportfolio.com"
+                                    className="max-w-xl"
+                                />
+                                <InputError
+                                    className="mt-2"
+                                    message={formErrors.website_url}
+                                />
+                            </div>
+
+                            <div className="flex items-center gap-4">
+                                <Button type="submit" disabled={processing}>
+                                    {processing
+                                        ? 'Saving...'
+                                        : 'Save Website URL'}
+                                </Button>
+                                {recentlySuccessful && (
+                                    <p className="text-sm text-muted-foreground">
+                                        Saved successfully!
+                                    </p>
+                                )}
+                            </div>
+                        </form>
+                    </div>
+
+                    {/* Skills Section */}
+                    <div className="mt-8 space-y-4">
+                        <div className="mb-6">
+                            <h3 className="text-lg font-semibold">Skills</h3>
+                            <p className="mt-1 text-sm text-muted-foreground">
+                                Select your skills and technologies from the
+                                Observatory filters
+                            </p>
+                        </div>
+
+                        <form
+                            onSubmit={handleSkillsSubmit}
+                            className="space-y-4"
+                        >
+                            <div className="grid gap-2">
+                                <Label htmlFor="skills">Select Skills</Label>
+                                <MultiSelect
+                                    options={availableSkills}
+                                    selected={skillsData.skills}
+                                    onChange={(skills) =>
+                                        setSkillsData('skills', skills)
+                                    }
+                                    placeholder="Choose your skills..."
+                                    className="max-w-xl"
+                                />
+                                <p className="text-xs text-muted-foreground">
+                                    Skills include technologies, tech stacks,
+                                    and professions from Observatory
+                                </p>
+                                <InputError
+                                    className="mt-2"
+                                    message={skillsErrors.skills}
+                                />
+                            </div>
+
+                            <div className="flex items-center gap-4">
+                                <Button
+                                    type="submit"
+                                    disabled={processingSkills}
+                                >
+                                    {processingSkills
+                                        ? 'Saving...'
+                                        : 'Save Skills'}
+                                </Button>
+                                {skillsRecentlySuccessful && (
+                                    <p className="text-sm text-muted-foreground">
+                                        Saved successfully!
+                                    </p>
+                                )}
+                            </div>
+                        </form>
                     </div>
                 </div>
             </SettingsLayout>

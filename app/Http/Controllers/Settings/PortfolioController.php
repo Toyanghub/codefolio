@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Settings;
 
 use App\Http\Controllers\Controller;
+use App\Models\Skill;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -16,10 +17,51 @@ class PortfolioController extends Controller
      */
     public function edit(Request $request): Response
     {
+        $user = $request->user();
+        $user->load('skills');
+
         return Inertia::render('settings/portfolio', [
-            'portfolio_desktop_image' => $request->user()->portfolio_desktop_image,
-            'portfolio_mobile_image' => $request->user()->portfolio_mobile_image,
+            'portfolio_desktop_image' => $user->portfolio_desktop_image,
+            'portfolio_mobile_image' => $user->portfolio_mobile_image,
+            'website_url' => $user->website_url,
+            'availableSkills' => Skill::all()->map(fn($skill) => [
+                'label' => $skill->name,
+                'value' => (string) $skill->id,
+                'category' => $skill->category,
+            ]),
+            'selectedSkills' => $user->skills->pluck('id')->map(fn($id) => (string) $id)->toArray(),
         ]);
+    }
+
+    /**
+     * Update the portfolio website URL.
+     */
+    public function updateWebsiteUrl(Request $request): RedirectResponse
+    {
+        $request->validate([
+            'website_url' => ['required', 'url', 'max:255'],
+        ]);
+
+        $request->user()->update([
+            'website_url' => $request->website_url,
+        ]);
+
+        return back()->with('status', 'website-url-updated');
+    }
+
+    /**
+     * Update the user's skills.
+     */
+    public function updateSkills(Request $request): RedirectResponse
+    {
+        $request->validate([
+            'skills' => ['required', 'array'],
+            'skills.*' => ['exists:skills,id'],
+        ]);
+
+        $request->user()->skills()->sync($request->skills);
+
+        return back()->with('status', 'skills-updated');
     }
 
     /**
