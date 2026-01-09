@@ -6,7 +6,6 @@ import { useRef, useState } from 'react';
 import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
-import { Separator } from '@/components/ui/separator';
 import SettingsAppLayout from '@/layouts/settings-app-layout';
 import SettingsLayout from '@/layouts/settings/layout';
 
@@ -150,7 +149,7 @@ export default function Portfolio({
                         </p>
                     </div>
 
-                    <div className="space-y-8">
+                    <div className="grid gap-6 md:grid-cols-2">
                         {/* Desktop Image Upload */}
                         <div className="space-y-4">
                             <div className="flex items-center gap-2">
@@ -255,8 +254,6 @@ export default function Portfolio({
                                 />
                             </div>
                         </div>
-
-                        <Separator />
 
                         {/* Mobile Image Upload */}
                         <div className="space-y-4">
