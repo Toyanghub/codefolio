@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Settings\PasswordController;
+use App\Http\Controllers\Settings\PortfolioController;
 use App\Http\Controllers\Settings\ProfileController;
 use App\Http\Controllers\Settings\TwoFactorAuthenticationController;
 use Illuminate\Support\Facades\Route;
@@ -13,9 +14,11 @@ Route::middleware('auth')->group(function () {
     Route::patch('settings/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('settings/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    Route::get('settings/portfolio', function () {
-        return Inertia::render('settings/portfolio');
-    })->name('portfolio.edit');
+    Route::get('settings/portfolio', [PortfolioController::class, 'edit'])->name('portfolio.edit');
+    Route::post('settings/portfolio/desktop-image', [PortfolioController::class, 'updateDesktopImage'])->name('portfolio.desktop-image.update');
+    Route::post('settings/portfolio/mobile-image', [PortfolioController::class, 'updateMobileImage'])->name('portfolio.mobile-image.update');
+    Route::delete('settings/portfolio/desktop-image', [PortfolioController::class, 'deleteDesktopImage'])->name('portfolio.desktop-image.delete');
+    Route::delete('settings/portfolio/mobile-image', [PortfolioController::class, 'deleteMobileImage'])->name('portfolio.mobile-image.delete');
 
     Route::get('settings/password', [PasswordController::class, 'edit'])->name('user-password.edit');
 
