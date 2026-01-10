@@ -1,5 +1,5 @@
-import { type BreadcrumbItem, type SharedData } from '@/types';
-import { Head, router, useForm, usePage } from '@inertiajs/react';
+import { type BreadcrumbItem } from '@/types';
+import { Head, router, useForm } from '@inertiajs/react';
 import { Monitor, Smartphone, Upload, X } from 'lucide-react';
 import { useRef, useState } from 'react';
 
@@ -44,7 +44,6 @@ export default function Portfolio({
     availableProfessions = [],
     selectedProfessions = [],
 }: PortfolioProps) {
-    const { auth } = usePage<SharedData>().props;
     const [desktopPreview, setDesktopPreview] = useState<string | null>(null);
     const [mobilePreview, setMobilePreview] = useState<string | null>(null);
     const [desktopFile, setDesktopFile] = useState<File | null>(null);
@@ -62,9 +61,7 @@ export default function Portfolio({
         data,
         setData,
         patch,
-        processing,
         errors: formErrors,
-        recentlySuccessful,
     } = useForm({
         website_url: website_url || '',
     });
@@ -73,9 +70,7 @@ export default function Portfolio({
         data: skillsData,
         setData: setSkillsData,
         patch: patchSkills,
-        processing: processingSkills,
         errors: skillsErrors,
-        recentlySuccessful: skillsRecentlySuccessful,
     } = useForm({
         skills: selectedSkills,
     });
@@ -84,9 +79,7 @@ export default function Portfolio({
         data: techStacksData,
         setData: setTechStacksData,
         patch: patchTechStacks,
-        processing: processingTechStacks,
         errors: techStacksErrors,
-        recentlySuccessful: techStacksRecentlySuccessful,
     } = useForm({
         tech_stacks: selectedTechStacks,
     });
@@ -95,31 +88,51 @@ export default function Portfolio({
         data: professionsData,
         setData: setProfessionsData,
         patch: patchProfessions,
-        processing: processingProfessions,
         errors: professionsErrors,
-        recentlySuccessful: professionsRecentlySuccessful,
     } = useForm({
         professions: selectedProfessions,
     });
 
-    const handleWebsiteUrlSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        patch('/settings/portfolio/website-url');
-    };
+    const [savingAll, setSavingAll] = useState(false);
+    const [allSavedSuccessfully, setAllSavedSuccessfully] = useState(false);
 
-    const handleSkillsSubmit = (e: React.FormEvent) => {
+    const handleSaveAll = async (e: React.FormEvent) => {
         e.preventDefault();
-        patchSkills('/settings/portfolio/skills');
-    };
+        setSavingAll(true);
+        setAllSavedSuccessfully(false);
 
-    const handleTechStacksSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        patchTechStacks('/settings/portfolio/tech-stacks');
-    };
+        // Save all sections sequentially
+        await new Promise<void>((resolve) => {
+            patch('/settings/portfolio/website-url', {
+                preserveScroll: true,
+                onFinish: () => resolve(),
+            });
+        });
 
-    const handleProfessionsSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        patchProfessions('/settings/portfolio/professions');
+        await new Promise<void>((resolve) => {
+            patchSkills('/settings/portfolio/skills', {
+                preserveScroll: true,
+                onFinish: () => resolve(),
+            });
+        });
+
+        await new Promise<void>((resolve) => {
+            patchTechStacks('/settings/portfolio/tech-stacks', {
+                preserveScroll: true,
+                onFinish: () => resolve(),
+            });
+        });
+
+        await new Promise<void>((resolve) => {
+            patchProfessions('/settings/portfolio/professions', {
+                preserveScroll: true,
+                onFinish: () => resolve(),
+            });
+        });
+
+        setSavingAll(false);
+        setAllSavedSuccessfully(true);
+        setTimeout(() => setAllSavedSuccessfully(false), 3000);
     };
 
     const handleDesktopChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -455,10 +468,7 @@ export default function Portfolio({
                             </p>
                         </div>
 
-                        <form
-                            onSubmit={handleWebsiteUrlSubmit}
-                            className="space-y-4"
-                        >
+                        <div className="space-y-4">
                             <div className="grid gap-2">
                                 <Label htmlFor="website_url">Website URL</Label>
                                 <Input
@@ -476,20 +486,7 @@ export default function Portfolio({
                                     message={formErrors.website_url}
                                 />
                             </div>
-
-                            <div className="flex items-center gap-4">
-                                <Button type="submit" disabled={processing}>
-                                    {processing
-                                        ? 'Saving...'
-                                        : 'Save Website URL'}
-                                </Button>
-                                {recentlySuccessful && (
-                                    <p className="text-sm text-muted-foreground">
-                                        Saved successfully!
-                                    </p>
-                                )}
-                            </div>
-                        </form>
+                        </div>
                     </div>
 
                     {/* Skills Section */}
@@ -502,10 +499,7 @@ export default function Portfolio({
                             </p>
                         </div>
 
-                        <form
-                            onSubmit={handleSkillsSubmit}
-                            className="space-y-4"
-                        >
+                        <div className="space-y-4">
                             <div className="grid gap-2">
                                 <Label htmlFor="skills">Select Skills</Label>
                                 <MultiSelect
@@ -526,23 +520,7 @@ export default function Portfolio({
                                     message={skillsErrors.skills}
                                 />
                             </div>
-
-                            <div className="flex items-center gap-4">
-                                <Button
-                                    type="submit"
-                                    disabled={processingSkills}
-                                >
-                                    {processingSkills
-                                        ? 'Saving...'
-                                        : 'Save Skills'}
-                                </Button>
-                                {skillsRecentlySuccessful && (
-                                    <p className="text-sm text-muted-foreground">
-                                        Saved successfully!
-                                    </p>
-                                )}
-                            </div>
-                        </form>
+                        </div>
                     </div>
 
                     {/* Tech Stack Section */}
@@ -556,10 +534,7 @@ export default function Portfolio({
                             </p>
                         </div>
 
-                        <form
-                            onSubmit={handleTechStacksSubmit}
-                            className="space-y-4"
-                        >
+                        <div className="space-y-4">
                             <div className="grid gap-2">
                                 <Label htmlFor="tech_stacks">
                                     Select Technologies
@@ -585,23 +560,7 @@ export default function Portfolio({
                                     message={techStacksErrors.tech_stacks}
                                 />
                             </div>
-
-                            <div className="flex items-center gap-4">
-                                <Button
-                                    type="submit"
-                                    disabled={processingTechStacks}
-                                >
-                                    {processingTechStacks
-                                        ? 'Saving...'
-                                        : 'Save Tech Stack'}
-                                </Button>
-                                {techStacksRecentlySuccessful && (
-                                    <p className="text-sm text-muted-foreground">
-                                        Saved successfully!
-                                    </p>
-                                )}
-                            </div>
-                        </form>
+                        </div>
                     </div>
 
                     {/* Profession Section */}
@@ -615,10 +574,7 @@ export default function Portfolio({
                             </p>
                         </div>
 
-                        <form
-                            onSubmit={handleProfessionsSubmit}
-                            className="space-y-4"
-                        >
+                        <div className="space-y-4">
                             <div className="grid gap-2">
                                 <Label htmlFor="professions">
                                     Select Professions
@@ -643,23 +599,25 @@ export default function Portfolio({
                                     message={professionsErrors.professions}
                                 />
                             </div>
+                        </div>
+                    </div>
 
-                            <div className="flex items-center gap-4">
-                                <Button
-                                    type="submit"
-                                    disabled={processingProfessions}
-                                >
-                                    {processingProfessions
-                                        ? 'Saving...'
-                                        : 'Save Professions'}
-                                </Button>
-                                {professionsRecentlySuccessful && (
-                                    <p className="text-sm text-muted-foreground">
-                                        Saved successfully!
-                                    </p>
-                                )}
-                            </div>
-                        </form>
+                    {/* Save All Button */}
+                    <div className="mt-8 border-t pt-6">
+                        <div className="flex items-center gap-4">
+                            <Button
+                                onClick={handleSaveAll}
+                                disabled={savingAll}
+                                size="lg"
+                            >
+                                {savingAll ? 'Saving All...' : 'Save All'}
+                            </Button>
+                            {allSavedSuccessfully && (
+                                <p className="text-sm font-medium text-green-600 dark:text-green-400">
+                                    All changes saved successfully!
+                                </p>
+                            )}
+                        </div>
                     </div>
                 </div>
             </SettingsLayout>
