@@ -12,7 +12,6 @@ function Navbar({ canRegister = true }: { canRegister?: boolean }) {
     const [userMenuOpen, setUserMenuOpen] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
     const [searchOpen, setSearchOpen] = useState(false);
-    const [showSearchResults, setShowSearchResults] = useState(false);
 
     const handleLogout = () => {
         router.post(logout.url());
@@ -23,7 +22,6 @@ function Navbar({ canRegister = true }: { canRegister?: boolean }) {
         if (searchQuery.trim()) {
             router.get('/observatory', { search: searchQuery });
             setSearchQuery('');
-            setShowSearchResults(false);
         }
     };
 
@@ -124,7 +122,6 @@ function Navbar({ canRegister = true }: { canRegister?: boolean }) {
                                                 if (!searchQuery) {
                                                     setSearchOpen(false);
                                                 }
-                                                setShowSearchResults(false);
                                             }, 200);
                                         }}
                                         autoFocus
@@ -489,109 +486,26 @@ function Navbar({ canRegister = true }: { canRegister?: boolean }) {
     );
 }
 
-// Sample portfolio data for Observatory
-const observatoryPortfolios = [
-    {
-        id: 1,
-        name: 'rizamb',
-        role: 'Fullstack Developer',
-        avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=rizamb',
-        image: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=400&h=300&fit=crop',
-        skills: ['Web', 'Fullstack'],
-        techStack: ['JavaScript', 'React'],
-        isCotd: true,
-    },
-    {
-        id: 2,
-        name: 'elliottprgrammer',
-        role: 'Fullstack Developer',
-        avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=elliott',
-        image: 'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=400&h=300&fit=crop',
-        skills: ['Web', 'Backend'],
-        techStack: ['TypeScript', 'Node.js'],
-    },
-    {
-        id: 3,
-        name: 'Jammore123',
-        role: 'Fullstack Developer',
-        avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=jammore',
-        image: 'https://images.unsplash.com/photo-1484417894907-623942c8ee29?w=400&h=300&fit=crop',
-        skills: ['Web', 'Mobile'],
-        techStack: ['JavaScript', 'React'],
-    },
-    {
-        id: 4,
-        name: 'Deepak',
-        role: 'Web Developer',
-        avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=deepak',
-        image: 'https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7?w=400&h=300&fit=crop',
-        skills: ['Frontend', 'Web'],
-        techStack: ['HTML', 'CSS'],
-        isCotd: true,
-    },
-    {
-        id: 5,
-        name: 'samilanojeff98',
-        role: 'Web Developer',
-        avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=samilano',
-        image: 'https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?w=400&h=300&fit=crop',
-        skills: ['Web', 'Fullstack'],
-        techStack: ['React', 'TypeScript'],
-    },
-    {
-        id: 6,
-        name: 'elkoh',
-        role: 'Fullstack Developer',
-        avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=elkoh',
-        image: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=400&h=300&fit=crop',
-        skills: ['Backend', 'Fullstack'],
-        techStack: ['Python', 'Django'],
-    },
-    {
-        id: 7,
-        name: 'JazzMase',
-        role: 'Fullstack Developer',
-        avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=jazzmase',
-        image: 'https://images.unsplash.com/photo-1510915361894-db8b60106cb1?w=400&h=300&fit=crop',
-        skills: ['Web', 'Data'],
-        techStack: ['JavaScript', 'Node.js'],
-        isCotd: true,
-    },
-    {
-        id: 8,
-        name: 'Dock',
-        role: 'Frontend Developer',
-        avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=dock',
-        image: 'https://images.unsplash.com/photo-1547658719-da2b51169166?w=400&h=300&fit=crop',
-        skills: ['Frontend', 'Web'],
-        techStack: ['React', 'CSS'],
-    },
-    {
-        id: 9,
-        name: 'quinchy',
-        role: 'Fullstack Developer',
-        avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=quinchy',
-        image: 'https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=400&h=300&fit=crop',
-        skills: ['Fullstack', 'Mobile'],
-        techStack: ['JavaScript', 'React'],
-    },
-    {
-        id: 10,
-        name: 'klynesjido',
-        role: 'Software Developer',
-        avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=klynes',
-        image: 'https://images.unsplash.com/photo-1504639725590-34d0984388bd?w=400&h=300&fit=crop',
-        skills: ['Software', 'Backend'],
-        techStack: ['C++', 'Python'],
-    },
-];
-
 interface ObservatoryProps {
     filterOptions?: {
         skills: string[];
         techStack: string[];
         profession: string[];
     };
+    portfolios?: Array<{
+        id: number;
+        title: string;
+        author: string;
+        authorImage: string | null;
+        image: string | null;
+        mobileImage: string | null;
+        description: string;
+        websiteUrl: string | null;
+        skills: string[];
+        techStack: string[];
+        profession: string[];
+        created_at: string;
+    }>;
 }
 
 export default function Observatory({
@@ -600,6 +514,7 @@ export default function Observatory({
         techStack: [],
         profession: [],
     },
+    portfolios = [],
 }: ObservatoryProps) {
     const { url } = usePage();
     const searchParams = new URLSearchParams(url.split('?')[1] || '');
@@ -664,18 +579,22 @@ export default function Observatory({
         });
     };
 
-    const filteredPortfolios = observatoryPortfolios.filter((portfolio) => {
+    const filteredPortfolios = portfolios.filter((portfolio) => {
         // Search query filter
         if (searchQuery) {
             const query = searchQuery.toLowerCase();
             const matchesSearch =
-                portfolio.name.toLowerCase().includes(query) ||
-                portfolio.role.toLowerCase().includes(query) ||
+                portfolio.author.toLowerCase().includes(query) ||
+                (portfolio.description &&
+                    portfolio.description.toLowerCase().includes(query)) ||
                 portfolio.skills.some((skill) =>
                     skill.toLowerCase().includes(query),
                 ) ||
                 portfolio.techStack.some((tech) =>
                     tech.toLowerCase().includes(query),
+                ) ||
+                portfolio.profession.some((prof) =>
+                    prof.toLowerCase().includes(query),
                 );
             if (!matchesSearch) return false;
         }
@@ -693,7 +612,9 @@ export default function Observatory({
             );
         const professionMatch =
             selectedFilters.profession.length === 0 ||
-            selectedFilters.profession.includes(portfolio.role);
+            selectedFilters.profession.some((prof) =>
+                portfolio.profession.includes(prof),
+            );
 
         return skillMatch && techMatch && professionMatch;
     });
@@ -1030,7 +951,7 @@ export default function Observatory({
                         <div className="flex-1">
                             <div className="mb-4 text-sm text-zinc-600 dark:text-zinc-400">
                                 Showing {filteredPortfolios.length} of{' '}
-                                {observatoryPortfolios.length} portfolios
+                                {portfolios.length} portfolios
                             </div>
 
                             {filteredPortfolios.length === 0 ? (
@@ -1040,7 +961,9 @@ export default function Observatory({
                                             No portfolios found
                                         </p>
                                         <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
-                                            Try adjusting your filters
+                                            {portfolios.length === 0
+                                                ? 'No portfolios have been published yet'
+                                                : 'Try adjusting your filters'}
                                         </p>
                                     </div>
                                 </div>
@@ -1049,37 +972,47 @@ export default function Observatory({
                                     {filteredPortfolios.map((portfolio) => (
                                         <Link
                                             key={portfolio.id}
-                                            href={`/portfolio/${portfolio.id}`}
+                                            href={
+                                                portfolio.websiteUrl ||
+                                                `/portfolio/${portfolio.id}`
+                                            }
+                                            target={
+                                                portfolio.websiteUrl
+                                                    ? '_blank'
+                                                    : undefined
+                                            }
                                         >
                                             <motion.div
                                                 initial={{ opacity: 0, y: 20 }}
                                                 animate={{ opacity: 1, y: 0 }}
                                                 transition={{ duration: 0.3 }}
-                                                className={`group cursor-pointer overflow-hidden rounded-lg border bg-white shadow-sm transition-all hover:shadow-md dark:bg-zinc-900 ${
-                                                    portfolio.isCotd
-                                                        ? 'border-amber-400 ring-2 ring-amber-400/20 dark:border-amber-500 dark:ring-amber-500/20'
-                                                        : 'border-zinc-200 dark:border-zinc-800'
-                                                }`}
+                                                className="group cursor-pointer overflow-hidden rounded-lg border border-zinc-200 bg-white shadow-sm transition-all hover:shadow-md dark:border-zinc-800 dark:bg-zinc-900"
                                             >
                                                 {/* Portfolio Image */}
                                                 <div className="relative h-32 overflow-hidden bg-zinc-100 dark:bg-zinc-800">
-                                                    <img
-                                                        src={portfolio.image}
-                                                        alt={`${portfolio.name}'s portfolio`}
-                                                        className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-                                                    />
-                                                    {portfolio.isCotd && (
-                                                        <div className="absolute top-2 right-2">
-                                                            <span className="inline-flex items-center gap-1 rounded-full bg-amber-500 px-2 py-0.5 text-xs font-semibold text-white shadow-lg">
-                                                                <svg
-                                                                    className="h-3 w-3"
-                                                                    fill="currentColor"
-                                                                    viewBox="0 0 20 20"
-                                                                >
-                                                                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                                                                </svg>
-                                                                COTD
-                                                            </span>
+                                                    {portfolio.image ? (
+                                                        <img
+                                                            src={
+                                                                portfolio.image
+                                                            }
+                                                            alt={
+                                                                portfolio.title
+                                                            }
+                                                            className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                                                        />
+                                                    ) : (
+                                                        <div className="flex h-full w-full items-center justify-center text-zinc-400">
+                                                            <svg
+                                                                className="h-12 w-12"
+                                                                fill="none"
+                                                                strokeLinecap="round"
+                                                                strokeLinejoin="round"
+                                                                strokeWidth={2}
+                                                                viewBox="0 0 24 24"
+                                                                stroke="currentColor"
+                                                            >
+                                                                <path d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                                            </svg>
                                                         </div>
                                                     )}
                                                 </div>
@@ -1087,19 +1020,40 @@ export default function Observatory({
                                                 {/* Portfolio Info */}
                                                 <div className="p-3">
                                                     <div className="flex items-center gap-2">
-                                                        <img
-                                                            src={
-                                                                portfolio.avatar
-                                                            }
-                                                            alt={portfolio.name}
-                                                            className="h-8 w-8 rounded-full"
-                                                        />
+                                                        {portfolio.authorImage ? (
+                                                            <img
+                                                                src={
+                                                                    portfolio.authorImage
+                                                                }
+                                                                alt={
+                                                                    portfolio.author
+                                                                }
+                                                                className="h-8 w-8 rounded-full object-cover"
+                                                            />
+                                                        ) : (
+                                                            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900">
+                                                                <span className="text-sm font-semibold">
+                                                                    {portfolio.author
+                                                                        .charAt(
+                                                                            0,
+                                                                        )
+                                                                        .toUpperCase()}
+                                                                </span>
+                                                            </div>
+                                                        )}
                                                         <div className="flex-1">
                                                             <h3 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">
-                                                                {portfolio.name}
+                                                                {
+                                                                    portfolio.author
+                                                                }
                                                             </h3>
                                                             <p className="text-xs text-zinc-600 dark:text-zinc-400">
-                                                                {portfolio.role}
+                                                                {portfolio
+                                                                    .profession
+                                                                    .length > 0
+                                                                    ? portfolio
+                                                                          .profession[0]
+                                                                    : 'Developer'}
                                                             </p>
                                                         </div>
                                                     </div>

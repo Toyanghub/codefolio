@@ -122,7 +122,22 @@ class PortfolioController extends Controller
 
         $request->user()->professions()->sync($request->professions);
 
+        // Auto-publish portfolio if all required fields are filled
+        $this->autoPublishPortfolio($request->user());
+
         return back()->with('status', 'professions-updated');
+    }
+
+    /**
+     * Auto-publish portfolio if all required fields are present.
+     */
+    private function autoPublishPortfolio($user): void
+    {
+        // Check if portfolio has minimum required content
+        if ($user->portfolio_desktop_image && 
+            ($user->skills()->count() > 0 || $user->techStacks()->count() > 0 || $user->professions()->count() > 0)) {
+            $user->update(['portfolio_published' => true]);
+        }
     }
 
     /**
