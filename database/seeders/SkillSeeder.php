@@ -12,9 +12,8 @@ class SkillSeeder extends Seeder
      */
     public function run(): void
     {
-        // Skills from Observatory filterCategories
+        // Skills from Observatory filters - only 'skills' category
         $skills = [
-            // Skills category
             ['name' => 'Web', 'category' => 'skills'],
             ['name' => 'Frontend', 'category' => 'skills'],
             ['name' => 'Backend', 'category' => 'skills'],
@@ -22,23 +21,6 @@ class SkillSeeder extends Seeder
             ['name' => 'Mobile', 'category' => 'skills'],
             ['name' => 'Data', 'category' => 'skills'],
             ['name' => 'Software', 'category' => 'skills'],
-            
-            // Tech Stack category
-            ['name' => 'JavaScript', 'category' => 'techStack'],
-            ['name' => 'TypeScript', 'category' => 'techStack'],
-            ['name' => 'React', 'category' => 'techStack'],
-            ['name' => 'Node.js', 'category' => 'techStack'],
-            ['name' => 'Python', 'category' => 'techStack'],
-            ['name' => 'HTML', 'category' => 'techStack'],
-            ['name' => 'CSS', 'category' => 'techStack'],
-            ['name' => 'Django', 'category' => 'techStack'],
-            ['name' => 'C++', 'category' => 'techStack'],
-            
-            // Profession category
-            ['name' => 'Fullstack Developer', 'category' => 'profession'],
-            ['name' => 'Frontend Developer', 'category' => 'profession'],
-            ['name' => 'Web Developer', 'category' => 'profession'],
-            ['name' => 'Software Developer', 'category' => 'profession'],
         ];
 
         foreach ($skills as $skill) {

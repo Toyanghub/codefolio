@@ -26,11 +26,13 @@ class PortfolioController extends Controller
             'portfolio_desktop_image' => $user->portfolio_desktop_image,
             'portfolio_mobile_image' => $user->portfolio_mobile_image,
             'website_url' => $user->website_url,
-            'availableSkills' => Skill::all()->map(fn($skill) => [
-                'label' => $skill->name,
-                'value' => (string) $skill->id,
-                'category' => $skill->category,
-            ]),
+            'availableSkills' => Skill::where('category', 'skills')
+                ->orderBy('name')
+                ->get()
+                ->map(fn($skill) => [
+                    'label' => $skill->name,
+                    'value' => (string) $skill->id,
+                ]),
             'selectedSkills' => $user->skills->pluck('id')->map(fn($id) => (string) $id)->toArray(),
             'availableTechStacks' => TechStack::all()->map(fn($tech) => [
                 'label' => $tech->name,

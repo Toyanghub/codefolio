@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ObservatoryController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Laravel\Fortify\Features;
@@ -10,9 +11,7 @@ Route::get('/', function () {
     ]);
 })->name('home');
 
-Route::get('/observatory', function () {
-    return Inertia::render('observatory');
-})->name('observatory');
+Route::get('/observatory', [ObservatoryController::class, 'index'])->name('observatory');
 
 Route::get('/works', function () {
     return Inertia::render('works');

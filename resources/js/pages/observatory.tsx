@@ -524,36 +524,21 @@ const observatoryPortfolios = [
     },
 ];
 
-const filterCategories = {
-    skills: [
-        'Web',
-        'Frontend',
-        'Backend',
-        'Fullstack',
-        'Mobile',
-        'Data',
-        'Software',
-    ],
-    techStack: [
-        'JavaScript',
-        'TypeScript',
-        'React',
-        'Node.js',
-        'Python',
-        'HTML',
-        'CSS',
-        'Django',
-        'C++',
-    ],
-    profession: [
-        'Fullstack Developer',
-        'Frontend Developer',
-        'Web Developer',
-        'Software Developer',
-    ],
-};
+interface ObservatoryProps {
+    filterOptions?: {
+        skills: string[];
+        techStack: string[];
+        profession: string[];
+    };
+}
 
-export default function Observatory() {
+export default function Observatory({
+    filterOptions = {
+        skills: [],
+        techStack: [],
+        profession: [],
+    },
+}: ObservatoryProps) {
     const { url } = usePage();
     const searchParams = new URLSearchParams(url.split('?')[1] || '');
     const searchQuery = searchParams.get('search') || '';
@@ -741,7 +726,7 @@ export default function Observatory() {
                                     </button>
                                     {dropdownsOpen.skills && (
                                         <div className="space-y-2">
-                                            {filterCategories.skills.map(
+                                            {filterOptions.skills.map(
                                                 (skill) => (
                                                     <label
                                                         key={skill}
@@ -795,7 +780,7 @@ export default function Observatory() {
                                     </button>
                                     {dropdownsOpen.techStack && (
                                         <div className="space-y-2">
-                                            {filterCategories.techStack.map(
+                                            {filterOptions.techStack.map(
                                                 (tech) => (
                                                     <label
                                                         key={tech}
@@ -849,7 +834,7 @@ export default function Observatory() {
                                     </button>
                                     {dropdownsOpen.profession && (
                                         <div className="space-y-2">
-                                            {filterCategories.profession.map(
+                                            {filterOptions.profession.map(
                                                 (profession) => (
                                                     <label
                                                         key={profession}
