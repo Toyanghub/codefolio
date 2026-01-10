@@ -146,10 +146,20 @@ export default function Navbar({ canRegister = true }: NavbarProps) {
                                 whileHover={{ scale: 1.05 }}
                                 className="flex items-center gap-2 rounded-full p-1 text-sm transition-colors hover:bg-zinc-100 dark:hover:bg-zinc-800"
                             >
-                                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900">
-                                    <span className="text-sm font-semibold">
-                                        {auth.user.name.charAt(0).toUpperCase()}
-                                    </span>
+                                <div className="flex h-8 w-8 items-center justify-center overflow-hidden rounded-full bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900">
+                                    {auth.user.profile_picture ? (
+                                        <img
+                                            src={`/storage/${auth.user.profile_picture}`}
+                                            alt={auth.user.name}
+                                            className="h-full w-full object-cover"
+                                        />
+                                    ) : (
+                                        <span className="text-sm font-semibold">
+                                            {auth.user.name
+                                                .charAt(0)
+                                                .toUpperCase()}
+                                        </span>
+                                    )}
                                 </div>
                             </motion.button>
 
@@ -164,12 +174,21 @@ export default function Navbar({ canRegister = true }: NavbarProps) {
                                         <div className="space-y-1 p-2">
                                             {/* User Info Header */}
                                             <div className="flex items-center gap-3 px-2 py-3">
-                                                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900">
-                                                    <span className="font-semibold">
-                                                        {auth.user.name
-                                                            .charAt(0)
-                                                            .toUpperCase()}
-                                                    </span>
+                                                <div className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-full bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900">
+                                                    {auth.user
+                                                        .profile_picture ? (
+                                                        <img
+                                                            src={`/storage/${auth.user.profile_picture}`}
+                                                            alt={auth.user.name}
+                                                            className="h-full w-full object-cover"
+                                                        />
+                                                    ) : (
+                                                        <span className="font-semibold">
+                                                            {auth.user.name
+                                                                .charAt(0)
+                                                                .toUpperCase()}
+                                                        </span>
+                                                    )}
                                                 </div>
                                                 <div className="flex flex-col">
                                                     <span className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
