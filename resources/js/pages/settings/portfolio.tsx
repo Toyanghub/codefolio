@@ -11,6 +11,7 @@ import {
     MultiSelect,
     type MultiSelectOption,
 } from '@/components/ui/multi-select';
+import { Textarea } from '@/components/ui/textarea';
 import SettingsAppLayout from '@/layouts/settings-app-layout';
 import SettingsLayout from '@/layouts/settings/layout';
 
@@ -25,6 +26,7 @@ interface PortfolioProps {
     portfolio_desktop_image?: string | null;
     portfolio_mobile_image?: string | null;
     website_url?: string | null;
+    portfolio_description?: string | null;
     availableSkills?: MultiSelectOption[];
     selectedSkills?: string[];
     availableTechStacks?: MultiSelectOption[];
@@ -37,6 +39,7 @@ export default function Portfolio({
     portfolio_desktop_image,
     portfolio_mobile_image,
     website_url,
+    portfolio_description,
     availableSkills = [],
     selectedSkills = [],
     availableTechStacks = [],
@@ -64,6 +67,7 @@ export default function Portfolio({
         errors: formErrors,
     } = useForm({
         website_url: website_url || '',
+        portfolio_description: portfolio_description || '',
     });
 
     const {
@@ -104,6 +108,13 @@ export default function Portfolio({
         // Save all sections sequentially
         await new Promise<void>((resolve) => {
             patch('/settings/portfolio/website-url', {
+                preserveScroll: true,
+                onFinish: () => resolve(),
+            });
+        });
+
+        await new Promise<void>((resolve) => {
+            patch('/settings/portfolio/description', {
                 preserveScroll: true,
                 onFinish: () => resolve(),
             });
@@ -463,9 +474,9 @@ export default function Portfolio({
                             <h3 className="text-lg font-semibold">
                                 Portfolio Link
                             </h3>
-                            <p className="mt-1 text-sm text-muted-foreground">
+                            {/* <p className="mt-1 text-sm text-muted-foreground">
                                 Enter the URL of your portfolio website
-                            </p>
+                            </p> */}
                         </div>
 
                         <div className="space-y-4">
@@ -484,6 +495,48 @@ export default function Portfolio({
                                 <InputError
                                     className="mt-2"
                                     message={formErrors.website_url}
+                                />
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Description Section */}
+                    <div className="mt-8 space-y-4">
+                        <div className="mb-6">
+                            <h3 className="text-lg font-semibold">
+                                Description
+                            </h3>
+                            <p className="mt-1 text-sm text-muted-foreground">
+                                Write about your portfolio, projects, or
+                                professional background
+                            </p>
+                        </div>
+
+                        <div className="space-y-4">
+                            <div className="grid gap-2">
+                                <Label htmlFor="portfolio_description">
+                                    Description
+                                </Label>
+                                <Textarea
+                                    id="portfolio_description"
+                                    value={data.portfolio_description}
+                                    onChange={(e) =>
+                                        setData(
+                                            'portfolio_description',
+                                            e.target.value,
+                                        )
+                                    }
+                                    placeholder="Write a description of your portfolio, projects, or professional background..."
+                                    className="min-h-[150px] max-w-xl"
+                                    maxLength={5000}
+                                />
+                                <p className="text-xs text-muted-foreground">
+                                    {data.portfolio_description.length}/5000
+                                    characters
+                                </p>
+                                <InputError
+                                    className="mt-2"
+                                    message={formErrors.portfolio_description}
                                 />
                             </div>
                         </div>

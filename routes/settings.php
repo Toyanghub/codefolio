@@ -20,6 +20,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('settings/portfolio/desktop-image', [PortfolioController::class, 'deleteDesktopImage'])->name('portfolio.desktop-image.delete');
     Route::delete('settings/portfolio/mobile-image', [PortfolioController::class, 'deleteMobileImage'])->name('portfolio.mobile-image.delete');
     Route::patch('settings/portfolio/website-url', [PortfolioController::class, 'updateWebsiteUrl'])->name('portfolio.website-url.update');
+    Route::patch('settings/portfolio/description', [PortfolioController::class, 'updateDescription'])->name('portfolio.description.update');
     Route::patch('settings/portfolio/skills', [PortfolioController::class, 'updateSkills'])->name('portfolio.skills.update');
     Route::patch('settings/portfolio/tech-stacks', [PortfolioController::class, 'updateTechStacks'])->name('portfolio.tech-stacks.update');
     Route::patch('settings/portfolio/professions', [PortfolioController::class, 'updateProfessions'])->name('portfolio.professions.update');

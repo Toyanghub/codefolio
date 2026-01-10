@@ -26,6 +26,7 @@ class PortfolioController extends Controller
             'portfolio_desktop_image' => $user->portfolio_desktop_image,
             'portfolio_mobile_image' => $user->portfolio_mobile_image,
             'website_url' => $user->website_url,
+            'portfolio_description' => $user->portfolio_description,
             'availableSkills' => Skill::where('category', 'skills')
                 ->orderBy('name')
                 ->get()
@@ -61,6 +62,22 @@ class PortfolioController extends Controller
         ]);
 
         return back()->with('status', 'website-url-updated');
+    }
+
+    /**
+     * Update the portfolio description.
+     */
+    public function updateDescription(Request $request): RedirectResponse
+    {
+        $request->validate([
+            'portfolio_description' => ['nullable', 'string', 'max:5000'],
+        ]);
+
+        $request->user()->update([
+            'portfolio_description' => $request->portfolio_description,
+        ]);
+
+        return back()->with('status', 'description-updated');
     }
 
     /**

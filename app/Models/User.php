@@ -26,6 +26,7 @@ class User extends Authenticatable
         'portfolio_desktop_image',
         'portfolio_mobile_image',
         'website_url',
+        'portfolio_description',
     ];
 
     public function skills(): BelongsToMany
