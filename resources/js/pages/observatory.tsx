@@ -2,6 +2,7 @@ import { Footerdemo } from '@/components/ui/footer-section';
 import { login, logout, register } from '@/routes';
 import { type SharedData } from '@/types';
 import { Head, Link, router, usePage } from '@inertiajs/react';
+import { Check } from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
 import { useState } from 'react';
 
@@ -558,6 +559,20 @@ export default function Observatory({
         techStack: true,
         profession: true,
     });
+    const [showAllFilters, setShowAllFilters] = useState({
+        skills: false,
+        techStack: false,
+        profession: false,
+    });
+
+    const INITIAL_ITEMS_TO_SHOW = 8;
+
+    const toggleShowAll = (category: 'skills' | 'techStack' | 'profession') => {
+        setShowAllFilters((prev) => ({
+            ...prev,
+            [category]: !prev[category],
+        }));
+    };
 
     const toggleDropdown = (
         category: 'skills' | 'techStack' | 'profession',
@@ -726,28 +741,55 @@ export default function Observatory({
                                     </button>
                                     {dropdownsOpen.skills && (
                                         <div className="space-y-2">
-                                            {filterOptions.skills.map(
-                                                (skill) => (
+                                            {(showAllFilters.skills
+                                                ? filterOptions.skills
+                                                : filterOptions.skills.slice(
+                                                      0,
+                                                      INITIAL_ITEMS_TO_SHOW,
+                                                  )
+                                            ).map((skill) => {
+                                                const isSelected =
+                                                    selectedFilters.skills.includes(
+                                                        skill,
+                                                    );
+                                                return (
                                                     <label
                                                         key={skill}
                                                         className="flex cursor-pointer items-center gap-2 text-sm text-zinc-700 dark:text-zinc-300"
                                                     >
-                                                        <input
-                                                            type="checkbox"
-                                                            checked={selectedFilters.skills.includes(
-                                                                skill,
-                                                            )}
-                                                            onChange={() =>
+                                                        <div
+                                                            className={`flex h-4 w-4 items-center justify-center rounded border ${
+                                                                isSelected
+                                                                    ? 'border-zinc-900 bg-zinc-900 dark:border-zinc-100 dark:bg-zinc-100'
+                                                                    : 'border-zinc-300 dark:border-zinc-600'
+                                                            }`}
+                                                            onClick={() =>
                                                                 toggleFilter(
                                                                     'skills',
                                                                     skill,
                                                                 )
                                                             }
-                                                            className="h-4 w-4 rounded border-zinc-300 text-zinc-900 focus:ring-2 focus:ring-zinc-900 dark:border-zinc-700 dark:bg-zinc-800"
-                                                        />
-                                                        {skill}
+                                                        >
+                                                            {isSelected && (
+                                                                <Check className="h-3 w-3 text-white dark:text-zinc-900" />
+                                                            )}
+                                                        </div>
+                                                        <span>{skill}</span>
                                                     </label>
-                                                ),
+                                                );
+                                            })}
+                                            {filterOptions.skills.length >
+                                                INITIAL_ITEMS_TO_SHOW && (
+                                                <button
+                                                    onClick={() =>
+                                                        toggleShowAll('skills')
+                                                    }
+                                                    className="mt-2 text-xs font-medium text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200"
+                                                >
+                                                    {showAllFilters.skills
+                                                        ? '− Show Less'
+                                                        : `+ See More (${filterOptions.skills.length - INITIAL_ITEMS_TO_SHOW} more)`}
+                                                </button>
                                             )}
                                         </div>
                                     )}
@@ -780,28 +822,57 @@ export default function Observatory({
                                     </button>
                                     {dropdownsOpen.techStack && (
                                         <div className="space-y-2">
-                                            {filterOptions.techStack.map(
-                                                (tech) => (
+                                            {(showAllFilters.techStack
+                                                ? filterOptions.techStack
+                                                : filterOptions.techStack.slice(
+                                                      0,
+                                                      INITIAL_ITEMS_TO_SHOW,
+                                                  )
+                                            ).map((tech) => {
+                                                const isSelected =
+                                                    selectedFilters.techStack.includes(
+                                                        tech,
+                                                    );
+                                                return (
                                                     <label
                                                         key={tech}
                                                         className="flex cursor-pointer items-center gap-2 text-sm text-zinc-700 dark:text-zinc-300"
                                                     >
-                                                        <input
-                                                            type="checkbox"
-                                                            checked={selectedFilters.techStack.includes(
-                                                                tech,
-                                                            )}
-                                                            onChange={() =>
+                                                        <div
+                                                            className={`flex h-4 w-4 items-center justify-center rounded border ${
+                                                                isSelected
+                                                                    ? 'border-zinc-900 bg-zinc-900 dark:border-zinc-100 dark:bg-zinc-100'
+                                                                    : 'border-zinc-300 dark:border-zinc-600'
+                                                            }`}
+                                                            onClick={() =>
                                                                 toggleFilter(
                                                                     'techStack',
                                                                     tech,
                                                                 )
                                                             }
-                                                            className="h-4 w-4 rounded border-zinc-300 text-zinc-900 focus:ring-2 focus:ring-zinc-900 dark:border-zinc-700 dark:bg-zinc-800"
-                                                        />
-                                                        {tech}
+                                                        >
+                                                            {isSelected && (
+                                                                <Check className="h-3 w-3 text-white dark:text-zinc-900" />
+                                                            )}
+                                                        </div>
+                                                        <span>{tech}</span>
                                                     </label>
-                                                ),
+                                                );
+                                            })}
+                                            {filterOptions.techStack.length >
+                                                INITIAL_ITEMS_TO_SHOW && (
+                                                <button
+                                                    onClick={() =>
+                                                        toggleShowAll(
+                                                            'techStack',
+                                                        )
+                                                    }
+                                                    className="mt-2 text-xs font-medium text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200"
+                                                >
+                                                    {showAllFilters.techStack
+                                                        ? '− Show Less'
+                                                        : `+ See More (${filterOptions.techStack.length - INITIAL_ITEMS_TO_SHOW} more)`}
+                                                </button>
                                             )}
                                         </div>
                                     )}
@@ -834,28 +905,59 @@ export default function Observatory({
                                     </button>
                                     {dropdownsOpen.profession && (
                                         <div className="space-y-2">
-                                            {filterOptions.profession.map(
-                                                (profession) => (
+                                            {(showAllFilters.profession
+                                                ? filterOptions.profession
+                                                : filterOptions.profession.slice(
+                                                      0,
+                                                      INITIAL_ITEMS_TO_SHOW,
+                                                  )
+                                            ).map((profession) => {
+                                                const isSelected =
+                                                    selectedFilters.profession.includes(
+                                                        profession,
+                                                    );
+                                                return (
                                                     <label
                                                         key={profession}
                                                         className="flex cursor-pointer items-center gap-2 text-sm text-zinc-700 dark:text-zinc-300"
                                                     >
-                                                        <input
-                                                            type="checkbox"
-                                                            checked={selectedFilters.profession.includes(
-                                                                profession,
-                                                            )}
-                                                            onChange={() =>
+                                                        <div
+                                                            className={`flex h-4 w-4 items-center justify-center rounded border ${
+                                                                isSelected
+                                                                    ? 'border-zinc-900 bg-zinc-900 dark:border-zinc-100 dark:bg-zinc-100'
+                                                                    : 'border-zinc-300 dark:border-zinc-600'
+                                                            }`}
+                                                            onClick={() =>
                                                                 toggleFilter(
                                                                     'profession',
                                                                     profession,
                                                                 )
                                                             }
-                                                            className="h-4 w-4 rounded border-zinc-300 text-zinc-900 focus:ring-2 focus:ring-zinc-900 dark:border-zinc-700 dark:bg-zinc-800"
-                                                        />
-                                                        {profession}
+                                                        >
+                                                            {isSelected && (
+                                                                <Check className="h-3 w-3 text-white dark:text-zinc-900" />
+                                                            )}
+                                                        </div>
+                                                        <span>
+                                                            {profession}
+                                                        </span>
                                                     </label>
-                                                ),
+                                                );
+                                            })}
+                                            {filterOptions.profession.length >
+                                                INITIAL_ITEMS_TO_SHOW && (
+                                                <button
+                                                    onClick={() =>
+                                                        toggleShowAll(
+                                                            'profession',
+                                                        )
+                                                    }
+                                                    className="mt-2 text-xs font-medium text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200"
+                                                >
+                                                    {showAllFilters.profession
+                                                        ? '− Show Less'
+                                                        : `+ See More (${filterOptions.profession.length - INITIAL_ITEMS_TO_SHOW} more)`}
+                                                </button>
                                             )}
                                         </div>
                                     )}

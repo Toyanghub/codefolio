@@ -185,13 +185,15 @@ export function MultiSelect({
                                             >
                                                 <div
                                                     className={cn(
-                                                        'mr-2 flex h-4 w-4 items-center justify-center rounded-sm border border-primary',
+                                                        'mr-2 flex h-4 w-4 items-center justify-center rounded border',
                                                         isSelected
-                                                            ? 'bg-primary text-primary-foreground'
-                                                            : 'opacity-50 [&_svg]:invisible',
+                                                            ? 'border-zinc-900 bg-zinc-900 dark:border-zinc-100 dark:bg-zinc-100'
+                                                            : 'border-zinc-300 dark:border-zinc-600',
                                                     )}
                                                 >
-                                                    <Check className="h-4 w-4" />
+                                                    {isSelected && (
+                                                        <Check className="h-3 w-3 text-white dark:text-zinc-900" />
+                                                    )}
                                                 </div>
                                                 <span>{option.label}</span>
                                             </CommandItem>
