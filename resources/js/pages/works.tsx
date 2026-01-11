@@ -2,6 +2,7 @@ import { Footerdemo } from '@/components/ui/footer-section';
 import { login, logout, register } from '@/routes';
 import { type SharedData } from '@/types';
 import { Head, Link, router, usePage } from '@inertiajs/react';
+import { ArrowUpRight } from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
 import { useState } from 'react';
 
@@ -524,6 +525,237 @@ const cotdPortfolios = [
     },
 ];
 
+// COTD Card Component
+function COTDCard({
+    portfolio,
+    index,
+}: {
+    portfolio: {
+        id: number;
+        name: string;
+        role: string;
+        avatar: string;
+        image: string;
+        skills: string[];
+        techStack: string[];
+        description: string;
+    };
+    index: number;
+}) {
+    const [isHovered, setIsHovered] = useState(false);
+
+    return (
+        <Link href={`/portfolio/${portfolio.id}`}>
+            <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{
+                    duration: 0.5,
+                    delay: 0.4 + index * 0.1,
+                }}
+                onMouseEnter={() => setIsHovered(true)}
+                onMouseLeave={() => setIsHovered(false)}
+                className="group relative overflow-hidden rounded-lg border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900"
+            >
+                {/* Animated Border Gradient */}
+                <div
+                    className="pointer-events-none absolute inset-0 rounded-lg opacity-0 transition-opacity duration-700"
+                    style={{
+                        opacity: isHovered ? 1 : 0,
+                        background:
+                            'linear-gradient(90deg, hsl(var(--foreground) / 0.1) 0%, hsl(var(--foreground) / 0.05) 100%)',
+                        border: '1px solid',
+                        borderImageSource:
+                            'linear-gradient(90deg, hsl(var(--foreground) / 0.3) 0%, hsl(var(--foreground) / 0.1) 100%)',
+                        borderImageSlice: 1,
+                    }}
+                />
+
+                {/* Featured COTD Badge */}
+                <div className="absolute top-3 right-3 z-20">
+                    <div className="flex items-center gap-1.5 rounded-full bg-gradient-to-r from-amber-500 to-amber-600 px-3 py-1.5 shadow-lg shadow-amber-500/30">
+                        <svg
+                            className="h-3.5 w-3.5 text-white"
+                            fill="currentColor"
+                            viewBox="0 0 20 20"
+                        >
+                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                        </svg>
+                        <span className="text-xs font-bold text-white">
+                            COTD
+                        </span>
+                    </div>
+                </div>
+
+                {/* Portfolio Label with Animated Line */}
+                <div className="p-4 pb-0">
+                    <div className="mb-3 flex items-center gap-2">
+                        <div
+                            className="h-[1px] bg-zinc-300 transition-all duration-700 dark:bg-zinc-700"
+                            style={{
+                                width: isHovered ? '32px' : '24px',
+                            }}
+                        />
+                        <span
+                            className="text-xs font-medium text-zinc-500 uppercase transition-all duration-700 dark:text-zinc-400"
+                            style={{
+                                letterSpacing: isHovered ? '0.1em' : '0.05em',
+                            }}
+                        >
+                            Featured Work
+                        </span>
+                    </div>
+                </div>
+
+                {/* Portfolio Image */}
+                <div className="relative mx-4 mb-4 h-56 overflow-hidden rounded-md bg-zinc-100 dark:bg-zinc-800">
+                    <img
+                        src={portfolio.image}
+                        alt={`${portfolio.name}'s portfolio`}
+                        className="h-full w-full object-cover transition-transform duration-700"
+                        style={{
+                            transform: isHovered ? 'scale(1.05)' : 'scale(1)',
+                        }}
+                    />
+
+                    {/* Corner Accent Lines */}
+                    <div className="pointer-events-none absolute inset-0">
+                        {/* Top Left */}
+                        <div
+                            className="absolute top-0 left-0 h-[2px] bg-white transition-all duration-700"
+                            style={{
+                                width: isHovered ? '24px' : '0px',
+                                transitionDelay: '50ms',
+                            }}
+                        />
+                        <div
+                            className="absolute top-0 left-0 w-[2px] bg-white transition-all duration-700"
+                            style={{
+                                height: isHovered ? '24px' : '0px',
+                                transitionDelay: '50ms',
+                            }}
+                        />
+
+                        {/* Top Right */}
+                        <div
+                            className="absolute top-0 right-0 h-[2px] bg-white transition-all duration-700"
+                            style={{
+                                width: isHovered ? '24px' : '0px',
+                                transitionDelay: '100ms',
+                            }}
+                        />
+                        <div
+                            className="absolute top-0 right-0 w-[2px] bg-white transition-all duration-700"
+                            style={{
+                                height: isHovered ? '24px' : '0px',
+                                transitionDelay: '100ms',
+                            }}
+                        />
+
+                        {/* Bottom Left */}
+                        <div
+                            className="absolute bottom-0 left-0 h-[2px] bg-white transition-all duration-700"
+                            style={{
+                                width: isHovered ? '24px' : '0px',
+                                transitionDelay: '150ms',
+                            }}
+                        />
+                        <div
+                            className="absolute bottom-0 left-0 w-[2px] bg-white transition-all duration-700"
+                            style={{
+                                height: isHovered ? '24px' : '0px',
+                                transitionDelay: '150ms',
+                            }}
+                        />
+
+                        {/* Bottom Right */}
+                        <div
+                            className="absolute right-0 bottom-0 h-[2px] bg-white transition-all duration-700"
+                            style={{
+                                width: isHovered ? '24px' : '0px',
+                                transitionDelay: '200ms',
+                            }}
+                        />
+                        <div
+                            className="absolute right-0 bottom-0 w-[2px] bg-white transition-all duration-700"
+                            style={{
+                                height: isHovered ? '24px' : '0px',
+                                transitionDelay: '200ms',
+                            }}
+                        />
+                    </div>
+                </div>
+
+                {/* Portfolio Content */}
+                <div className="p-4 pt-0">
+                    {/* Author Info */}
+                    <div className="mb-4 flex items-center gap-3">
+                        <img
+                            src={portfolio.avatar}
+                            alt={portfolio.name}
+                            className="h-10 w-10 rounded-full ring-2 ring-amber-400 dark:ring-amber-500"
+                        />
+                        <div
+                            className="transition-transform duration-700"
+                            style={{
+                                transform: isHovered
+                                    ? 'translateX(4px)'
+                                    : 'translateX(0)',
+                            }}
+                        >
+                            <h3 className="text-base font-semibold text-zinc-900 dark:text-zinc-100">
+                                {portfolio.name}
+                            </h3>
+                            <p className="text-sm text-zinc-600 dark:text-zinc-400">
+                                {portfolio.role}
+                            </p>
+                        </div>
+                    </div>
+
+                    {/* Description */}
+                    <p className="mb-4 line-clamp-2 text-sm text-zinc-600 dark:text-zinc-400">
+                        {portfolio.description}
+                    </p>
+
+                    {/* Tech Stack */}
+                    <div className="mb-4 flex flex-wrap gap-2">
+                        {portfolio.techStack.slice(0, 3).map((tech) => (
+                            <span
+                                key={tech}
+                                className="inline-flex items-center rounded-md bg-zinc-100 px-2.5 py-1 text-xs font-medium text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300"
+                            >
+                                {tech}
+                            </span>
+                        ))}
+                        {portfolio.techStack.length > 3 && (
+                            <span className="inline-flex items-center rounded-md bg-zinc-100 px-2.5 py-1 text-xs font-medium text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300">
+                                +{portfolio.techStack.length - 3}
+                            </span>
+                        )}
+                    </div>
+
+                    {/* View Portfolio CTA */}
+                    <div className="flex items-center justify-between">
+                        <span className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
+                            View Portfolio
+                        </span>
+                        <div
+                            className="flex h-8 w-8 items-center justify-center rounded-full bg-amber-500 text-white transition-all duration-700"
+                            style={{
+                                transform: isHovered
+                                    ? 'rotate(45deg)'
+                                    : 'rotate(0deg)',
+                            }}
+                        >
+                            <ArrowUpRight className="h-4 w-4" />
+                        </div>
+                    </div>
+                </div>
+            </motion.div>
+        </Link>
+    );
+}
+
 export default function Works() {
     return (
         <>
@@ -573,114 +805,18 @@ export default function Works() {
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             transition={{ duration: 0.5, delay: 0.3 }}
-                            className="mb-6 text-2xl font-bold text-zinc-900 dark:text-zinc-100"
+                            className="mb-8 text-2xl font-bold text-zinc-900 dark:text-zinc-100"
                         >
                             Standout Portfolios
                         </motion.h2>
 
-                        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
+                        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
                             {cotdPortfolios.map((portfolio, index) => (
-                                <Link
+                                <COTDCard
                                     key={portfolio.id}
-                                    href={`/portfolio/${portfolio.id}`}
-                                >
-                                    <motion.div
-                                        initial={{ opacity: 0, y: 20 }}
-                                        animate={{ opacity: 1, y: 0 }}
-                                        transition={{
-                                            duration: 0.5,
-                                            delay: 0.4 + index * 0.1,
-                                        }}
-                                        className="group relative overflow-hidden rounded-lg border border-amber-400 bg-white shadow-sm ring-2 ring-amber-400/20 transition-all hover:shadow-xl dark:border-amber-500 dark:bg-zinc-900 dark:ring-amber-500/20"
-                                    >
-                                        {/* COTD Badge */}
-                                        <div className="absolute top-2 right-2 z-10">
-                                            <span className="inline-flex items-center gap-1 rounded-full bg-amber-500 px-2.5 py-0.5 text-xs font-semibold text-white shadow-lg">
-                                                <svg
-                                                    className="h-3 w-3"
-                                                    fill="currentColor"
-                                                    viewBox="0 0 20 20"
-                                                >
-                                                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                                                </svg>
-                                                COTD
-                                            </span>
-                                        </div>
-
-                                        {/* Portfolio Image */}
-                                        <div className="relative h-40 overflow-hidden bg-zinc-100 dark:bg-zinc-800">
-                                            <img
-                                                src={portfolio.image}
-                                                alt={`${portfolio.name}'s portfolio`}
-                                                className="h-full w-full object-cover"
-                                            />
-                                            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-                                        </div>
-
-                                        {/* Portfolio Info */}
-                                        <div className="p-4">
-                                            <div className="mb-3 flex items-center gap-2.5">
-                                                <img
-                                                    src={portfolio.avatar}
-                                                    alt={portfolio.name}
-                                                    className="h-10 w-10 rounded-full ring-2 ring-amber-400 dark:ring-amber-500"
-                                                />
-                                                <div>
-                                                    <h3 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">
-                                                        {portfolio.name}
-                                                    </h3>
-                                                    <p className="text-xs text-zinc-600 dark:text-zinc-400">
-                                                        {portfolio.role}
-                                                    </p>
-                                                </div>
-                                            </div>
-
-                                            <p className="mb-3 line-clamp-2 text-xs text-zinc-600 dark:text-zinc-400">
-                                                {portfolio.description}
-                                            </p>
-
-                                            {/* Tech Stack Pills */}
-                                            <div className="flex flex-wrap gap-1.5">
-                                                {portfolio.techStack
-                                                    .slice(0, 3)
-                                                    .map((tech) => (
-                                                        <span
-                                                            key={tech}
-                                                            className="inline-flex items-center rounded-full bg-zinc-100 px-2 py-0.5 text-xs font-medium text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300"
-                                                        >
-                                                            {tech}
-                                                        </span>
-                                                    ))}
-                                                {portfolio.techStack.length >
-                                                    3 && (
-                                                    <span className="inline-flex items-center rounded-full bg-zinc-100 px-2 py-0.5 text-xs font-medium text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300">
-                                                        +
-                                                        {portfolio.techStack
-                                                            .length - 3}
-                                                    </span>
-                                                )}
-                                            </div>
-                                        </div>
-
-                                        {/* View Portfolio Link */}
-                                        <div className="border-t border-zinc-200 px-4 py-3 dark:border-zinc-800">
-                                            <div className="flex w-full items-center justify-center gap-2 text-xs font-medium text-amber-600 transition-colors hover:text-amber-700 dark:text-amber-400 dark:hover:text-amber-300">
-                                                <span>View Portfolio</span>
-                                                <svg
-                                                    className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1"
-                                                    fill="none"
-                                                    strokeLinecap="round"
-                                                    strokeLinejoin="round"
-                                                    strokeWidth={2}
-                                                    viewBox="0 0 24 24"
-                                                    stroke="currentColor"
-                                                >
-                                                    <path d="M9 5l7 7-7 7" />
-                                                </svg>
-                                            </div>
-                                        </div>
-                                    </motion.div>
-                                </Link>
+                                    portfolio={portfolio}
+                                    index={index}
+                                />
                             ))}
                         </div>
                     </div>
