@@ -67,6 +67,8 @@ class ObservatoryController extends Controller
                 'techStack' => $user->techStacks->pluck('name')->toArray(),
                 'profession' => $user->professions->pluck('name')->toArray(),
                 'created_at' => $user->created_at,
+                'is_featured' => $user->is_featured ?? false,
+                'featured_at' => $user->featured_at,
             ];
         });
 

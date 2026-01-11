@@ -2,7 +2,7 @@ import { Footerdemo } from '@/components/ui/footer-section';
 import { login, logout, register } from '@/routes';
 import { type SharedData } from '@/types';
 import { Head, Link, router, usePage } from '@inertiajs/react';
-import { ArrowUpRight, Check } from 'lucide-react';
+import { ArrowUpRight, Check, Star } from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
 import { useState } from 'react';
 
@@ -607,6 +607,16 @@ function PortfolioCard({
                                 }}
                             />
                             <div className="relative h-48 overflow-hidden">
+                                {/* COTD Badge - Only for featured portfolios */}
+                                {portfolio.is_featured && (
+                                    <div className="absolute top-3 right-3 z-10 flex items-center gap-1.5 rounded-full bg-gradient-to-r from-amber-500 to-orange-500 px-3 py-1.5 shadow-lg">
+                                        <Star className="h-3.5 w-3.5 fill-white text-white" />
+                                        <span className="text-xs font-bold text-white">
+                                            COTD
+                                        </span>
+                                    </div>
+                                )}
+
                                 {portfolio.image ? (
                                     <img
                                         src={portfolio.image}
