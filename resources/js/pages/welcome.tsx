@@ -202,7 +202,7 @@ function Navbar({ canRegister = true }: { canRegister?: boolean }) {
                                             <div className="border-t border-zinc-200 dark:border-zinc-800" />
 
                                             {/* Admin Link - Only visible to admins */}
-                                            {auth.user.is_admin && (
+                                            {!!auth.user.is_admin && (
                                                 <>
                                                     <Link
                                                         href="/admin/cotd"
@@ -485,7 +485,7 @@ function Navbar({ canRegister = true }: { canRegister?: boolean }) {
                                 </div>
 
                                 {/* Admin Link - Only visible to admins */}
-                                {auth.user.is_admin && (
+                                {!!auth.user.is_admin && (
                                     <Link
                                         href="/admin/cotd"
                                         className="mb-2 block rounded-lg bg-gradient-to-r from-amber-500 to-orange-500 px-4 py-3 text-center text-base font-semibold text-white shadow-sm hover:from-amber-600 hover:to-orange-600"
