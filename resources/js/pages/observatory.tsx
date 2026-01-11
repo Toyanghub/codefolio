@@ -2,7 +2,7 @@ import { Footerdemo } from '@/components/ui/footer-section';
 import { login, logout, register } from '@/routes';
 import { type SharedData } from '@/types';
 import { Head, Link, router, usePage } from '@inertiajs/react';
-import { Check } from 'lucide-react';
+import { ArrowUpRight, Check } from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
 import { useState } from 'react';
 
@@ -508,6 +508,304 @@ interface ObservatoryProps {
     }>;
 }
 
+// Portfolio Card Component with Feature Spotlight Design
+function PortfolioCard({
+    portfolio,
+    index,
+}: {
+    portfolio: {
+        id: number;
+        author: string;
+        authorImage: string | null;
+        title: string;
+        image: string | null;
+        mobileImage: string | null;
+        description: string;
+        websiteUrl: string | null;
+        skills: string[];
+        techStack: string[];
+        profession: string[];
+        created_at: string;
+    };
+    index: number;
+}) {
+    const [isHovered, setIsHovered] = useState(false);
+
+    const role =
+        portfolio.profession.length > 0 ? portfolio.profession[0] : 'Developer';
+
+    return (
+        <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: index * 0.1 }}
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
+            className="group relative"
+        >
+            <Link href={`/portfolio/${portfolio.id}`} className="block">
+                {/* Main Card Container */}
+                <div className="relative overflow-hidden bg-background p-6 transition-all duration-700">
+                    {/* Animated Border Frame */}
+                    <div
+                        className="absolute -inset-px transition-all duration-700"
+                        style={{
+                            background: isHovered
+                                ? 'linear-gradient(90deg, hsl(var(--foreground) / 0.1), transparent)'
+                                : 'transparent',
+                        }}
+                    />
+
+                    {/* Content Container */}
+                    <div className="relative space-y-4">
+                        {/* Top Section: Label and Index */}
+                        <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-2">
+                                <div
+                                    className="h-px bg-foreground transition-all duration-700"
+                                    style={{
+                                        width: isHovered ? 32 : 24,
+                                        transitionTimingFunction:
+                                            'cubic-bezier(0.16, 1, 0.3, 1)',
+                                    }}
+                                />
+                                <span
+                                    className="text-[9px] font-medium tracking-[0.2em] text-foreground/60 uppercase transition-all duration-700 md:text-[10px]"
+                                    style={{
+                                        letterSpacing: isHovered
+                                            ? '0.25em'
+                                            : '0.2em',
+                                        transitionTimingFunction:
+                                            'cubic-bezier(0.16, 1, 0.3, 1)',
+                                    }}
+                                >
+                                    Portfolio
+                                </span>
+                            </div>
+                            <span
+                                className="font-mono text-xs text-muted-foreground transition-all duration-700"
+                                style={{
+                                    opacity: isHovered ? 1 : 0.4,
+                                    transitionTimingFunction:
+                                        'cubic-bezier(0.16, 1, 0.3, 1)',
+                                }}
+                            >
+                                {String(portfolio.id).padStart(2, '0')}
+                            </span>
+                        </div>
+
+                        {/* Portfolio Image */}
+                        <div className="relative">
+                            <div
+                                className="absolute -inset-2 transition-all duration-700"
+                                style={{
+                                    boxShadow: isHovered
+                                        ? '0 16px 48px hsl(var(--foreground) / 0.08)'
+                                        : '0 0 0 transparent',
+                                    transitionTimingFunction:
+                                        'cubic-bezier(0.16, 1, 0.3, 1)',
+                                }}
+                            />
+                            <div className="relative h-48 overflow-hidden">
+                                {portfolio.image ? (
+                                    <img
+                                        src={portfolio.image}
+                                        alt={portfolio.title}
+                                        className="h-full w-full object-cover transition-all duration-1000"
+                                        style={{
+                                            transform: isHovered
+                                                ? 'scale(1.05)'
+                                                : 'scale(1)',
+                                            transitionTimingFunction:
+                                                'cubic-bezier(0.16, 1, 0.3, 1)',
+                                        }}
+                                    />
+                                ) : (
+                                    <div className="flex h-full w-full items-center justify-center bg-muted text-muted-foreground">
+                                        <svg
+                                            className="h-12 w-12"
+                                            fill="none"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            strokeWidth={1.5}
+                                            viewBox="0 0 24 24"
+                                            stroke="currentColor"
+                                        >
+                                            <path d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                        </svg>
+                                    </div>
+                                )}
+
+                                {/* Gradient Overlay */}
+                                <div
+                                    className="absolute inset-0 bg-gradient-to-t from-black/10 via-transparent to-transparent transition-opacity duration-700"
+                                    style={{
+                                        opacity: isHovered ? 1 : 0,
+                                        transitionTimingFunction:
+                                            'cubic-bezier(0.16, 1, 0.3, 1)',
+                                    }}
+                                />
+                            </div>
+                        </div>
+
+                        {/* Author Info */}
+                        <div className="flex items-center gap-3">
+                            {portfolio.authorImage ? (
+                                <img
+                                    src={portfolio.authorImage}
+                                    alt={portfolio.author}
+                                    className="h-10 w-10 rounded-full object-cover transition-all duration-700"
+                                    style={{
+                                        transform: isHovered
+                                            ? 'scale(1.1)'
+                                            : 'scale(1)',
+                                        transitionTimingFunction:
+                                            'cubic-bezier(0.16, 1, 0.3, 1)',
+                                    }}
+                                />
+                            ) : (
+                                <div
+                                    className="flex h-10 w-10 items-center justify-center rounded-full bg-foreground text-background transition-all duration-700"
+                                    style={{
+                                        transform: isHovered
+                                            ? 'scale(1.1)'
+                                            : 'scale(1)',
+                                        transitionTimingFunction:
+                                            'cubic-bezier(0.16, 1, 0.3, 1)',
+                                    }}
+                                >
+                                    <span className="text-sm font-semibold">
+                                        {portfolio.author
+                                            .charAt(0)
+                                            .toUpperCase()}
+                                    </span>
+                                </div>
+                            )}
+                            <div className="min-w-0 flex-1">
+                                <h3
+                                    className="truncate text-base font-normal tracking-tight text-foreground transition-all duration-700"
+                                    style={{
+                                        transform: isHovered
+                                            ? 'translateX(4px)'
+                                            : 'translateX(0)',
+                                        transitionTimingFunction:
+                                            'cubic-bezier(0.16, 1, 0.3, 1)',
+                                    }}
+                                >
+                                    {portfolio.author}
+                                </h3>
+                                <p
+                                    className="text-xs text-muted-foreground transition-all duration-700"
+                                    style={{
+                                        opacity: isHovered ? 1 : 0.7,
+                                        transform: isHovered
+                                            ? 'translateX(4px)'
+                                            : 'translateX(0)',
+                                        transitionTimingFunction:
+                                            'cubic-bezier(0.16, 1, 0.3, 1)',
+                                    }}
+                                >
+                                    {role}
+                                </p>
+                            </div>
+                        </div>
+
+                        {/* Skills Preview */}
+                        {portfolio.skills.length > 0 && (
+                            <div
+                                className="flex flex-wrap gap-1.5"
+                                style={{
+                                    opacity: isHovered ? 1 : 0.8,
+                                    transform: isHovered
+                                        ? 'translateY(0)'
+                                        : 'translateY(2px)',
+                                    transition:
+                                        'all 0.7s cubic-bezier(0.16, 1, 0.3, 1)',
+                                }}
+                            >
+                                {portfolio.skills.slice(0, 3).map((skill) => (
+                                    <span
+                                        key={skill}
+                                        className="rounded-full bg-muted px-2 py-0.5 text-[10px] font-medium text-muted-foreground"
+                                    >
+                                        {skill}
+                                    </span>
+                                ))}
+                                {portfolio.skills.length > 3 && (
+                                    <span className="rounded-full bg-muted px-2 py-0.5 text-[10px] font-medium text-muted-foreground">
+                                        +{portfolio.skills.length - 3}
+                                    </span>
+                                )}
+                            </div>
+                        )}
+
+                        {/* View Arrow - Bottom Right */}
+                        <div className="flex justify-end">
+                            <div
+                                className="flex h-8 w-8 items-center justify-center rounded-full border transition-all duration-500"
+                                style={{
+                                    borderColor: isHovered
+                                        ? 'hsl(var(--foreground))'
+                                        : 'hsl(var(--muted-foreground) / 0.3)',
+                                    backgroundColor: isHovered
+                                        ? 'hsl(var(--foreground))'
+                                        : 'transparent',
+                                    color: isHovered
+                                        ? 'hsl(var(--background))'
+                                        : 'hsl(var(--foreground))',
+                                    transform: isHovered
+                                        ? 'scale(1.1)'
+                                        : 'scale(1)',
+                                    boxShadow: isHovered
+                                        ? '0 4px 16px hsl(var(--foreground) / 0.15)'
+                                        : '0 0 0 transparent',
+                                    transitionTimingFunction:
+                                        'cubic-bezier(0.16, 1, 0.3, 1)',
+                                }}
+                            >
+                                <ArrowUpRight
+                                    className="h-3.5 w-3.5 transition-transform duration-500"
+                                    style={{
+                                        transform: isHovered
+                                            ? 'rotate(45deg)'
+                                            : 'rotate(0deg)',
+                                        transitionTimingFunction:
+                                            'cubic-bezier(0.16, 1, 0.3, 1)',
+                                    }}
+                                />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </Link>
+
+            {/* External Website Link - Floating Button */}
+            {portfolio.websiteUrl && (
+                <a
+                    href={portfolio.websiteUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={(e) => e.stopPropagation()}
+                    className="absolute top-8 right-8 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-background/90 text-foreground/60 shadow-md backdrop-blur-sm transition-all hover:bg-background hover:text-foreground hover:shadow-lg"
+                    title="Visit Website"
+                >
+                    <svg
+                        className="h-3.5 w-3.5"
+                        fill="none"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                    >
+                        <path d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                    </svg>
+                </a>
+            )}
+        </motion.div>
+    );
+}
+
 export default function Observatory({
     filterOptions = {
         skills: [],
@@ -968,118 +1266,16 @@ export default function Observatory({
                                     </div>
                                 </div>
                             ) : (
-                                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
-                                    {filteredPortfolios.map((portfolio) => (
-                                        <motion.div
-                                            key={portfolio.id}
-                                            initial={{ opacity: 0, y: 20 }}
-                                            animate={{ opacity: 1, y: 0 }}
-                                            transition={{ duration: 0.3 }}
-                                            className="group relative overflow-hidden rounded-lg border border-zinc-200 bg-white shadow-sm transition-all hover:shadow-md dark:border-zinc-800 dark:bg-zinc-900"
-                                        >
-                                            <Link
-                                                href={`/portfolio/${portfolio.id}`}
-                                                className="block"
-                                            >
-                                                {/* Portfolio Image */}
-                                                <div className="relative h-32 overflow-hidden bg-zinc-100 dark:bg-zinc-800">
-                                                    {portfolio.image ? (
-                                                        <img
-                                                            src={
-                                                                portfolio.image
-                                                            }
-                                                            alt={
-                                                                portfolio.title
-                                                            }
-                                                            className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-                                                        />
-                                                    ) : (
-                                                        <div className="flex h-full w-full items-center justify-center text-zinc-400">
-                                                            <svg
-                                                                className="h-12 w-12"
-                                                                fill="none"
-                                                                strokeLinecap="round"
-                                                                strokeLinejoin="round"
-                                                                strokeWidth={2}
-                                                                viewBox="0 0 24 24"
-                                                                stroke="currentColor"
-                                                            >
-                                                                <path d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                                            </svg>
-                                                        </div>
-                                                    )}
-                                                </div>
-
-                                                {/* Portfolio Info */}
-                                                <div className="p-3">
-                                                    <div className="flex items-center gap-2">
-                                                        {portfolio.authorImage ? (
-                                                            <img
-                                                                src={
-                                                                    portfolio.authorImage
-                                                                }
-                                                                alt={
-                                                                    portfolio.author
-                                                                }
-                                                                className="h-8 w-8 rounded-full object-cover"
-                                                            />
-                                                        ) : (
-                                                            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900">
-                                                                <span className="text-sm font-semibold">
-                                                                    {portfolio.author
-                                                                        .charAt(
-                                                                            0,
-                                                                        )
-                                                                        .toUpperCase()}
-                                                                </span>
-                                                            </div>
-                                                        )}
-                                                        <div className="flex-1">
-                                                            <h3 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">
-                                                                {
-                                                                    portfolio.author
-                                                                }
-                                                            </h3>
-                                                            <p className="text-xs text-zinc-600 dark:text-zinc-400">
-                                                                {portfolio
-                                                                    .profession
-                                                                    .length > 0
-                                                                    ? portfolio
-                                                                          .profession[0]
-                                                                    : 'Developer'}
-                                                            </p>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </Link>
-
-                                            {/* External Website Link Button */}
-                                            {portfolio.websiteUrl && (
-                                                <a
-                                                    href={portfolio.websiteUrl}
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
-                                                    onClick={(e) =>
-                                                        e.stopPropagation()
-                                                    }
-                                                    className="absolute top-2 right-2 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-white/90 text-zinc-700 shadow-md transition-all hover:bg-white hover:shadow-lg dark:bg-zinc-800/90 dark:text-zinc-300 dark:hover:bg-zinc-800"
-                                                    title="Visit Website"
-                                                >
-                                                    <svg
-                                                        className="h-4 w-4"
-                                                        fill="none"
-                                                        strokeLinecap="round"
-                                                        strokeLinejoin="round"
-                                                        strokeWidth={2}
-                                                        viewBox="0 0 24 24"
-                                                        stroke="currentColor"
-                                                    >
-                                                        <path d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                                                    </svg>
-                                                </a>
-                                            )}
-                                        </motion.div>
-                                    ))}
+                                <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3">
+                                    {filteredPortfolios.map(
+                                        (portfolio, index) => (
+                                            <PortfolioCard
+                                                key={portfolio.id}
+                                                portfolio={portfolio}
+                                                index={index}
+                                            />
+                                        ),
+                                    )}
                                 </div>
                             )}
                         </div>
