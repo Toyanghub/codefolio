@@ -2,29 +2,23 @@ import { Footerdemo } from '@/components/ui/footer-section';
 import { login, logout, register } from '@/routes';
 import { type SharedData } from '@/types';
 import { Head, Link, router, usePage } from '@inertiajs/react';
+import { ArrowUpRight } from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
 import { useState } from 'react';
 
 interface Portfolio {
     id: number;
     name: string;
-    role: string;
-    avatar: string;
-    image: string;
+    email: string;
+    profilePicture: string | null;
+    desktopImage: string;
+    mobileImage: string | null;
+    description: string | null;
+    websiteUrl: string | null;
     skills: string[];
     techStack: string[];
-    isCotd?: boolean;
-    description?: string;
-    bio?: string;
-    email?: string;
-    website?: string;
-    github?: string;
-    projects?: {
-        title: string;
-        description: string;
-        technologies: string[];
-        image?: string;
-    }[];
+    professions: string[];
+    createdAt: string;
 }
 
 interface PageProps {
@@ -350,387 +344,588 @@ function Navbar({ canRegister = true }: { canRegister?: boolean }) {
 }
 
 export default function PortfolioDetail({ portfolio, canRegister }: PageProps) {
+    const [isHovered, setIsHovered] = useState(false);
+    const [activeImage, setActiveImage] = useState<
+        'both' | 'desktop' | 'mobile'
+    >('both');
+
+    // Get profession/role for display
+    const role =
+        portfolio.professions.length > 0
+            ? portfolio.professions[0]
+            : 'Developer';
+
     return (
         <>
             <Head title={`${portfolio.name} - Portfolio`} />
 
-            <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950">
+            <div className="min-h-screen bg-background">
                 <Navbar canRegister={canRegister} />
 
-                <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 lg:px-8">
-                    {/* Header Section */}
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.5 }}
-                        className="mb-12"
+                <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+                    {/* Feature Spotlight Layout */}
+                    <div
+                        className="group relative flex cursor-pointer flex-col items-center gap-8 md:flex-row md:items-start md:gap-12 lg:gap-16"
+                        onMouseEnter={() => setIsHovered(true)}
+                        onMouseLeave={() => setIsHovered(false)}
                     >
-                        <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-zinc-100 to-zinc-200 p-8 dark:from-zinc-900 dark:to-zinc-800">
-                            {/* COTD Badge */}
-                            {portfolio.isCotd && (
-                                <motion.div
-                                    initial={{ scale: 0 }}
-                                    animate={{ scale: 1 }}
-                                    transition={{
-                                        type: 'spring',
-                                        stiffness: 200,
-                                        delay: 0.2,
+                        {/* Left: Portfolio Info Block */}
+                        <div className="relative z-10 flex w-full max-w-[420px] shrink-0 flex-col items-center text-center md:w-[340px] md:items-start md:text-left lg:w-[400px] lg:pt-4">
+                            {/* Label with animated line */}
+                            <div className="mb-6 flex items-center gap-3 md:mb-8 md:gap-4">
+                                <div
+                                    className="h-px bg-foreground transition-all duration-700"
+                                    style={{
+                                        width: isHovered ? 48 : 32,
+                                        transitionTimingFunction:
+                                            'cubic-bezier(0.16, 1, 0.3, 1)',
                                     }}
-                                    className="absolute top-6 right-6"
+                                />
+                                <span
+                                    className="text-[10px] font-medium tracking-[0.25em] text-foreground uppercase transition-all duration-700 md:text-xs"
+                                    style={{
+                                        letterSpacing: isHovered
+                                            ? '0.3em'
+                                            : '0.25em',
+                                        transitionTimingFunction:
+                                            'cubic-bezier(0.16, 1, 0.3, 1)',
+                                    }}
                                 >
-                                    <div className="flex items-center gap-2 rounded-full bg-amber-500 px-4 py-2 text-sm font-bold text-white shadow-lg">
-                                        <svg
-                                            className="h-5 w-5"
-                                            fill="currentColor"
-                                            viewBox="0 0 20 20"
-                                        >
-                                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                                        </svg>
-                                        COTD
-                                    </div>
-                                </motion.div>
-                            )}
+                                    Portfolio
+                                </span>
+                            </div>
 
-                            <div className="flex flex-col items-start gap-6 sm:flex-row sm:items-center">
-                                {/* Avatar */}
+                            {/* Profile Picture */}
+                            {portfolio.profilePicture && (
                                 <motion.div
-                                    initial={{ scale: 0 }}
-                                    animate={{ scale: 1 }}
-                                    transition={{
-                                        type: 'spring',
-                                        stiffness: 200,
-                                        delay: 0.3,
+                                    className="mb-6"
+                                    style={{
+                                        transform: isHovered
+                                            ? 'scale(1.05)'
+                                            : 'scale(1)',
+                                        transition:
+                                            'transform 0.7s cubic-bezier(0.16, 1, 0.3, 1)',
                                     }}
                                 >
                                     <img
-                                        src={portfolio.avatar}
+                                        src={`/storage/${portfolio.profilePicture}`}
                                         alt={portfolio.name}
-                                        className={`h-32 w-32 rounded-full border-4 ${
-                                            portfolio.isCotd
-                                                ? 'border-amber-400 ring-4 ring-amber-400/20'
-                                                : 'border-white dark:border-zinc-700'
-                                        } shadow-xl`}
+                                        className="h-20 w-20 rounded-full object-cover md:h-24 md:w-24"
                                     />
                                 </motion.div>
+                            )}
 
-                                {/* Info */}
-                                <div className="flex-1">
-                                    <motion.h1
-                                        initial={{ opacity: 0, x: -20 }}
-                                        animate={{ opacity: 1, x: 0 }}
-                                        transition={{ delay: 0.4 }}
-                                        className="text-3xl font-bold text-zinc-900 dark:text-zinc-100"
-                                    >
-                                        {portfolio.name}
-                                    </motion.h1>
-                                    <motion.p
-                                        initial={{ opacity: 0, x: -20 }}
-                                        animate={{ opacity: 1, x: 0 }}
-                                        transition={{ delay: 0.5 }}
-                                        className="mt-2 text-lg text-zinc-600 dark:text-zinc-400"
-                                    >
-                                        {portfolio.role}
-                                    </motion.p>
+                            {/* Name - responsive text sizes */}
+                            <h1 className="relative mb-2">
+                                <span
+                                    className="block text-4xl font-normal tracking-tight text-foreground transition-all duration-700 sm:text-5xl md:text-5xl lg:text-6xl"
+                                    style={{
+                                        transform: isHovered
+                                            ? 'translateY(-2px)'
+                                            : 'translateY(0)',
+                                        transitionTimingFunction:
+                                            'cubic-bezier(0.16, 1, 0.3, 1)',
+                                    }}
+                                >
+                                    {portfolio.name}
+                                </span>
+                            </h1>
 
-                                    {/* Skills Tags */}
-                                    <motion.div
-                                        initial={{ opacity: 0, y: 10 }}
-                                        animate={{ opacity: 1, y: 0 }}
-                                        transition={{ delay: 0.6 }}
-                                        className="mt-4 flex flex-wrap gap-2"
-                                    >
-                                        {portfolio.skills.map((skill) => (
+                            {/* Role */}
+                            <p
+                                className="mb-6 text-lg font-medium text-muted-foreground transition-all duration-700"
+                                style={{
+                                    opacity: isHovered ? 1 : 0.7,
+                                    transform: isHovered
+                                        ? 'translateX(4px)'
+                                        : 'translateX(0)',
+                                    transitionTimingFunction:
+                                        'cubic-bezier(0.16, 1, 0.3, 1)',
+                                }}
+                            >
+                                {role}
+                            </p>
+
+                            {/* Description */}
+                            {portfolio.description && (
+                                <p
+                                    className="mt-6 max-w-[360px] text-sm leading-relaxed transition-all duration-700 md:mt-8 md:max-w-[320px] md:text-base lg:mt-10 lg:max-w-[360px]"
+                                    style={{
+                                        color: isHovered
+                                            ? 'hsl(var(--muted-foreground))'
+                                            : 'hsl(var(--muted-foreground) / 0.6)',
+                                        transform: isHovered
+                                            ? 'translateY(-4px)'
+                                            : 'translateY(0)',
+                                        transitionTimingFunction:
+                                            'cubic-bezier(0.16, 1, 0.3, 1)',
+                                    }}
+                                >
+                                    {portfolio.description}
+                                </p>
+                            )}
+
+                            {/* Skills Tags */}
+                            {portfolio.skills.length > 0 && (
+                                <div
+                                    className="mt-6 flex flex-wrap justify-center gap-2 md:mt-8 md:justify-start"
+                                    style={{
+                                        opacity: isHovered ? 1 : 0.8,
+                                        transform: isHovered
+                                            ? 'translateY(0)'
+                                            : 'translateY(4px)',
+                                        transition:
+                                            'all 0.7s cubic-bezier(0.16, 1, 0.3, 1)',
+                                    }}
+                                >
+                                    {portfolio.skills
+                                        .slice(0, 4)
+                                        .map((skill) => (
                                             <span
                                                 key={skill}
-                                                className="rounded-full bg-blue-100 px-3 py-1 text-sm font-medium text-blue-700 dark:bg-blue-950 dark:text-blue-300"
+                                                className="rounded-full bg-muted px-3 py-1 text-xs font-medium text-muted-foreground"
                                             >
                                                 {skill}
                                             </span>
                                         ))}
-                                    </motion.div>
                                 </div>
-                            </div>
-                        </div>
-                    </motion.div>
-
-                    {/* Main Content Grid */}
-                    <div className="grid gap-8 lg:grid-cols-3">
-                        {/* Left Column - Main Content */}
-                        <div className="space-y-8 lg:col-span-2">
-                            {/* Cover Image */}
-                            <motion.div
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: 0.7 }}
-                                className="overflow-hidden rounded-2xl"
-                            >
-                                <img
-                                    src={portfolio.image}
-                                    alt={`${portfolio.name}'s work`}
-                                    className="h-80 w-full object-cover"
-                                />
-                            </motion.div>
-
-                            {/* About Section */}
-                            <motion.div
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: 0.8 }}
-                                className="rounded-2xl bg-white p-6 shadow-sm dark:bg-zinc-900"
-                            >
-                                <h2 className="mb-4 text-2xl font-bold text-zinc-900 dark:text-zinc-100">
-                                    About
-                                </h2>
-                                <p className="leading-relaxed text-zinc-600 dark:text-zinc-400">
-                                    {portfolio.description ||
-                                        portfolio.bio ||
-                                        `${portfolio.name} is a talented ${portfolio.role} specializing in ${portfolio.skills.join(', ')}. With expertise in modern technologies and a passion for creating exceptional digital experiences, they bring creativity and technical excellence to every project.`}
-                                </p>
-                            </motion.div>
-
-                            {/* Projects Section (if available) */}
-                            {portfolio.projects &&
-                                portfolio.projects.length > 0 && (
-                                    <motion.div
-                                        initial={{ opacity: 0, y: 20 }}
-                                        animate={{ opacity: 1, y: 0 }}
-                                        transition={{ delay: 0.9 }}
-                                        className="rounded-2xl bg-white p-6 shadow-sm dark:bg-zinc-900"
-                                    >
-                                        <h2 className="mb-6 text-2xl font-bold text-zinc-900 dark:text-zinc-100">
-                                            Featured Projects
-                                        </h2>
-                                        <div className="space-y-6">
-                                            {portfolio.projects.map(
-                                                (project, idx) => (
-                                                    <motion.div
-                                                        key={idx}
-                                                        initial={{
-                                                            opacity: 0,
-                                                            x: -20,
-                                                        }}
-                                                        animate={{
-                                                            opacity: 1,
-                                                            x: 0,
-                                                        }}
-                                                        transition={{
-                                                            delay:
-                                                                1 + idx * 0.1,
-                                                        }}
-                                                        className="border-b border-zinc-200 pb-6 last:border-0 last:pb-0 dark:border-zinc-800"
-                                                    >
-                                                        {project.image && (
-                                                            <img
-                                                                src={
-                                                                    project.image
-                                                                }
-                                                                alt={
-                                                                    project.title
-                                                                }
-                                                                className="mb-4 h-48 w-full rounded-lg object-cover"
-                                                            />
-                                                        )}
-                                                        <h3 className="mb-2 text-lg font-semibold text-zinc-900 dark:text-zinc-100">
-                                                            {project.title}
-                                                        </h3>
-                                                        <p className="mb-3 text-zinc-600 dark:text-zinc-400">
-                                                            {
-                                                                project.description
-                                                            }
-                                                        </p>
-                                                        <div className="flex flex-wrap gap-2">
-                                                            {project.technologies.map(
-                                                                (tech) => (
-                                                                    <span
-                                                                        key={
-                                                                            tech
-                                                                        }
-                                                                        className="rounded-full bg-zinc-100 px-3 py-1 text-xs font-medium text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300"
-                                                                    >
-                                                                        {tech}
-                                                                    </span>
-                                                                ),
-                                                            )}
-                                                        </div>
-                                                    </motion.div>
-                                                ),
-                                            )}
-                                        </div>
-                                    </motion.div>
-                                )}
-                        </div>
-
-                        {/* Right Column - Sidebar */}
-                        <div className="space-y-6">
-                            {/* Tech Stack */}
-                            <motion.div
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: 0.7 }}
-                                className="rounded-2xl bg-white p-6 shadow-sm dark:bg-zinc-900"
-                            >
-                                <h3 className="mb-4 text-lg font-bold text-zinc-900 dark:text-zinc-100">
-                                    Tech Stack
-                                </h3>
-                                <div className="flex flex-wrap gap-2">
-                                    {portfolio.techStack.map((tech) => (
-                                        <span
-                                            key={tech}
-                                            className="rounded-full bg-zinc-100 px-3 py-2 text-sm font-medium text-zinc-800 dark:bg-zinc-800 dark:text-zinc-200"
-                                        >
-                                            {tech}
-                                        </span>
-                                    ))}
-                                </div>
-                            </motion.div>
-
-                            {/* Contact Information */}
-                            {(portfolio.email ||
-                                portfolio.website ||
-                                portfolio.github) && (
-                                <motion.div
-                                    initial={{ opacity: 0, y: 20 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    transition={{ delay: 0.8 }}
-                                    className="rounded-2xl bg-white p-6 shadow-sm dark:bg-zinc-900"
-                                >
-                                    <h3 className="mb-4 text-lg font-bold text-zinc-900 dark:text-zinc-100">
-                                        Contact
-                                    </h3>
-                                    <div className="space-y-3">
-                                        {portfolio.email && (
-                                            <a
-                                                href={`mailto:${portfolio.email}`}
-                                                className="flex items-center gap-3 text-zinc-600 transition-colors hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
-                                            >
-                                                <svg
-                                                    className="h-5 w-5"
-                                                    fill="none"
-                                                    strokeLinecap="round"
-                                                    strokeLinejoin="round"
-                                                    strokeWidth={2}
-                                                    viewBox="0 0 24 24"
-                                                    stroke="currentColor"
-                                                >
-                                                    <path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                                                </svg>
-                                                <span className="text-sm">
-                                                    {portfolio.email}
-                                                </span>
-                                            </a>
-                                        )}
-                                        {portfolio.website && (
-                                            <a
-                                                href={portfolio.website}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className="flex items-center gap-3 text-zinc-600 transition-colors hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
-                                            >
-                                                <svg
-                                                    className="h-5 w-5"
-                                                    fill="none"
-                                                    strokeLinecap="round"
-                                                    strokeLinejoin="round"
-                                                    strokeWidth={2}
-                                                    viewBox="0 0 24 24"
-                                                    stroke="currentColor"
-                                                >
-                                                    <path d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
-                                                </svg>
-                                                <span className="text-sm">
-                                                    Visit Website
-                                                </span>
-                                            </a>
-                                        )}
-                                        {portfolio.github && (
-                                            <a
-                                                href={portfolio.github}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className="flex items-center gap-3 text-zinc-600 transition-colors hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
-                                            >
-                                                <svg
-                                                    className="h-5 w-5"
-                                                    fill="currentColor"
-                                                    viewBox="0 0 24 24"
-                                                >
-                                                    <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
-                                                </svg>
-                                                <span className="text-sm">
-                                                    GitHub Profile
-                                                </span>
-                                            </a>
-                                        )}
-                                    </div>
-                                </motion.div>
                             )}
 
-                            {/* Stats Card */}
-                            <motion.div
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: 0.9 }}
-                                className="rounded-2xl bg-gradient-to-br from-blue-50 to-purple-50 p-6 dark:from-blue-950/20 dark:to-purple-950/20"
-                            >
-                                <h3 className="mb-4 text-lg font-bold text-zinc-900 dark:text-zinc-100">
-                                    Quick Stats
-                                </h3>
-                                <div className="space-y-3">
-                                    <div className="flex justify-between">
-                                        <span className="text-zinc-600 dark:text-zinc-400">
-                                            Skills
-                                        </span>
-                                        <span className="font-semibold text-zinc-900 dark:text-zinc-100">
-                                            {portfolio.skills.length}
+                            {/* Visit Website CTA */}
+                            {portfolio.websiteUrl && (
+                                <a
+                                    href={portfolio.websiteUrl}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="mt-6 flex items-center gap-4 md:mt-8 lg:mt-10"
+                                >
+                                    <div
+                                        className="flex h-10 w-10 items-center justify-center rounded-full border transition-all duration-500 md:h-11 md:w-11 lg:h-12 lg:w-12"
+                                        style={{
+                                            borderColor: isHovered
+                                                ? 'hsl(var(--foreground))'
+                                                : 'hsl(var(--muted-foreground) / 0.3)',
+                                            backgroundColor: isHovered
+                                                ? 'hsl(var(--foreground))'
+                                                : 'transparent',
+                                            color: isHovered
+                                                ? 'hsl(var(--background))'
+                                                : 'hsl(var(--foreground))',
+                                            transform: isHovered
+                                                ? 'scale(1.05)'
+                                                : 'scale(1)',
+                                            boxShadow: isHovered
+                                                ? '0 8px 32px hsl(var(--foreground) / 0.15)'
+                                                : '0 0 0 transparent',
+                                            transitionTimingFunction:
+                                                'cubic-bezier(0.16, 1, 0.3, 1)',
+                                        }}
+                                    >
+                                        <ArrowUpRight
+                                            className="h-3.5 w-3.5 transition-transform duration-500 md:h-4 md:w-4"
+                                            style={{
+                                                transform: isHovered
+                                                    ? 'rotate(45deg)'
+                                                    : 'rotate(0deg)',
+                                                transitionTimingFunction:
+                                                    'cubic-bezier(0.16, 1, 0.3, 1)',
+                                            }}
+                                        />
+                                    </div>
+                                    <span
+                                        className="text-[10px] font-medium tracking-widest uppercase transition-all duration-700 md:text-xs"
+                                        style={{
+                                            opacity: isHovered ? 1 : 0.5,
+                                            transform: isHovered
+                                                ? 'translateX(0)'
+                                                : 'translateX(-8px)',
+                                            transitionTimingFunction:
+                                                'cubic-bezier(0.16, 1, 0.3, 1)',
+                                            transitionDelay: isHovered
+                                                ? '100ms'
+                                                : '0ms',
+                                        }}
+                                    >
+                                        Visit Site
+                                    </span>
+                                </a>
+                            )}
+
+                            {/* Image Toggle Buttons - Three Options */}
+                            {portfolio.mobileImage && (
+                                <div className="mt-8 flex gap-1.5 rounded-lg bg-muted/50 p-1">
+                                    <button
+                                        onClick={() => setActiveImage('both')}
+                                        className={`rounded-md px-4 py-2 text-xs font-medium tracking-wider uppercase transition-all duration-300 ${
+                                            activeImage === 'both'
+                                                ? 'bg-foreground text-background shadow-sm'
+                                                : 'text-muted-foreground hover:text-foreground'
+                                        }`}
+                                    >
+                                        Both
+                                    </button>
+                                    <button
+                                        onClick={() =>
+                                            setActiveImage('desktop')
+                                        }
+                                        className={`rounded-md px-4 py-2 text-xs font-medium tracking-wider uppercase transition-all duration-300 ${
+                                            activeImage === 'desktop'
+                                                ? 'bg-foreground text-background shadow-sm'
+                                                : 'text-muted-foreground hover:text-foreground'
+                                        }`}
+                                    >
+                                        Desktop
+                                    </button>
+                                    <button
+                                        onClick={() => setActiveImage('mobile')}
+                                        className={`rounded-md px-4 py-2 text-xs font-medium tracking-wider uppercase transition-all duration-300 ${
+                                            activeImage === 'mobile'
+                                                ? 'bg-foreground text-background shadow-sm'
+                                                : 'text-muted-foreground hover:text-foreground'
+                                        }`}
+                                    >
+                                        Mobile
+                                    </button>
+                                </div>
+                            )}
+                        </div>
+
+                        {/* Right: Portfolio Screenshot Block */}
+                        <div
+                            className="relative transition-all duration-700"
+                            style={{
+                                transform: isHovered
+                                    ? 'translateX(4px) translateY(-4px)'
+                                    : 'translateX(0) translateY(0)',
+                                transitionTimingFunction:
+                                    'cubic-bezier(0.16, 1, 0.3, 1)',
+                            }}
+                        >
+                            {/* Frame outline */}
+                            <div
+                                className="absolute -inset-3 border transition-all duration-700 md:-inset-4"
+                                style={{
+                                    borderColor: isHovered
+                                        ? 'hsl(var(--foreground) / 0.15)'
+                                        : 'transparent',
+                                    transform: isHovered
+                                        ? 'scale(1.01)'
+                                        : 'scale(1)',
+                                    transitionTimingFunction:
+                                        'cubic-bezier(0.16, 1, 0.3, 1)',
+                                }}
+                            />
+
+                            {/* Image container - responsive sizing with support for both/desktop/mobile */}
+                            {activeImage === 'both' ? (
+                                /* Both Images Side by Side */
+                                <div className="flex gap-4 md:gap-6">
+                                    {/* Desktop Image */}
+                                    <div className="relative flex-1">
+                                        <div
+                                            className="absolute -inset-1 transition-all duration-700"
+                                            style={{
+                                                boxShadow: isHovered
+                                                    ? '0 24px 64px hsl(var(--foreground) / 0.1)'
+                                                    : '0 0 0 transparent',
+                                                transitionTimingFunction:
+                                                    'cubic-bezier(0.16, 1, 0.3, 1)',
+                                            }}
+                                        />
+                                        <div className="relative h-[280px] w-full overflow-hidden sm:h-[320px] md:h-[360px] lg:h-[420px]">
+                                            <img
+                                                src={`/storage/${portfolio.desktopImage}`}
+                                                alt={`${portfolio.name}'s portfolio - Desktop`}
+                                                className="h-full w-full object-contain transition-all duration-1000"
+                                                style={{
+                                                    transform: isHovered
+                                                        ? 'scale(1.03)'
+                                                        : 'scale(1)',
+                                                    transitionTimingFunction:
+                                                        'cubic-bezier(0.16, 1, 0.3, 1)',
+                                                }}
+                                            />
+                                            <div
+                                                className="absolute inset-0 bg-gradient-to-t from-black/10 via-transparent to-transparent transition-opacity duration-700"
+                                                style={{
+                                                    opacity: isHovered ? 1 : 0,
+                                                    transitionTimingFunction:
+                                                        'cubic-bezier(0.16, 1, 0.3, 1)',
+                                                }}
+                                            />
+                                        </div>
+                                        <span className="mt-2 block text-center text-xs font-medium tracking-wider text-muted-foreground uppercase">
+                                            Desktop
                                         </span>
                                     </div>
-                                    <div className="flex justify-between">
-                                        <span className="text-zinc-600 dark:text-zinc-400">
-                                            Technologies
-                                        </span>
-                                        <span className="font-semibold text-zinc-900 dark:text-zinc-100">
-                                            {portfolio.techStack.length}
-                                        </span>
-                                    </div>
-                                    {portfolio.projects && (
-                                        <div className="flex justify-between">
-                                            <span className="text-zinc-600 dark:text-zinc-400">
-                                                Projects
-                                            </span>
-                                            <span className="font-semibold text-zinc-900 dark:text-zinc-100">
-                                                {portfolio.projects.length}
+
+                                    {/* Mobile Image */}
+                                    {portfolio.mobileImage && (
+                                        <div className="relative w-[140px] sm:w-[160px] md:w-[180px] lg:w-[200px]">
+                                            <div
+                                                className="absolute -inset-1 transition-all duration-700"
+                                                style={{
+                                                    boxShadow: isHovered
+                                                        ? '0 24px 64px hsl(var(--foreground) / 0.1)'
+                                                        : '0 0 0 transparent',
+                                                    transitionTimingFunction:
+                                                        'cubic-bezier(0.16, 1, 0.3, 1)',
+                                                }}
+                                            />
+                                            <div className="relative h-[280px] w-full overflow-hidden sm:h-[320px] md:h-[360px] lg:h-[420px]">
+                                                <img
+                                                    src={`/storage/${portfolio.mobileImage}`}
+                                                    alt={`${portfolio.name}'s portfolio - Mobile`}
+                                                    className="h-full w-full object-contain transition-all duration-1000"
+                                                    style={{
+                                                        transform: isHovered
+                                                            ? 'scale(1.03)'
+                                                            : 'scale(1)',
+                                                        transitionTimingFunction:
+                                                            'cubic-bezier(0.16, 1, 0.3, 1)',
+                                                    }}
+                                                />
+                                                <div
+                                                    className="absolute inset-0 bg-gradient-to-t from-black/10 via-transparent to-transparent transition-opacity duration-700"
+                                                    style={{
+                                                        opacity: isHovered
+                                                            ? 1
+                                                            : 0,
+                                                        transitionTimingFunction:
+                                                            'cubic-bezier(0.16, 1, 0.3, 1)',
+                                                    }}
+                                                />
+                                            </div>
+                                            <span className="mt-2 block text-center text-xs font-medium tracking-wider text-muted-foreground uppercase">
+                                                Mobile
                                             </span>
                                         </div>
                                     )}
                                 </div>
-                            </motion.div>
+                            ) : (
+                                /* Single Image View */
+                                <div
+                                    className={`relative overflow-hidden ${
+                                        activeImage === 'mobile'
+                                            ? 'h-[420px] w-[220px] sm:h-[480px] sm:w-[260px] md:h-[540px] md:w-[300px]'
+                                            : 'h-[280px] w-[360px] sm:h-[340px] sm:w-[440px] md:h-[400px] md:w-[520px] lg:h-[460px] lg:w-[600px]'
+                                    }`}
+                                >
+                                    <div
+                                        className="absolute -inset-1 transition-all duration-700"
+                                        style={{
+                                            boxShadow: isHovered
+                                                ? '0 24px 64px hsl(var(--foreground) / 0.1)'
+                                                : '0 0 0 transparent',
+                                            transitionTimingFunction:
+                                                'cubic-bezier(0.16, 1, 0.3, 1)',
+                                        }}
+                                    />
+                                    <img
+                                        src={`/storage/${
+                                            activeImage === 'mobile' &&
+                                            portfolio.mobileImage
+                                                ? portfolio.mobileImage
+                                                : portfolio.desktopImage
+                                        }`}
+                                        alt={`${portfolio.name}'s portfolio - ${activeImage}`}
+                                        className="h-full w-full object-contain transition-all duration-1000"
+                                        style={{
+                                            transform: isHovered
+                                                ? 'scale(1.03)'
+                                                : 'scale(1)',
+                                            transitionTimingFunction:
+                                                'cubic-bezier(0.16, 1, 0.3, 1)',
+                                        }}
+                                    />
 
-                            {/* Back Button */}
+                                    <div
+                                        className="absolute inset-0 bg-gradient-to-t from-black/10 via-transparent to-transparent transition-opacity duration-700"
+                                        style={{
+                                            opacity: isHovered ? 1 : 0,
+                                            transitionTimingFunction:
+                                                'cubic-bezier(0.16, 1, 0.3, 1)',
+                                        }}
+                                    />
+
+                                    {/* Corner accents */}
+                                    <div
+                                        className="absolute top-2 left-2 h-5 w-px bg-white/80 transition-all duration-500 md:top-3 md:left-3 md:h-6"
+                                        style={{
+                                            opacity: isHovered ? 1 : 0,
+                                            transform: isHovered
+                                                ? 'scaleY(1)'
+                                                : 'scaleY(0)',
+                                            transformOrigin: 'top',
+                                            transitionTimingFunction:
+                                                'cubic-bezier(0.16, 1, 0.3, 1)',
+                                            transitionDelay: '50ms',
+                                        }}
+                                    />
+                                    <div
+                                        className="absolute top-2 left-2 h-px w-5 bg-white/80 transition-all duration-500 md:top-3 md:left-3 md:w-6"
+                                        style={{
+                                            opacity: isHovered ? 1 : 0,
+                                            transform: isHovered
+                                                ? 'scaleX(1)'
+                                                : 'scaleX(0)',
+                                            transformOrigin: 'left',
+                                            transitionTimingFunction:
+                                                'cubic-bezier(0.16, 1, 0.3, 1)',
+                                            transitionDelay: '100ms',
+                                        }}
+                                    />
+                                    <div
+                                        className="absolute right-2 bottom-2 h-5 w-px bg-white/80 transition-all duration-500 md:right-3 md:bottom-3 md:h-6"
+                                        style={{
+                                            opacity: isHovered ? 1 : 0,
+                                            transform: isHovered
+                                                ? 'scaleY(1)'
+                                                : 'scaleY(0)',
+                                            transformOrigin: 'bottom',
+                                            transitionTimingFunction:
+                                                'cubic-bezier(0.16, 1, 0.3, 1)',
+                                            transitionDelay: '150ms',
+                                        }}
+                                    />
+                                    <div
+                                        className="absolute right-2 bottom-2 h-px w-5 bg-white/80 transition-all duration-500 md:right-3 md:bottom-3 md:w-6"
+                                        style={{
+                                            opacity: isHovered ? 1 : 0,
+                                            transform: isHovered
+                                                ? 'scaleX(1)'
+                                                : 'scaleX(0)',
+                                            transformOrigin: 'right',
+                                            transitionTimingFunction:
+                                                'cubic-bezier(0.16, 1, 0.3, 1)',
+                                            transitionDelay: '200ms',
+                                        }}
+                                    />
+                                </div>
+                            )}
+
+                            {/* Portfolio ID */}
+                            <span
+                                className="absolute right-0 -bottom-6 font-mono text-xs text-muted-foreground transition-all duration-700 md:-bottom-8 md:text-sm"
+                                style={{
+                                    opacity: isHovered ? 1 : 0.4,
+                                    transform: isHovered
+                                        ? 'translateY(12px)'
+                                        : 'translateY(0)',
+                                    transitionTimingFunction:
+                                        'cubic-bezier(0.16, 1, 0.3, 1)',
+                                }}
+                            >
+                                {String(portfolio.id).padStart(2, '0')}
+                            </span>
+                        </div>
+                    </div>
+
+                    {/* Additional Details Section */}
+                    <div className="mx-auto mt-24 max-w-6xl">
+                        <div className="grid gap-8 md:gap-12 lg:grid-cols-3">
+                            {/* Tech Stack */}
                             <motion.div
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: 1 }}
+                                transition={{ delay: 0.2 }}
+                                className="space-y-4"
                             >
-                                <Link
-                                    href="/observatory"
-                                    className="flex w-full items-center justify-center gap-2 rounded-xl bg-zinc-900 px-6 py-3 font-medium text-white transition-colors hover:bg-zinc-800 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200"
-                                >
-                                    <svg
-                                        className="h-5 w-5"
-                                        fill="none"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth={2}
-                                        viewBox="0 0 24 24"
-                                        stroke="currentColor"
+                                <h3 className="text-xs font-semibold tracking-[0.2em] text-muted-foreground uppercase">
+                                    Tech Stack
+                                </h3>
+                                {portfolio.techStack.length > 0 ? (
+                                    <div className="flex flex-wrap gap-2">
+                                        {portfolio.techStack.map((tech) => (
+                                            <span
+                                                key={tech}
+                                                className="rounded-md bg-muted px-3 py-1.5 text-sm font-medium text-foreground"
+                                            >
+                                                {tech}
+                                            </span>
+                                        ))}
+                                    </div>
+                                ) : (
+                                    <p className="text-sm text-muted-foreground">
+                                        No tech stack listed
+                                    </p>
+                                )}
+                            </motion.div>
+
+                            {/* All Skills */}
+                            <motion.div
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: 0.3 }}
+                                className="space-y-4"
+                            >
+                                <h3 className="text-xs font-semibold tracking-[0.2em] text-muted-foreground uppercase">
+                                    Skills
+                                </h3>
+                                {portfolio.skills.length > 0 ? (
+                                    <div className="flex flex-wrap gap-2">
+                                        {portfolio.skills.map((skill) => (
+                                            <span
+                                                key={skill}
+                                                className="rounded-md bg-muted px-3 py-1.5 text-sm font-medium text-foreground"
+                                            >
+                                                {skill}
+                                            </span>
+                                        ))}
+                                    </div>
+                                ) : (
+                                    <p className="text-sm text-muted-foreground">
+                                        No skills listed
+                                    </p>
+                                )}
+                            </motion.div>
+
+                            {/* Contact Info */}
+                            <motion.div
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: 0.4 }}
+                                className="space-y-4"
+                            >
+                                <h3 className="text-xs font-semibold tracking-[0.2em] text-muted-foreground uppercase">
+                                    Connect
+                                </h3>
+                                <div className="space-y-2">
+                                    <a
+                                        href={`mailto:${portfolio.email}`}
+                                        className="block text-sm text-foreground/80 transition-colors hover:text-foreground"
                                     >
-                                        <path d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-                                    </svg>
-                                    Back to Observatory
-                                </Link>
+                                        {portfolio.email}
+                                    </a>
+                                    {portfolio.websiteUrl && (
+                                        <a
+                                            href={portfolio.websiteUrl}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="block text-sm text-foreground/80 underline underline-offset-4 transition-colors hover:text-foreground"
+                                        >
+                                            Visit Website →
+                                        </a>
+                                    )}
+                                </div>
                             </motion.div>
                         </div>
                     </div>
+
+                    {/* Back to Observatory */}
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: 0.5 }}
+                        className="mt-16 text-center"
+                    >
+                        <Link
+                            href="/observatory"
+                            className="inline-flex items-center gap-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+                        >
+                            ← Back to Observatory
+                        </Link>
+                    </motion.div>
                 </div>
 
                 <Footerdemo />

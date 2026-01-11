@@ -970,23 +970,16 @@ export default function Observatory({
                             ) : (
                                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
                                     {filteredPortfolios.map((portfolio) => (
-                                        <Link
+                                        <motion.div
                                             key={portfolio.id}
-                                            href={
-                                                portfolio.websiteUrl ||
-                                                `/portfolio/${portfolio.id}`
-                                            }
-                                            target={
-                                                portfolio.websiteUrl
-                                                    ? '_blank'
-                                                    : undefined
-                                            }
+                                            initial={{ opacity: 0, y: 20 }}
+                                            animate={{ opacity: 1, y: 0 }}
+                                            transition={{ duration: 0.3 }}
+                                            className="group relative overflow-hidden rounded-lg border border-zinc-200 bg-white shadow-sm transition-all hover:shadow-md dark:border-zinc-800 dark:bg-zinc-900"
                                         >
-                                            <motion.div
-                                                initial={{ opacity: 0, y: 20 }}
-                                                animate={{ opacity: 1, y: 0 }}
-                                                transition={{ duration: 0.3 }}
-                                                className="group cursor-pointer overflow-hidden rounded-lg border border-zinc-200 bg-white shadow-sm transition-all hover:shadow-md dark:border-zinc-800 dark:bg-zinc-900"
+                                            <Link
+                                                href={`/portfolio/${portfolio.id}`}
+                                                className="block"
                                             >
                                                 {/* Portfolio Image */}
                                                 <div className="relative h-32 overflow-hidden bg-zinc-100 dark:bg-zinc-800">
@@ -1058,8 +1051,34 @@ export default function Observatory({
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </motion.div>
-                                        </Link>
+                                            </Link>
+
+                                            {/* External Website Link Button */}
+                                            {portfolio.websiteUrl && (
+                                                <a
+                                                    href={portfolio.websiteUrl}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    onClick={(e) =>
+                                                        e.stopPropagation()
+                                                    }
+                                                    className="absolute top-2 right-2 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-white/90 text-zinc-700 shadow-md transition-all hover:bg-white hover:shadow-lg dark:bg-zinc-800/90 dark:text-zinc-300 dark:hover:bg-zinc-800"
+                                                    title="Visit Website"
+                                                >
+                                                    <svg
+                                                        className="h-4 w-4"
+                                                        fill="none"
+                                                        strokeLinecap="round"
+                                                        strokeLinejoin="round"
+                                                        strokeWidth={2}
+                                                        viewBox="0 0 24 24"
+                                                        stroke="currentColor"
+                                                    >
+                                                        <path d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                                                    </svg>
+                                                </a>
+                                            )}
+                                        </motion.div>
                                     ))}
                                 </div>
                             )}
