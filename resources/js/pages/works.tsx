@@ -583,77 +583,7 @@ function COTDCard({
                         src={portfolio.image}
                         alt={`${portfolio.name}'s portfolio`}
                         className="h-full w-full object-cover transition-transform duration-700"
-                        style={{
-                            transform: isHovered ? 'scale(1.05)' : 'scale(1)',
-                        }}
                     />
-
-                    {/* Corner Accent Lines */}
-                    <div className="pointer-events-none absolute inset-0">
-                        {/* Top Left */}
-                        <div
-                            className="absolute top-0 left-0 h-[2px] bg-white transition-all duration-700"
-                            style={{
-                                width: isHovered ? '24px' : '0px',
-                                transitionDelay: '50ms',
-                            }}
-                        />
-                        <div
-                            className="absolute top-0 left-0 w-[2px] bg-white transition-all duration-700"
-                            style={{
-                                height: isHovered ? '24px' : '0px',
-                                transitionDelay: '50ms',
-                            }}
-                        />
-
-                        {/* Top Right */}
-                        <div
-                            className="absolute top-0 right-0 h-[2px] bg-white transition-all duration-700"
-                            style={{
-                                width: isHovered ? '24px' : '0px',
-                                transitionDelay: '100ms',
-                            }}
-                        />
-                        <div
-                            className="absolute top-0 right-0 w-[2px] bg-white transition-all duration-700"
-                            style={{
-                                height: isHovered ? '24px' : '0px',
-                                transitionDelay: '100ms',
-                            }}
-                        />
-
-                        {/* Bottom Left */}
-                        <div
-                            className="absolute bottom-0 left-0 h-[2px] bg-white transition-all duration-700"
-                            style={{
-                                width: isHovered ? '24px' : '0px',
-                                transitionDelay: '150ms',
-                            }}
-                        />
-                        <div
-                            className="absolute bottom-0 left-0 w-[2px] bg-white transition-all duration-700"
-                            style={{
-                                height: isHovered ? '24px' : '0px',
-                                transitionDelay: '150ms',
-                            }}
-                        />
-
-                        {/* Bottom Right */}
-                        <div
-                            className="absolute right-0 bottom-0 h-[2px] bg-white transition-all duration-700"
-                            style={{
-                                width: isHovered ? '24px' : '0px',
-                                transitionDelay: '200ms',
-                            }}
-                        />
-                        <div
-                            className="absolute right-0 bottom-0 w-[2px] bg-white transition-all duration-700"
-                            style={{
-                                height: isHovered ? '24px' : '0px',
-                                transitionDelay: '200ms',
-                            }}
-                        />
-                    </div>
                 </div>
 
                 {/* Portfolio Content */}
