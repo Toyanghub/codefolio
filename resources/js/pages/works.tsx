@@ -489,8 +489,8 @@ function Navbar({ canRegister = true }: { canRegister?: boolean }) {
     );
 }
 
-// COTD Portfolio data - will be populated from backend
-const cotdPortfolios: Array<{
+// Portfolio type definition
+interface Portfolio {
     id: number;
     name: string;
     role: string;
@@ -499,23 +499,18 @@ const cotdPortfolios: Array<{
     skills: string[];
     techStack: string[];
     description: string;
-}> = [];
+}
+
+interface WorksPageProps {
+    cotdPortfolios: Portfolio[];
+}
 
 // COTD Card Component
 function COTDCard({
     portfolio,
     index,
 }: {
-    portfolio: {
-        id: number;
-        name: string;
-        role: string;
-        avatar: string;
-        image: string;
-        skills: string[];
-        techStack: string[];
-        description: string;
-    };
+    portfolio: Portfolio;
     index: number;
 }) {
     const [isHovered, setIsHovered] = useState(false);
@@ -732,7 +727,7 @@ function COTDCard({
     );
 }
 
-export default function Works() {
+export default function Works({ cotdPortfolios }: WorksPageProps) {
     return (
         <>
             <Head title="Works - COTD Showcase" />
