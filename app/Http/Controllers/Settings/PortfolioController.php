@@ -136,7 +136,10 @@ class PortfolioController extends Controller
         // Check if portfolio has minimum required content
         if ($user->portfolio_desktop_image && 
             ($user->skills()->count() > 0 || $user->techStacks()->count() > 0 || $user->professions()->count() > 0)) {
-            $user->update(['portfolio_published' => true]);
+            $user->update([
+                'portfolio_published' => true,
+                'portfolio_setup_completed' => true,
+            ]);
         }
     }
 
@@ -220,6 +223,38 @@ class PortfolioController extends Controller
         }
 
         return back()->with('status', 'mobile-image-deleted');
+    }
+
+    /**
+     * Mark portfolio setup as completed.
+     */
+    public function completeSetup(Request $request): RedirectResponse
+    {
+        $user = $request->user();
+
+        // Verify minimum requirements are met
+        if (!$user->portfolio_desktop_image) {
+            return back()->withErrors([
+                'portfolio' => 'Please upload at least a desktop portfolio image to continue.',
+            ]);
+        }
+
+        if ($user->skills()->count() === 0 && 
+            $user->techStacks()->count() === 0 && 
+            $user->professions()->count() === 0) {
+            return back()->withErrors([
+                'portfolio' => 'Please select at least one skill, tech stack, or profession to continue.',
+            ]);
+        }
+
+        // Mark setup as completed
+        $user->update([
+            'portfolio_setup_completed' => true,
+            'portfolio_published' => true,
+        ]);
+
+        return redirect()->route('dashboard')
+            ->with('success', 'Portfolio setup completed! Welcome to your dashboard.');
     }
 }
 

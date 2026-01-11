@@ -17,6 +17,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('settings/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::get('settings/portfolio', [PortfolioController::class, 'edit'])->name('portfolio.edit');
+    Route::post('settings/portfolio/complete', [PortfolioController::class, 'completeSetup'])->name('portfolio.complete');
     Route::post('settings/portfolio/desktop-image', [PortfolioController::class, 'updateDesktopImage'])->name('portfolio.desktop-image.update');
     Route::post('settings/portfolio/mobile-image', [PortfolioController::class, 'updateMobileImage'])->name('portfolio.mobile-image.update');
     Route::delete('settings/portfolio/desktop-image', [PortfolioController::class, 'deleteDesktopImage'])->name('portfolio.desktop-image.delete');

@@ -38,6 +38,7 @@ export interface User {
     profile_picture?: string | null;
     email_verified_at: string | null;
     two_factor_enabled?: boolean;
+    portfolio_setup_completed?: boolean;
     created_at: string;
     updated_at: string;
     [key: string]: unknown; // This allows for additional properties...
