@@ -611,13 +611,6 @@ function PortfolioCard({
                                         src={portfolio.image}
                                         alt={portfolio.title}
                                         className="h-full w-full object-cover transition-all duration-1000"
-                                        style={{
-                                            transform: isHovered
-                                                ? 'scale(1.05)'
-                                                : 'scale(1)',
-                                            transitionTimingFunction:
-                                                'cubic-bezier(0.16, 1, 0.3, 1)',
-                                        }}
                                     />
                                 ) : (
                                     <div className="flex h-full w-full items-center justify-center bg-muted text-muted-foreground">
