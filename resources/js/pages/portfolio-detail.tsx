@@ -803,21 +803,6 @@ export default function PortfolioDetail({ portfolio, canRegister }: PageProps) {
                                     />
                                 </div>
                             )}
-
-                            {/* Portfolio ID */}
-                            <span
-                                className="absolute right-0 -bottom-6 font-mono text-xs text-muted-foreground transition-all duration-700 md:-bottom-8 md:text-sm"
-                                style={{
-                                    opacity: isHovered ? 1 : 0.4,
-                                    transform: isHovered
-                                        ? 'translateY(12px)'
-                                        : 'translateY(0)',
-                                    transitionTimingFunction:
-                                        'cubic-bezier(0.16, 1, 0.3, 1)',
-                                }}
-                            >
-                                {String(portfolio.id).padStart(2, '0')}
-                            </span>
                         </div>
                     </div>
 
