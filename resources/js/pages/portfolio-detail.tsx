@@ -37,19 +37,25 @@ function Navbar({ canRegister = true }: { canRegister?: boolean }) {
 
     return (
         <div className="flex w-full justify-center px-4 py-6">
-            <nav className="relative z-50 flex w-full max-w-6xl items-center justify-between rounded-full bg-white px-6 py-3 shadow-lg dark:bg-zinc-950">
+            <nav className="relative z-50 flex w-full max-w-6xl items-center justify-between rounded-full bg-white px-6 py-3 shadow-lg dark:border dark:border-zinc-800 dark:bg-zinc-950">
                 {/* Logo/Brand */}
                 <motion.div
                     initial={{ scale: 0.8 }}
                     animate={{ scale: 1 }}
-                    whileHover={{ scale: 1.05 }}
                     transition={{ duration: 0.3 }}
                 >
                     <Link
                         href="/"
-                        className="flex items-center space-x-2 text-xl font-semibold tracking-tight text-zinc-900 transition-colors hover:text-zinc-700 dark:text-zinc-100 dark:hover:text-zinc-300"
+                        className="flex items-center space-x-2 text-xl font-semibold tracking-tight transition-colors"
                     >
-                        <span>Codefolio</span>
+                        <span>
+                            <span className="text-zinc-900 hover:text-zinc-700 dark:text-zinc-100 dark:hover:text-zinc-300">
+                                Code
+                            </span>
+                            <span className="text-zinc-400 hover:text-zinc-500 dark:text-zinc-500 dark:hover:text-zinc-400">
+                                folio
+                            </span>
+                        </span>
                     </Link>
                 </motion.div>
 
@@ -65,11 +71,10 @@ function Navbar({ canRegister = true }: { canRegister?: boolean }) {
                             initial={{ opacity: 0, y: -10 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.3, delay: index * 0.1 }}
-                            whileHover={{ scale: 1.05 }}
                         >
                             <Link
                                 href={item.href}
-                                className="rounded-full px-4 py-2 text-sm font-medium text-zinc-700 transition-colors hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800 dark:hover:text-zinc-100"
+                                className="rounded-full px-4 py-2 text-sm font-medium text-zinc-700 transition-all duration-300 hover:text-zinc-900 hover:drop-shadow-[0_0_8px_rgba(0,0,0,0.3)] dark:text-zinc-300 dark:hover:text-zinc-100 dark:hover:drop-shadow-[0_0_8px_rgba(255,255,255,0.5)]"
                             >
                                 {item.label}
                             </Link>
@@ -272,7 +277,7 @@ function Navbar({ canRegister = true }: { canRegister?: boolean }) {
                                 >
                                     <Link
                                         href={item.href}
-                                        className="block rounded-lg px-4 py-3 text-base font-medium text-zinc-900 hover:bg-zinc-100 dark:text-zinc-100 dark:hover:bg-zinc-800"
+                                        className="block rounded-lg px-4 py-3 text-base font-medium text-zinc-900 transition-all duration-300 hover:text-zinc-900 hover:drop-shadow-[0_0_8px_rgba(0,0,0,0.3)] dark:text-zinc-100 dark:hover:text-zinc-100 dark:hover:drop-shadow-[0_0_8px_rgba(255,255,255,0.5)]"
                                         onClick={() => setMobileMenuOpen(false)}
                                     >
                                         {item.label}
