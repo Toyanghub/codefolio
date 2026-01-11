@@ -489,41 +489,17 @@ function Navbar({ canRegister = true }: { canRegister?: boolean }) {
     );
 }
 
-// COTD Portfolio data
-const cotdPortfolios = [
-    {
-        id: 1,
-        name: 'rizamb',
-        role: 'Fullstack Developer',
-        avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=rizamb',
-        image: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=400&h=300&fit=crop',
-        skills: ['Web', 'Fullstack'],
-        techStack: ['JavaScript', 'React'],
-        description:
-            'Creating seamless web experiences with modern JavaScript frameworks',
-    },
-    {
-        id: 4,
-        name: 'Deepak',
-        role: 'Web Developer',
-        avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=deepak',
-        image: 'https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7?w=400&h=300&fit=crop',
-        skills: ['Frontend', 'Web'],
-        techStack: ['HTML', 'CSS'],
-        description: 'Crafting beautiful and responsive user interfaces',
-    },
-    {
-        id: 7,
-        name: 'JazzMase',
-        role: 'Fullstack Developer',
-        avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=jazzmase',
-        image: 'https://images.unsplash.com/photo-1510915361894-db8b60106cb1?w=400&h=300&fit=crop',
-        skills: ['Web', 'Data'],
-        techStack: ['JavaScript', 'Node.js'],
-        description:
-            'Building scalable applications with data-driven solutions',
-    },
-];
+// COTD Portfolio data - will be populated from backend
+const cotdPortfolios: Array<{
+    id: number;
+    name: string;
+    role: string;
+    avatar: string;
+    image: string;
+    skills: string[];
+    techStack: string[];
+    description: string;
+}> = [];
 
 // COTD Card Component
 function COTDCard({
@@ -810,15 +786,48 @@ export default function Works() {
                             Standout Portfolios
                         </motion.h2>
 
-                        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                            {cotdPortfolios.map((portfolio, index) => (
-                                <COTDCard
-                                    key={portfolio.id}
-                                    portfolio={portfolio}
-                                    index={index}
-                                />
-                            ))}
-                        </div>
+                        {cotdPortfolios.length > 0 ? (
+                            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                                {cotdPortfolios.map((portfolio, index) => (
+                                    <COTDCard
+                                        key={portfolio.id}
+                                        portfolio={portfolio}
+                                        index={index}
+                                    />
+                                ))}
+                            </div>
+                        ) : (
+                            <motion.div
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ duration: 0.5, delay: 0.4 }}
+                                className="rounded-lg border border-zinc-200 bg-white p-12 text-center dark:border-zinc-800 dark:bg-zinc-900"
+                            >
+                                <div className="mx-auto max-w-md">
+                                    <div className="mb-4 flex justify-center">
+                                        <svg
+                                            className="h-16 w-16 text-zinc-400 dark:text-zinc-600"
+                                            fill="none"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            strokeWidth={1.5}
+                                            viewBox="0 0 24 24"
+                                            stroke="currentColor"
+                                        >
+                                            <path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                                        </svg>
+                                    </div>
+                                    <h3 className="mb-2 text-lg font-semibold text-zinc-900 dark:text-zinc-100">
+                                        No Featured Portfolios Yet
+                                    </h3>
+                                    <p className="text-sm text-zinc-600 dark:text-zinc-400">
+                                        Check back soon! We'll be featuring
+                                        exceptional portfolios from our
+                                        community.
+                                    </p>
+                                </div>
+                            </motion.div>
+                        )}
                     </div>
 
                     {/* Call to Action */}
