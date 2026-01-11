@@ -253,8 +253,8 @@ class PortfolioController extends Controller
             'portfolio_published' => true,
         ]);
 
-        return redirect()->route('dashboard')
-            ->with('success', 'Portfolio setup completed! Welcome to your dashboard.');
+        return redirect()->route('home')
+            ->with('success', 'Portfolio setup completed!');
     }
 }
 
