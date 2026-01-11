@@ -610,7 +610,7 @@ function PortfolioCard({
                                     <img
                                         src={portfolio.image}
                                         alt={portfolio.title}
-                                        className="h-full w-full object-cover transition-all duration-1000"
+                                        className="h-full w-full object-contain transition-all duration-1000"
                                     />
                                 ) : (
                                     <div className="flex h-full w-full items-center justify-center bg-muted text-muted-foreground">
