@@ -27,7 +27,9 @@ class WorksController extends Controller
                     'id' => $user->id,
                     'name' => $user->name,
                     'role' => $user->professions->first()?->name ?? 'Developer',
-                    'avatar' => $user->profile_picture ?? "https://api.dicebear.com/7.x/avataaars/svg?seed={$user->name}",
+                    'avatar' => $user->profile_picture 
+                        ? asset('storage/' . $user->profile_picture)
+                        : "https://api.dicebear.com/7.x/avataaars/svg?seed={$user->name}",
                     'image' => $user->portfolio_desktop_image 
                         ? asset('storage/' . $user->portfolio_desktop_image)
                         : null,
