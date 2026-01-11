@@ -16,17 +16,41 @@ class CotdController extends Controller
     public function index(Request $request): Response
     {
         $search = $request->input('search', '');
+        $filter = $request->input('filter', 'all'); // all, featured, not_featured, recent
         
         // Get all users with published portfolios
-        $portfolios = User::query()
+        $query = User::query()
             ->whereNotNull('portfolio_desktop_image')
             ->where('portfolio_published', true)
             ->when($search, function ($query, $search) {
                 $query->where('name', 'like', "%{$search}%")
                       ->orWhere('email', 'like', "%{$search}%");
-            })
+            });
+        
+        // Apply filter
+        switch ($filter) {
+            case 'featured':
+                // Currently featured portfolios
+                $query->where('is_featured', true);
+                break;
+            case 'not_featured':
+                // Never been featured (featured_at is null)
+                $query->whereNull('featured_at');
+                break;
+            case 'recent':
+                // Featured within last 30 days
+                $query->where('featured_at', '>=', now()->subDays(30));
+                break;
+            case 'all':
+            default:
+                // Show all portfolios
+                break;
+        }
+        
+        $portfolios = $query
             ->with(['skills', 'techStacks', 'professions'])
             ->orderByDesc('is_featured')
+            ->orderByDesc('featured_at')
             ->orderByDesc('created_at')
             ->get()
             ->map(function ($user) {
@@ -50,6 +74,7 @@ class CotdController extends Controller
         return Inertia::render('admin/cotd', [
             'portfolios' => $portfolios,
             'search' => $search,
+            'filter' => $filter,
         ]);
     }
 

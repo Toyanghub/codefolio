@@ -36,18 +36,29 @@ interface Portfolio {
 interface AdminCotdProps {
     portfolios: Portfolio[];
     search: string;
+    filter: string;
 }
 
 export default function AdminCotd({
     portfolios,
     search: initialSearch,
+    filter: initialFilter,
 }: AdminCotdProps) {
     const [searchQuery, setSearchQuery] = useState(initialSearch);
     const [processing, setProcessing] = useState<number | null>(null);
+    const [activeFilter, setActiveFilter] = useState(initialFilter);
 
     const handleSearch = (e: React.FormEvent) => {
         e.preventDefault();
-        router.get('/admin/cotd', { search: searchQuery });
+        router.get('/admin/cotd', {
+            search: searchQuery,
+            filter: activeFilter,
+        });
+    };
+
+    const handleFilterChange = (filter: string) => {
+        setActiveFilter(filter);
+        router.get('/admin/cotd', { search: searchQuery, filter });
     };
 
     const toggleFeatured = (portfolio: Portfolio) => {
@@ -83,6 +94,76 @@ export default function AdminCotd({
                             {featuredCount !== 1 ? 's' : ''} currently featured
                         </span>
                     </p>
+                </div>
+
+                {/* Filter Tabs */}
+                <div className="mb-6">
+                    <div className="flex flex-wrap gap-2">
+                        {[
+                            {
+                                value: 'all',
+                                label: 'All Portfolios',
+                                icon: '📚',
+                            },
+                            {
+                                value: 'featured',
+                                label: 'Currently Featured',
+                                icon: '⭐',
+                            },
+                            {
+                                value: 'not_featured',
+                                label: 'Never Featured',
+                                icon: '🆕',
+                            },
+                            {
+                                value: 'recent',
+                                label: 'Recently Featured',
+                                icon: '🕐',
+                            },
+                        ].map((tab) => (
+                            <button
+                                key={tab.value}
+                                onClick={() => handleFilterChange(tab.value)}
+                                className={`flex items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-medium transition-all ${
+                                    activeFilter === tab.value
+                                        ? 'bg-zinc-900 text-white shadow-md dark:bg-zinc-100 dark:text-zinc-900'
+                                        : 'bg-white text-zinc-700 hover:bg-zinc-100 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700'
+                                } border ${
+                                    activeFilter === tab.value
+                                        ? 'border-zinc-900 dark:border-zinc-100'
+                                        : 'border-zinc-200 dark:border-zinc-700'
+                                }`}
+                            >
+                                <span>{tab.icon}</span>
+                                <span>{tab.label}</span>
+                            </button>
+                        ))}
+                    </div>
+
+                    {/* Filter Info */}
+                    <div className="mt-3 text-sm text-zinc-600 dark:text-zinc-400">
+                        {activeFilter === 'all' && (
+                            <p>Showing all published portfolios</p>
+                        )}
+                        {activeFilter === 'featured' && (
+                            <p>
+                                Showing portfolios currently active as Card of
+                                the Day
+                            </p>
+                        )}
+                        {activeFilter === 'not_featured' && (
+                            <p>
+                                Showing portfolios that have never been featured
+                                before
+                            </p>
+                        )}
+                        {activeFilter === 'recent' && (
+                            <p>
+                                Showing portfolios featured within the last 30
+                                days
+                            </p>
+                        )}
+                    </div>
                 </div>
 
                 {/* Search */}
