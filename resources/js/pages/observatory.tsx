@@ -581,16 +581,6 @@ function PortfolioCard({
                                     Portfolio
                                 </span>
                             </div>
-                            <span
-                                className="font-mono text-xs text-muted-foreground transition-all duration-700"
-                                style={{
-                                    opacity: isHovered ? 1 : 0.4,
-                                    transitionTimingFunction:
-                                        'cubic-bezier(0.16, 1, 0.3, 1)',
-                                }}
-                            >
-                                {String(portfolio.id).padStart(2, '0')}
-                            </span>
                         </div>
 
                         {/* Portfolio Image */}
@@ -607,7 +597,7 @@ function PortfolioCard({
                             />
                             <div className="relative h-48 overflow-hidden">
                                 {/* COTD Badge - Only for featured portfolios */}
-                                {portfolio.is_featured && (
+                                {!!portfolio.is_featured && (
                                     <div className="absolute top-3 right-3 z-10 flex items-center gap-1.5 rounded-full bg-gradient-to-r from-amber-500 to-orange-500 px-3 py-1.5 shadow-lg">
                                         <Star className="h-3.5 w-3.5 fill-white text-white" />
                                         <span className="text-xs font-bold text-white">
