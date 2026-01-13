@@ -1,4 +1,5 @@
 import { Footerdemo } from '@/components/ui/footer-section';
+import { InfiniteTextMarquee } from '@/components/ui/infinite-text-marquee';
 import { login, logout, register } from '@/routes';
 import { type SharedData } from '@/types';
 import { Head, Link, router, usePage } from '@inertiajs/react';
@@ -19,6 +20,7 @@ interface Portfolio {
     techStack: string[];
     professions: string[];
     createdAt: string;
+    isFeatured?: boolean;
 }
 
 interface PageProps {
@@ -366,6 +368,21 @@ export default function PortfolioDetail({ portfolio, canRegister }: PageProps) {
 
             <div className="min-h-screen bg-background">
                 <Navbar canRegister={canRegister} />
+
+                {/* Featured Portfolio Marquee */}
+                {!!portfolio.isFeatured && (
+                    <div className="w-full overflow-hidden border-y border-zinc-200 bg-gradient-to-r from-amber-50 via-orange-50 to-amber-50 dark:border-zinc-800 dark:from-amber-950/20 dark:via-orange-950/20 dark:to-amber-950/20">
+                        <InfiniteTextMarquee
+                            text="⭐ Featured Portfolio"
+                            link={`/portfolio/${portfolio.id}`}
+                            speed={25}
+                            showTooltip={false}
+                            fontSize="3rem"
+                            textColor="rgb(217 119 6)"
+                            hoverColor="rgb(245 158 11)"
+                        />
+                    </div>
+                )}
 
                 <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
                     {/* Feature Spotlight Layout */}

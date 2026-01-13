@@ -36,6 +36,7 @@ class PortfolioDetailController extends Controller
             'techStack' => $user->techStacks->pluck('name')->toArray(),
             'professions' => $user->professions->pluck('name')->toArray(),
             'createdAt' => $user->created_at->format('F Y'),
+            'isFeatured' => $user->is_featured ?? false,
         ];
 
         return Inertia::render('portfolio-detail', [
