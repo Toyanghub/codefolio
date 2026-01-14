@@ -246,17 +246,19 @@ function Navbar({ canRegister = true }: { canRegister?: boolean }) {
                         <>
                             <Link
                                 href={login.url()}
-                                className="rounded-lg px-4 py-2 text-sm font-medium text-zinc-700 transition-colors hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800 dark:hover:text-zinc-100"
+                                className="rounded-full px-5 py-2 text-sm font-medium text-zinc-700 transition-colors hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800 dark:hover:text-zinc-100"
                             >
                                 Log in
                             </Link>
                             {canRegister && (
-                                <Link
-                                    href={register.url()}
-                                    className="rounded-lg bg-zinc-900 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-zinc-700 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-300"
-                                >
-                                    Sign up
-                                </Link>
+                                <motion.div whileHover={{ scale: 1.05 }}>
+                                    <Link
+                                        href={register.url()}
+                                        className="inline-flex items-center justify-center rounded-full bg-zinc-900 px-5 py-2 text-sm font-medium text-white transition-colors hover:bg-zinc-800 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200"
+                                    >
+                                        Sign up
+                                    </Link>
+                                </motion.div>
                             )}
                         </>
                     )}
