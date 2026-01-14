@@ -7,6 +7,7 @@ import {
     TooltipTrigger,
 } from '@/components/ui/tooltip';
 import { useAppearance } from '@/hooks/use-appearance';
+import { Link } from '@inertiajs/react';
 import {
     Facebook,
     Instagram,
@@ -224,12 +225,12 @@ function Footerdemo() {
                         © 2024 Your Company. All rights reserved.
                     </p>
                     <nav className="flex gap-4 text-sm">
-                        <a
-                            href="#"
+                        <Link
+                            href="/privacy-policy"
                             className="transition-colors hover:text-primary"
                         >
                             Privacy Policy
-                        </a>
+                        </Link>
                         <a
                             href="#"
                             className="transition-colors hover:text-primary"

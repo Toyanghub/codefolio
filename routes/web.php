@@ -21,6 +21,10 @@ Route::get('/works', [WorksController::class, 'index'])->name('works');
 
 Route::get('/portfolio/{id}', [PortfolioDetailController::class, 'show'])->name('portfolio.detail');
 
+Route::get('/privacy-policy', function () {
+    return Inertia::render('privacy-policy');
+})->name('privacy.policy');
+
 // Admin routes
 Route::middleware(['auth', EnsureUserIsAdmin::class])->prefix('admin')->group(function () {
     Route::get('/cotd', [CotdController::class, 'index'])->name('admin.cotd');
