@@ -1,6 +1,5 @@
 'use client';
 
-import { Link } from '@inertiajs/react';
 import { motion } from 'motion/react';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
@@ -79,9 +78,9 @@ export const InfiniteTextMarquee: React.FC<InfiniteTextMarqueeProps> = ({
                         },
                     }}
                 >
-                    <Link href={link}>
+                    <div>
                         <span
-                            className={`m-0 cursor-pointer py-10 font-bold tracking-tight transition-all ${
+                            className={`m-0 py-10 font-bold tracking-tight transition-all ${
                                 textColor ? '' : 'text-black dark:text-white'
                             }`}
                             style={{
@@ -99,7 +98,7 @@ export const InfiniteTextMarquee: React.FC<InfiniteTextMarqueeProps> = ({
                                 }
                             `}</style>
                         </span>
-                    </Link>
+                    </div>
                 </motion.div>
             </main>
         </>
