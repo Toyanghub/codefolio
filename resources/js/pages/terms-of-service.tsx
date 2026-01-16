@@ -179,7 +179,7 @@ function Navbar() {
                     {/* Mobile Menu Button */}
                     <motion.button
                         onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                        className="rounded-lg p-2 text-zinc-900 hover:bg-zinc-100 dark:text-zinc-100 dark:hover:bg-zinc-800 md:hidden"
+                        className="rounded-lg p-2 text-zinc-900 hover:bg-zinc-100 md:hidden dark:text-zinc-100 dark:hover:bg-zinc-800"
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                     >
@@ -211,7 +211,7 @@ function Navbar() {
                         exit={{ opacity: 0, height: 0 }}
                         className="overflow-hidden md:hidden"
                     >
-                        <div className="space-y-1 px-4 pb-4 pt-2">
+                        <div className="space-y-1 px-4 pt-2 pb-4">
                             {[
                                 { href: '/', label: 'Lobby' },
                                 { href: '/observatory', label: 'Observatory' },
@@ -241,9 +241,7 @@ function Navbar() {
                                     <Link
                                         href="/settings"
                                         className="block rounded-lg px-4 py-3 text-base font-medium text-zinc-900 hover:bg-zinc-100 dark:text-zinc-100 dark:hover:bg-zinc-800"
-                                        onClick={() =>
-                                            setMobileMenuOpen(false)
-                                        }
+                                        onClick={() => setMobileMenuOpen(false)}
                                     >
                                         Settings
                                     </Link>
@@ -526,9 +524,7 @@ export default function TermsOfService() {
                                         You agree not to:
                                     </p>
                                     <ul className="list-disc space-y-2 pl-6 text-zinc-700 dark:text-zinc-300">
-                                        <li>
-                                            Violate any laws or regulations
-                                        </li>
+                                        <li>Violate any laws or regulations</li>
                                         <li>
                                             Infringe on intellectual property
                                             rights
@@ -599,8 +595,8 @@ export default function TermsOfService() {
                                         You retain all ownership rights to the
                                         content you submit to Codefolio. By
                                         publishing your portfolio, you grant us
-                                        a non-exclusive, worldwide,
-                                        royalty-free license to:
+                                        a non-exclusive, worldwide, royalty-free
+                                        license to:
                                     </p>
                                     <ul className="list-disc space-y-2 pl-6 text-zinc-700 dark:text-zinc-300">
                                         <li>
@@ -634,9 +630,9 @@ export default function TermsOfService() {
                                         Codefolio and its original content,
                                         features, and functionality are owned by
                                         us and protected by intellectual
-                                        property laws. You may not copy,
-                                        modify, distribute, or create derivative
-                                        works based on our platform without
+                                        property laws. You may not copy, modify,
+                                        distribute, or create derivative works
+                                        based on our platform without
                                         permission.
                                     </p>
                                 </div>
@@ -708,9 +704,7 @@ export default function TermsOfService() {
                                     <ul className="list-disc space-y-2 pl-6 text-zinc-700 dark:text-zinc-300">
                                         <li>Loss of profits or revenue</li>
                                         <li>Loss of data or content</li>
-                                        <li>
-                                            Loss of business opportunities
-                                        </li>
+                                        <li>Loss of business opportunities</li>
                                         <li>
                                             Damage to reputation or goodwill
                                         </li>
