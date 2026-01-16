@@ -231,12 +231,12 @@ function Footerdemo() {
                         >
                             Privacy Policy
                         </Link>
-                        <a
-                            href="#"
+                        <Link
+                            href="/terms-of-service"
                             className="transition-colors hover:text-primary"
                         >
                             Terms of Service
-                        </a>
+                        </Link>
                         <a
                             href="#"
                             className="transition-colors hover:text-primary"

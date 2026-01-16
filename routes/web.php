@@ -25,6 +25,10 @@ Route::get('/privacy-policy', function () {
     return Inertia::render('privacy-policy');
 })->name('privacy.policy');
 
+Route::get('/terms-of-service', function () {
+    return Inertia::render('terms-of-service');
+})->name('terms.of.service');
+
 // Admin routes
 Route::middleware(['auth', EnsureUserIsAdmin::class])->prefix('admin')->group(function () {
     Route::get('/cotd', [CotdController::class, 'index'])->name('admin.cotd');
