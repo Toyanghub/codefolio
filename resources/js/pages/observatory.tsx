@@ -140,9 +140,10 @@ function Navbar({ canRegister = true }: { canRegister?: boolean }) {
                                 className="flex items-center gap-2 rounded-full p-1 text-sm transition-colors hover:bg-zinc-100 dark:hover:bg-zinc-800"
                             >
                                 <div className="flex h-8 w-8 items-center justify-center overflow-hidden rounded-full bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900">
-                                    {auth.user.profile_picture ? (
+                                    {auth.user.avatar ||
+                                    auth.user.profile_picture ? (
                                         <img
-                                            src={`/storage/${auth.user.profile_picture}`}
+                                            src={`/storage/${auth.user.avatar || auth.user.profile_picture}`}
                                             alt={auth.user.name}
                                             className="h-full w-full object-cover"
                                         />
@@ -167,27 +168,28 @@ function Navbar({ canRegister = true }: { canRegister?: boolean }) {
                                         <div className="space-y-1 p-2">
                                             {/* User Info Header */}
                                             <div className="flex items-center gap-3 px-2 py-3">
-                                                <div className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-full bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900">
-                                                    {auth.user
+                                                <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center overflow-hidden rounded-full border-2 border-zinc-200 bg-zinc-900 text-white dark:border-zinc-700 dark:bg-zinc-100 dark:text-zinc-900">
+                                                    {auth.user.avatar ||
+                                                    auth.user
                                                         .profile_picture ? (
                                                         <img
-                                                            src={`/storage/${auth.user.profile_picture}`}
+                                                            src={`/storage/${auth.user.avatar || auth.user.profile_picture}`}
                                                             alt={auth.user.name}
                                                             className="h-full w-full object-cover"
                                                         />
                                                     ) : (
-                                                        <span className="font-semibold">
+                                                        <span className="text-base font-semibold">
                                                             {auth.user.name
                                                                 .charAt(0)
                                                                 .toUpperCase()}
                                                         </span>
                                                     )}
                                                 </div>
-                                                <div className="flex flex-col">
-                                                    <span className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
+                                                <div className="flex flex-1 flex-col overflow-hidden">
+                                                    <span className="truncate text-sm font-semibold text-zinc-900 dark:text-zinc-100">
                                                         {auth.user.name}
                                                     </span>
-                                                    <span className="text-xs text-zinc-500 dark:text-zinc-400">
+                                                    <span className="truncate text-xs text-zinc-500 dark:text-zinc-400">
                                                         {auth.user.email}
                                                     </span>
                                                 </div>

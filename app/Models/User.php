@@ -24,6 +24,7 @@ class User extends Authenticatable
         'email',
         'password',
         'google_id',
+        'avatar',
         'is_admin',
         'profile_picture',
         'portfolio_desktop_image',

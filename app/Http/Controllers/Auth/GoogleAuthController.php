@@ -34,20 +34,27 @@ class GoogleAuthController extends Controller
                 ->first();
 
             if ($user) {
-                // Update Google ID and avatar if not already set
+                // Update Google ID if not already set
                 if (!$user->google_id) {
                     $user->google_id = $googleUser->id;
                 }
-                // Always update the profile picture from Google if user doesn't have one
-                if (!$user->profile_picture && $googleUser->avatar) {
-                    $user->profile_picture = $this->downloadGoogleAvatar($googleUser->avatar, $googleUser->id);
+                // Always update the Google avatar when logging in with OAuth
+                if ($googleUser->avatar) {
+                    $avatarPath = $this->downloadGoogleAvatar($googleUser->avatar, $googleUser->id);
+                    if ($avatarPath) {
+                        // Delete old Google avatar if exists
+                        if ($user->avatar && Storage::disk('public')->exists($user->avatar)) {
+                            Storage::disk('public')->delete($user->avatar);
+                        }
+                        $user->avatar = $avatarPath;
+                    }
                 }
                 $user->save();
             } else {
                 // Download and store the Google profile picture
-                $profilePicture = null;
+                $avatar = null;
                 if ($googleUser->avatar) {
-                    $profilePicture = $this->downloadGoogleAvatar($googleUser->avatar, $googleUser->id);
+                    $avatar = $this->downloadGoogleAvatar($googleUser->avatar, $googleUser->id);
                 }
 
                 // Create new user
@@ -55,7 +62,7 @@ class GoogleAuthController extends Controller
                     'name' => $googleUser->name,
                     'email' => $googleUser->email,
                     'google_id' => $googleUser->id,
-                    'profile_picture' => $profilePicture,
+                    'avatar' => $avatar,
                     'password' => Hash::make(Str::random(24)), // Random password for OAuth users
                     'email_verified_at' => now(), // Google accounts are already verified
                 ]);
