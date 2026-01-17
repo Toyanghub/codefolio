@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\CotdController;
+use App\Http\Controllers\Auth\GoogleAuthController;
 use App\Http\Controllers\ObservatoryController;
 use App\Http\Controllers\PortfolioDetailController;
 use App\Http\Controllers\WorksController;
@@ -28,6 +29,10 @@ Route::get('/privacy-policy', function () {
 Route::get('/terms-of-service', function () {
     return Inertia::render('terms-of-service');
 })->name('terms.of.service');
+
+// Google OAuth routes
+Route::get('/auth/google', [GoogleAuthController::class, 'redirectToGoogle'])->name('auth.google');
+Route::get('/auth/google/callback', [GoogleAuthController::class, 'handleGoogleCallback']);
 
 // Admin routes
 Route::middleware(['auth', EnsureUserIsAdmin::class])->prefix('admin')->group(function () {
