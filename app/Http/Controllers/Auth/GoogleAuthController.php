@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Support\Str;
 
@@ -33,20 +34,28 @@ class GoogleAuthController extends Controller
                 ->first();
 
             if ($user) {
-                // Update Google ID if not already set
+                // Update Google ID and avatar if not already set
                 if (!$user->google_id) {
-                    $user->update([
-                        'google_id' => $googleUser->id,
-                        'avatar' => $googleUser->avatar,
-                    ]);
+                    $user->google_id = $googleUser->id;
                 }
+                // Always update the profile picture from Google if user doesn't have one
+                if (!$user->profile_picture && $googleUser->avatar) {
+                    $user->profile_picture = $this->downloadGoogleAvatar($googleUser->avatar, $googleUser->id);
+                }
+                $user->save();
             } else {
+                // Download and store the Google profile picture
+                $profilePicture = null;
+                if ($googleUser->avatar) {
+                    $profilePicture = $this->downloadGoogleAvatar($googleUser->avatar, $googleUser->id);
+                }
+
                 // Create new user
                 $user = User::create([
                     'name' => $googleUser->name,
                     'email' => $googleUser->email,
                     'google_id' => $googleUser->id,
-                    'avatar' => $googleUser->avatar,
+                    'profile_picture' => $profilePicture,
                     'password' => Hash::make(Str::random(24)), // Random password for OAuth users
                     'email_verified_at' => now(), // Google accounts are already verified
                 ]);
@@ -59,6 +68,33 @@ class GoogleAuthController extends Controller
             
         } catch (\Exception $e) {
             return redirect('/login')->with('error', 'Unable to authenticate with Google. Please try again.');
+        }
+    }
+
+    /**
+     * Download and store Google avatar locally
+     */
+    private function downloadGoogleAvatar(string $avatarUrl, string $googleId): ?string
+    {
+        try {
+            // Download the image
+            $imageContent = file_get_contents($avatarUrl);
+            
+            if ($imageContent === false) {
+                return null;
+            }
+
+            // Generate a unique filename
+            $extension = 'jpg'; // Google avatars are typically JPG
+            $filename = 'google-avatars/' . $googleId . '_' . time() . '.' . $extension;
+
+            // Store in public disk
+            Storage::disk('public')->put($filename, $imageContent);
+
+            return $filename;
+        } catch (\Exception $e) {
+            // If download fails, return null (user will get initials instead)
+            return null;
         }
     }
 }
