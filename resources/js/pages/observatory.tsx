@@ -818,13 +818,16 @@ export default function Observatory({
         skills: string[];
         techStack: string[];
         profession: string[];
+        cotd: 'all' | 'yes' | 'no';
     }>({
         skills: [],
         techStack: [],
         profession: [],
+        cotd: 'all',
     });
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const [dropdownsOpen, setDropdownsOpen] = useState({
+        cotd: true,
         skills: true,
         techStack: true,
         profession: true,
@@ -845,7 +848,7 @@ export default function Observatory({
     };
 
     const toggleDropdown = (
-        category: 'skills' | 'techStack' | 'profession',
+        category: 'cotd' | 'skills' | 'techStack' | 'profession',
     ) => {
         setDropdownsOpen((prev) => ({
             ...prev,
@@ -870,6 +873,7 @@ export default function Observatory({
             skills: [],
             techStack: [],
             profession: [],
+            cotd: 'all',
         });
     };
 
@@ -893,6 +897,12 @@ export default function Observatory({
             if (!matchesSearch) return false;
         }
 
+        // COTD filter
+        const cotdMatch =
+            selectedFilters.cotd === 'all' ||
+            (selectedFilters.cotd === 'yes' && !!portfolio.is_featured) ||
+            (selectedFilters.cotd === 'no' && !portfolio.is_featured);
+
         // Filter by selected categories
         const skillMatch =
             selectedFilters.skills.length === 0 ||
@@ -910,7 +920,7 @@ export default function Observatory({
                 portfolio.profession.includes(prof),
             );
 
-        return skillMatch && techMatch && professionMatch;
+        return cotdMatch && skillMatch && techMatch && professionMatch;
     });
 
     return (
@@ -979,7 +989,8 @@ export default function Observatory({
                                     <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100">
                                         Filters
                                     </h2>
-                                    {(selectedFilters.skills.length > 0 ||
+                                    {(selectedFilters.cotd !== 'all' ||
+                                        selectedFilters.skills.length > 0 ||
                                         selectedFilters.techStack.length > 0 ||
                                         selectedFilters.profession.length >
                                             0) && (
@@ -989,6 +1000,74 @@ export default function Observatory({
                                         >
                                             Clear all
                                         </button>
+                                    )}
+                                </div>
+
+                                {/* COTD Filter */}
+                                <div className="mb-6">
+                                    <button
+                                        onClick={() => toggleDropdown('cotd')}
+                                        className="mb-3 flex w-full items-center justify-between text-sm font-medium text-zinc-900 transition-colors hover:text-zinc-700 dark:text-zinc-100 dark:hover:text-zinc-300"
+                                    >
+                                        <span>COTD</span>
+                                        <svg
+                                            className={`h-4 w-4 transition-transform ${
+                                                dropdownsOpen.cotd
+                                                    ? 'rotate-180'
+                                                    : ''
+                                            }`}
+                                            fill="none"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            strokeWidth={2}
+                                            viewBox="0 0 24 24"
+                                            stroke="currentColor"
+                                        >
+                                            <path d="M19 9l-7 7-7-7" />
+                                        </svg>
+                                    </button>
+                                    {dropdownsOpen.cotd && (
+                                        <div className="space-y-2">
+                                            {[
+                                                { value: 'all', label: 'All' },
+                                                { value: 'yes', label: 'Yes' },
+                                                { value: 'no', label: 'No' },
+                                            ].map(({ value, label }) => {
+                                                const isSelected =
+                                                    selectedFilters.cotd ===
+                                                    value;
+                                                return (
+                                                    <label
+                                                        key={value}
+                                                        className="flex cursor-pointer items-center gap-2 text-sm text-zinc-700 dark:text-zinc-300"
+                                                    >
+                                                        <div
+                                                            className={`flex h-4 w-4 items-center justify-center rounded-full border ${
+                                                                isSelected
+                                                                    ? 'border-zinc-900 bg-zinc-900 dark:border-zinc-100 dark:bg-zinc-100'
+                                                                    : 'border-zinc-300 dark:border-zinc-600'
+                                                            }`}
+                                                            onClick={() =>
+                                                                setSelectedFilters(
+                                                                    (prev) => ({
+                                                                        ...prev,
+                                                                        cotd: value as
+                                                                            | 'all'
+                                                                            | 'yes'
+                                                                            | 'no',
+                                                                    }),
+                                                                )
+                                                            }
+                                                        >
+                                                            {isSelected && (
+                                                                <div className="h-2 w-2 rounded-full bg-white dark:bg-zinc-900" />
+                                                            )}
+                                                        </div>
+                                                        <span>{label}</span>
+                                                    </label>
+                                                );
+                                            })}
+                                        </div>
                                     )}
                                 </div>
 
