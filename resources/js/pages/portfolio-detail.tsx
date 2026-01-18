@@ -373,15 +373,13 @@ export default function PortfolioDetail({ portfolio, canRegister }: PageProps) {
 
                 {/* Featured Portfolio Marquee */}
                 {!!portfolio.isFeatured && (
-                    <div className="w-full overflow-hidden border-y border-zinc-200 bg-gradient-to-r from-amber-50 via-orange-50 to-amber-50 dark:border-zinc-800 dark:from-amber-950/20 dark:via-orange-950/20 dark:to-amber-950/20">
+                    <div className="w-full overflow-hidden border-y border-zinc-200 bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900">
                         <InfiniteTextMarquee
-                            text="⭐ Featured Portfolio"
+                            text="Featured   Portfolio   ★"
                             link={`/portfolio/${portfolio.id}`}
-                            speed={25}
+                            speed={40}
                             showTooltip={false}
-                            fontSize="3rem"
-                            textColor="rgb(217 119 6)"
-                            hoverColor="rgb(245 158 11)"
+                            fontSize="1.5rem"
                         />
                     </div>
                 )}

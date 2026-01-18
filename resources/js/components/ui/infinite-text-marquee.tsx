@@ -47,7 +47,7 @@ export const InfiniteTextMarquee: React.FC<InfiniteTextMarqueeProps> = ({
         return () => window.removeEventListener('mousemove', handleMouseMove);
     }, [showTooltip]);
 
-    const repeatedText = Array(10).fill(text).join(' - ') + ' -';
+    const repeatedText = Array(20).fill(text).join('     ');
 
     return (
         <>
@@ -64,13 +64,13 @@ export const InfiniteTextMarquee: React.FC<InfiniteTextMarqueeProps> = ({
                 </div>
             )}
 
-            <main className="w-vw relative overflow-hidden">
+            <main className="w-full relative overflow-hidden">
                 <motion.div
-                    className="whitespace-nowrap"
+                    className="whitespace-nowrap will-change-transform"
                     onMouseEnter={() => setIsHovered(true)}
                     onMouseLeave={() => setIsHovered(false)}
                     animate={{
-                        x: [0, -1000],
+                        x: [0, -2000],
                         transition: {
                             repeat: Infinity,
                             duration: speed,
@@ -80,21 +80,25 @@ export const InfiniteTextMarquee: React.FC<InfiniteTextMarqueeProps> = ({
                 >
                     <div>
                         <span
-                            className={`m-0 py-10 font-bold tracking-tight transition-all ${
-                                textColor ? '' : 'text-black dark:text-white'
-                            }`}
+                            className="m-0 py-10 font-bold tracking-tight transition-all text-zinc-900 dark:text-zinc-100"
                             style={{
                                 fontSize,
-                                color: textColor || undefined,
                             }}
                         >
                             <span className="hoverable-text">
                                 {repeatedText}
                             </span>
                             <style jsx>{`
+                                .hoverable-text {
+                                    transition: color 0.2s ease;
+                                }
                                 .hoverable-text:hover {
-                                    color: ${hoverColor ||
-                                    'var(--tw-prose-links)'};
+                                    color: rgb(63 63 70);
+                                }
+                                @media (prefers-color-scheme: dark) {
+                                    .hoverable-text:hover {
+                                        color: rgb(212 212 216);
+                                    }
                                 }
                             `}</style>
                         </span>
