@@ -825,6 +825,18 @@ export default function Observatory({
         profession: [],
         cotd: 'all',
     });
+    // Temporary state for mobile filter selections (before applying)
+    const [tempMobileFilters, setTempMobileFilters] = useState<{
+        skills: string[];
+        techStack: string[];
+        profession: string[];
+        cotd: 'all' | 'yes' | 'no';
+    }>({
+        skills: [],
+        techStack: [],
+        profession: [],
+        cotd: 'all',
+    });
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const [dropdownsOpen, setDropdownsOpen] = useState({
         cotd: true,
@@ -866,6 +878,69 @@ export default function Observatory({
                 ? prev[category].filter((item) => item !== value)
                 : [...prev[category], value],
         }));
+    };
+
+    // Mobile-specific filter functions
+    const toggleMobileFilter = (
+        category: 'skills' | 'techStack' | 'profession',
+        value: string,
+    ) => {
+        setTempMobileFilters((prev) => ({
+            ...prev,
+            [category]: prev[category].includes(value)
+                ? prev[category].filter((item) => item !== value)
+                : [...prev[category], value],
+        }));
+    };
+
+    const setMobileCotdFilter = (value: 'all' | 'yes' | 'no') => {
+        setTempMobileFilters((prev) => ({
+            ...prev,
+            cotd: value,
+        }));
+    };
+
+    const applyMobileFilters = () => {
+        setSelectedFilters(tempMobileFilters);
+        setSidebarOpen(false);
+    };
+
+    const closeMobileFilters = () => {
+        setTempMobileFilters(selectedFilters);
+        setSidebarOpen(false);
+    };
+
+    const clearMobileFilters = () => {
+        setTempMobileFilters({
+            skills: [],
+            techStack: [],
+            profession: [],
+            cotd: 'all',
+        });
+    };
+
+    const getMobileFilterCount = () => {
+        return (
+            tempMobileFilters.skills.length +
+            tempMobileFilters.techStack.length +
+            tempMobileFilters.profession.length +
+            (tempMobileFilters.cotd !== 'all' ? 1 : 0)
+        );
+    };
+
+    const getActiveFilterCount = () => {
+        return (
+            selectedFilters.skills.length +
+            selectedFilters.techStack.length +
+            selectedFilters.profession.length +
+            (selectedFilters.cotd !== 'all' ? 1 : 0)
+        );
+    };
+
+    // Open mobile sidebar and sync temp filters
+    const openMobileFilters = () => {
+        setTempMobileFilters(selectedFilters);
+        setSidebarOpen(true);
     };
 
     const clearFilters = () => {
@@ -961,11 +1036,11 @@ export default function Observatory({
                     <div className="flex flex-col gap-6 lg:flex-row">
                         {/* Mobile Filter Toggle */}
                         <button
-                            onClick={() => setSidebarOpen(!sidebarOpen)}
-                            className="flex items-center gap-2 rounded-lg border border-zinc-200 bg-white px-4 py-2 text-sm font-medium text-zinc-900 transition-colors hover:bg-zinc-50 lg:hidden dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-100 dark:hover:bg-zinc-800"
+                            onClick={openMobileFilters}
+                            className="flex w-fit items-center gap-2 rounded-lg border border-zinc-200 bg-white px-3 py-1.5 text-xs font-medium text-zinc-900 transition-colors hover:bg-zinc-50 lg:hidden dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-100 dark:hover:bg-zinc-800"
                         >
                             <svg
-                                className="h-5 w-5"
+                                className="h-4 w-4"
                                 fill="none"
                                 strokeLinecap="round"
                                 strokeLinejoin="round"
@@ -975,347 +1050,480 @@ export default function Observatory({
                             >
                                 <path d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
                             </svg>
-                            Hide Filter
+                            Filters
+                            {getActiveFilterCount() > 0 && (
+                                <span className="ml-1">
+                                    ({getActiveFilterCount()})
+                                </span>
+                            )}
                         </button>
+
+                        {/* Mobile Overlay */}
+                        {sidebarOpen && (
+                            <div
+                                className="fixed inset-0 z-40 bg-black/50 lg:hidden"
+                                onClick={closeMobileFilters}
+                                onClick={() => setSidebarOpen(false)}
+                            />
+                        )}
 
                         {/* Sidebar */}
                         <aside
                             className={`${
-                                sidebarOpen ? 'block' : 'hidden'
-                            } w-full space-y-6 lg:block lg:w-64`}
+                                sidebarOpen
+                                    ? 'translate-x-0'
+                                    : 'translate-x-full'
+                            } fixed top-0 right-0 z-50 flex h-full w-80 flex-col space-y-0 overflow-hidden bg-zinc-50 shadow-xl transition-transform duration-300 lg:relative lg:block lg:h-auto lg:w-64 lg:translate-x-0 lg:overflow-visible lg:bg-transparent lg:shadow-none dark:bg-zinc-950`}
                         >
-                            <div className="rounded-lg border border-zinc-200 bg-white p-4 dark:border-zinc-800 dark:bg-zinc-900">
-                                <div className="mb-4 flex items-center justify-between">
-                                    <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100">
-                                        Filters
-                                    </h2>
-                                    {(selectedFilters.cotd !== 'all' ||
-                                        selectedFilters.skills.length > 0 ||
-                                        selectedFilters.techStack.length > 0 ||
-                                        selectedFilters.profession.length >
-                                            0) && (
-                                        <button
-                                            onClick={clearFilters}
-                                            className="text-xs text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
-                                        >
-                                            Clear all
-                                        </button>
-                                    )}
-                                </div>
-
-                                {/* COTD Filter */}
-                                <div className="mb-6">
+                            {/* Mobile Header with Counter - Only on mobile */}
+                            <div className="flex items-center justify-between border-b border-zinc-200 bg-white p-4 lg:hidden dark:border-zinc-800 dark:bg-zinc-900">
+                                <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100">
+                                    Filters ({getMobileFilterCount()})
+                                </h2>
+                                {getMobileFilterCount() > 0 && (
                                     <button
-                                        onClick={() => toggleDropdown('cotd')}
-                                        className="mb-3 flex w-full items-center justify-between text-sm font-medium text-zinc-900 transition-colors hover:text-zinc-700 dark:text-zinc-100 dark:hover:text-zinc-300"
+                                        onClick={clearMobileFilters}
+                                        className="text-sm font-medium text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
                                     >
-                                        <span>COTD</span>
-                                        <svg
-                                            className={`h-4 w-4 transition-transform ${
-                                                dropdownsOpen.cotd
-                                                    ? 'rotate-180'
-                                                    : ''
-                                            }`}
-                                            fill="none"
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                            strokeWidth={2}
-                                            viewBox="0 0 24 24"
-                                            stroke="currentColor"
-                                        >
-                                            <path d="M19 9l-7 7-7-7" />
-                                        </svg>
+                                        Clear ({getMobileFilterCount()})
                                     </button>
-                                    {dropdownsOpen.cotd && (
-                                        <div className="space-y-2">
-                                            {[
-                                                { value: 'all', label: 'All' },
-                                                { value: 'yes', label: 'Yes' },
-                                                { value: 'no', label: 'No' },
-                                            ].map(({ value, label }) => {
-                                                const isSelected =
-                                                    selectedFilters.cotd ===
-                                                    value;
-                                                return (
-                                                    <label
-                                                        key={value}
-                                                        className="flex cursor-pointer items-center gap-2 text-sm text-zinc-700 dark:text-zinc-300"
-                                                    >
-                                                        <div
-                                                            className={`flex h-4 w-4 items-center justify-center rounded-full border ${
-                                                                isSelected
-                                                                    ? 'border-zinc-900 bg-zinc-900 dark:border-zinc-100 dark:bg-zinc-100'
-                                                                    : 'border-zinc-300 dark:border-zinc-600'
-                                                            }`}
-                                                            onClick={() =>
-                                                                setSelectedFilters(
-                                                                    (prev) => ({
-                                                                        ...prev,
-                                                                        cotd: value as
+                                )}
+                            </div>
+
+                            {/* Scrollable Filter Content */}
+                            <div className="flex-1 space-y-6 overflow-y-auto p-4 lg:overflow-visible lg:p-0">
+                                <div className="rounded-lg border border-zinc-200 bg-white p-4 dark:border-zinc-800 dark:bg-zinc-900">
+                                    {/* Desktop Header - Only on desktop */}
+                                    <div className="mb-4 hidden items-center justify-between lg:flex">
+                                        <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100">
+                                            Filters
+                                        </h2>
+                                        {(selectedFilters.cotd !== 'all' ||
+                                            selectedFilters.skills.length > 0 ||
+                                            selectedFilters.techStack.length >
+                                                0 ||
+                                            selectedFilters.profession.length >
+                                                0) && (
+                                            <button
+                                                onClick={clearFilters}
+                                                className="text-xs text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
+                                            >
+                                                Clear all
+                                            </button>
+                                        )}
+                                    </div>
+
+                                    {/* COTD Filter */}
+                                    <div className="mb-6">
+                                        <button
+                                            onClick={() =>
+                                                toggleDropdown('cotd')
+                                            }
+                                            className="mb-3 flex w-full items-center justify-between text-sm font-medium text-zinc-900 transition-colors hover:text-zinc-700 dark:text-zinc-100 dark:hover:text-zinc-300"
+                                        >
+                                            <span>COTD</span>
+                                            <svg
+                                                className={`h-4 w-4 transition-transform ${
+                                                    dropdownsOpen.cotd
+                                                        ? 'rotate-180'
+                                                        : ''
+                                                }`}
+                                                fill="none"
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                                strokeWidth={2}
+                                                viewBox="0 0 24 24"
+                                                stroke="currentColor"
+                                            >
+                                                <path d="M19 9l-7 7-7-7" />
+                                            </svg>
+                                        </button>
+                                        {dropdownsOpen.cotd && (
+                                            <div className="space-y-2">
+                                                {[
+                                                    {
+                                                        value: 'all',
+                                                        label: 'All',
+                                                    },
+                                                    {
+                                                        value: 'yes',
+                                                        label: 'Yes',
+                                                    },
+                                                    {
+                                                        value: 'no',
+                                                        label: 'No',
+                                                    },
+                                                ].map(({ value, label }) => {
+                                                    // Use temp filters for mobile, regular filters for desktop
+                                                    const currentCotd =
+                                                        sidebarOpen
+                                                            ? tempMobileFilters.cotd
+                                                            : selectedFilters.cotd;
+                                                    const isSelected =
+                                                        currentCotd === value;
+                                                    return (
+                                                        <label
+                                                            key={value}
+                                                            className="flex cursor-pointer items-center gap-2 text-sm text-zinc-700 dark:text-zinc-300"
+                                                        >
+                                                            <div
+                                                                className={`flex h-4 w-4 items-center justify-center rounded-full border ${
+                                                                    isSelected
+                                                                        ? 'border-zinc-900 bg-zinc-900 dark:border-zinc-100 dark:bg-zinc-100'
+                                                                        : 'border-zinc-300 dark:border-zinc-600'
+                                                                }`}
+                                                                onClick={() => {
+                                                                    // Use mobile function on mobile, desktop on desktop
+                                                                    const filterValue =
+                                                                        value as
                                                                             | 'all'
                                                                             | 'yes'
-                                                                            | 'no',
-                                                                    }),
-                                                                )
-                                                            }
-                                                        >
-                                                            {isSelected && (
-                                                                <div className="h-2 w-2 rounded-full bg-white dark:bg-zinc-900" />
-                                                            )}
-                                                        </div>
-                                                        <span>{label}</span>
-                                                    </label>
-                                                );
-                                            })}
-                                        </div>
-                                    )}
-                                </div>
-
-                                {/* Skills Filter */}
-                                <div className="mb-6">
-                                    <button
-                                        onClick={() => toggleDropdown('skills')}
-                                        className="mb-3 flex w-full items-center justify-between text-sm font-medium text-zinc-900 transition-colors hover:text-zinc-700 dark:text-zinc-100 dark:hover:text-zinc-300"
-                                    >
-                                        <span>Skills</span>
-                                        <svg
-                                            className={`h-4 w-4 transition-transform ${
-                                                dropdownsOpen.skills
-                                                    ? 'rotate-180'
-                                                    : ''
-                                            }`}
-                                            fill="none"
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                            strokeWidth={2}
-                                            viewBox="0 0 24 24"
-                                            stroke="currentColor"
-                                        >
-                                            <path d="M19 9l-7 7-7-7" />
-                                        </svg>
-                                    </button>
-                                    {dropdownsOpen.skills && (
-                                        <div className="space-y-2">
-                                            {(showAllFilters.skills
-                                                ? filterOptions.skills
-                                                : filterOptions.skills.slice(
-                                                      0,
-                                                      INITIAL_ITEMS_TO_SHOW,
-                                                  )
-                                            ).map((skill) => {
-                                                const isSelected =
-                                                    selectedFilters.skills.includes(
-                                                        skill,
+                                                                            | 'no';
+                                                                    if (
+                                                                        window.innerWidth <
+                                                                        1024
+                                                                    ) {
+                                                                        setMobileCotdFilter(
+                                                                            filterValue,
+                                                                        );
+                                                                    } else {
+                                                                        setSelectedFilters(
+                                                                            (
+                                                                                prev,
+                                                                            ) => ({
+                                                                                ...prev,
+                                                                                cotd: filterValue,
+                                                                            }),
+                                                                        );
+                                                                    }
+                                                                }}
+                                                            >
+                                                                {isSelected && (
+                                                                    <div className="h-2 w-2 rounded-full bg-white dark:bg-zinc-900" />
+                                                                )}
+                                                            </div>
+                                                            <span>{label}</span>
+                                                        </label>
                                                     );
-                                                return (
-                                                    <label
-                                                        key={skill}
-                                                        className="flex cursor-pointer items-center gap-2 text-sm text-zinc-700 dark:text-zinc-300"
-                                                    >
-                                                        <div
-                                                            className={`flex h-4 w-4 items-center justify-center rounded border ${
-                                                                isSelected
-                                                                    ? 'border-zinc-900 bg-zinc-900 dark:border-zinc-100 dark:bg-zinc-100'
-                                                                    : 'border-zinc-300 dark:border-zinc-600'
-                                                            }`}
-                                                            onClick={() =>
-                                                                toggleFilter(
-                                                                    'skills',
-                                                                    skill,
-                                                                )
-                                                            }
-                                                        >
-                                                            {isSelected && (
-                                                                <Check className="h-3 w-3 text-white dark:text-zinc-900" />
-                                                            )}
-                                                        </div>
-                                                        <span>{skill}</span>
-                                                    </label>
-                                                );
-                                            })}
-                                            {filterOptions.skills.length >
-                                                INITIAL_ITEMS_TO_SHOW && (
-                                                <button
-                                                    onClick={() =>
-                                                        toggleShowAll('skills')
-                                                    }
-                                                    className="mt-2 text-xs font-medium text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200"
-                                                >
-                                                    {showAllFilters.skills
-                                                        ? '− Show Less'
-                                                        : `+ See More (${filterOptions.skills.length - INITIAL_ITEMS_TO_SHOW} more)`}
-                                                </button>
-                                            )}
-                                        </div>
-                                    )}
-                                </div>
+                                                })}
+                                            </div>
+                                        )}
+                                    </div>
 
-                                {/* Tech Stack Filter */}
-                                <div className="mb-6">
-                                    <button
-                                        onClick={() =>
-                                            toggleDropdown('techStack')
-                                        }
-                                        className="mb-3 flex w-full items-center justify-between text-sm font-medium text-zinc-900 transition-colors hover:text-zinc-700 dark:text-zinc-100 dark:hover:text-zinc-300"
-                                    >
-                                        <span>Tech Stack</span>
-                                        <svg
-                                            className={`h-4 w-4 transition-transform ${
-                                                dropdownsOpen.techStack
-                                                    ? 'rotate-180'
-                                                    : ''
-                                            }`}
-                                            fill="none"
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                            strokeWidth={2}
-                                            viewBox="0 0 24 24"
-                                            stroke="currentColor"
+                                    {/* Skills Filter */}
+                                    <div className="mb-6">
+                                        <button
+                                            onClick={() =>
+                                                toggleDropdown('skills')
+                                            }
+                                            className="mb-3 flex w-full items-center justify-between text-sm font-medium text-zinc-900 transition-colors hover:text-zinc-700 dark:text-zinc-100 dark:hover:text-zinc-300"
                                         >
-                                            <path d="M19 9l-7 7-7-7" />
-                                        </svg>
-                                    </button>
-                                    {dropdownsOpen.techStack && (
-                                        <div className="space-y-2">
-                                            {(showAllFilters.techStack
-                                                ? filterOptions.techStack
-                                                : filterOptions.techStack.slice(
-                                                      0,
-                                                      INITIAL_ITEMS_TO_SHOW,
-                                                  )
-                                            ).map((tech) => {
-                                                const isSelected =
-                                                    selectedFilters.techStack.includes(
-                                                        tech,
-                                                    );
-                                                return (
-                                                    <label
-                                                        key={tech}
-                                                        className="flex cursor-pointer items-center gap-2 text-sm text-zinc-700 dark:text-zinc-300"
-                                                    >
-                                                        <div
-                                                            className={`flex h-4 w-4 items-center justify-center rounded border ${
-                                                                isSelected
-                                                                    ? 'border-zinc-900 bg-zinc-900 dark:border-zinc-100 dark:bg-zinc-100'
-                                                                    : 'border-zinc-300 dark:border-zinc-600'
-                                                            }`}
-                                                            onClick={() =>
-                                                                toggleFilter(
-                                                                    'techStack',
-                                                                    tech,
-                                                                )
-                                                            }
+                                            <span>Skills</span>
+                                            <svg
+                                                className={`h-4 w-4 transition-transform ${
+                                                    dropdownsOpen.skills
+                                                        ? 'rotate-180'
+                                                        : ''
+                                                }`}
+                                                fill="none"
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                                strokeWidth={2}
+                                                viewBox="0 0 24 24"
+                                                stroke="currentColor"
+                                            >
+                                                <path d="M19 9l-7 7-7-7" />
+                                            </svg>
+                                        </button>
+                                        {dropdownsOpen.skills && (
+                                            <div className="space-y-2">
+                                                {(showAllFilters.skills
+                                                    ? filterOptions.skills
+                                                    : filterOptions.skills.slice(
+                                                          0,
+                                                          INITIAL_ITEMS_TO_SHOW,
+                                                      )
+                                                ).map((skill) => {
+                                                    // Use temp filters for mobile, regular filters for desktop
+                                                    const currentSkills =
+                                                        sidebarOpen
+                                                            ? tempMobileFilters.skills
+                                                            : selectedFilters.skills;
+                                                    const isSelected =
+                                                        currentSkills.includes(
+                                                            skill,
+                                                        );
+                                                    return (
+                                                        <label
+                                                            key={skill}
+                                                            className="flex cursor-pointer items-center gap-2 text-sm text-zinc-700 dark:text-zinc-300"
                                                         >
-                                                            {isSelected && (
-                                                                <Check className="h-3 w-3 text-white dark:text-zinc-900" />
-                                                            )}
-                                                        </div>
-                                                        <span>{tech}</span>
-                                                    </label>
-                                                );
-                                            })}
-                                            {filterOptions.techStack.length >
-                                                INITIAL_ITEMS_TO_SHOW && (
-                                                <button
-                                                    onClick={() =>
-                                                        toggleShowAll(
-                                                            'techStack',
-                                                        )
-                                                    }
-                                                    className="mt-2 text-xs font-medium text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200"
-                                                >
-                                                    {showAllFilters.techStack
-                                                        ? '− Show Less'
-                                                        : `+ See More (${filterOptions.techStack.length - INITIAL_ITEMS_TO_SHOW} more)`}
-                                                </button>
-                                            )}
-                                        </div>
-                                    )}
-                                </div>
+                                                            <div
+                                                                className={`flex h-4 w-4 items-center justify-center rounded border ${
+                                                                    isSelected
+                                                                        ? 'border-zinc-900 bg-zinc-900 dark:border-zinc-100 dark:bg-zinc-100'
+                                                                        : 'border-zinc-300 dark:border-zinc-600'
+                                                                }`}
+                                                                onClick={() => {
+                                                                    // Use mobile function on mobile, desktop on desktop
+                                                                    if (
+                                                                        window.innerWidth <
+                                                                        1024
+                                                                    ) {
+                                                                        toggleMobileFilter(
+                                                                            'skills',
+                                                                            skill,
+                                                                        );
+                                                                    } else {
+                                                                        toggleFilter(
+                                                                            'skills',
+                                                                            skill,
+                                                                        );
+                                                                    }
+                                                                }}
+                                                            >
+                                                                {isSelected && (
+                                                                    <Check className="h-3 w-3 text-white dark:text-zinc-900" />
+                                                                )}
+                                                            </div>
+                                                            <span>{skill}</span>
+                                                        </label>
+                                                    );
+                                                })}
+                                                {filterOptions.skills.length >
+                                                    INITIAL_ITEMS_TO_SHOW && (
+                                                    <button
+                                                        onClick={() =>
+                                                            toggleShowAll(
+                                                                'skills',
+                                                            )
+                                                        }
+                                                        className="mt-2 text-xs font-medium text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200"
+                                                    >
+                                                        {showAllFilters.skills
+                                                            ? '− Show Less'
+                                                            : `+ See More (${filterOptions.skills.length - INITIAL_ITEMS_TO_SHOW} more)`}
+                                                    </button>
+                                                )}
+                                            </div>
+                                        )}
+                                    </div>
 
-                                {/* Profession Filter */}
-                                <div>
-                                    <button
-                                        onClick={() =>
-                                            toggleDropdown('profession')
-                                        }
-                                        className="mb-3 flex w-full items-center justify-between text-sm font-medium text-zinc-900 transition-colors hover:text-zinc-700 dark:text-zinc-100 dark:hover:text-zinc-300"
-                                    >
-                                        <span>Profession</span>
-                                        <svg
-                                            className={`h-4 w-4 transition-transform ${
-                                                dropdownsOpen.profession
-                                                    ? 'rotate-180'
-                                                    : ''
-                                            }`}
-                                            fill="none"
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                            strokeWidth={2}
-                                            viewBox="0 0 24 24"
-                                            stroke="currentColor"
+                                    {/* Tech Stack Filter */}
+                                    <div className="mb-6">
+                                        <button
+                                            onClick={() =>
+                                                toggleDropdown('techStack')
+                                            }
+                                            className="mb-3 flex w-full items-center justify-between text-sm font-medium text-zinc-900 transition-colors hover:text-zinc-700 dark:text-zinc-100 dark:hover:text-zinc-300"
                                         >
-                                            <path d="M19 9l-7 7-7-7" />
-                                        </svg>
-                                    </button>
-                                    {dropdownsOpen.profession && (
-                                        <div className="space-y-2">
-                                            {(showAllFilters.profession
-                                                ? filterOptions.profession
-                                                : filterOptions.profession.slice(
-                                                      0,
-                                                      INITIAL_ITEMS_TO_SHOW,
-                                                  )
-                                            ).map((profession) => {
-                                                const isSelected =
-                                                    selectedFilters.profession.includes(
-                                                        profession,
-                                                    );
-                                                return (
-                                                    <label
-                                                        key={profession}
-                                                        className="flex cursor-pointer items-center gap-2 text-sm text-zinc-700 dark:text-zinc-300"
-                                                    >
-                                                        <div
-                                                            className={`flex h-4 w-4 items-center justify-center rounded border ${
-                                                                isSelected
-                                                                    ? 'border-zinc-900 bg-zinc-900 dark:border-zinc-100 dark:bg-zinc-100'
-                                                                    : 'border-zinc-300 dark:border-zinc-600'
-                                                            }`}
-                                                            onClick={() =>
-                                                                toggleFilter(
-                                                                    'profession',
-                                                                    profession,
-                                                                )
-                                                            }
+                                            <span>Tech Stack</span>
+                                            <svg
+                                                className={`h-4 w-4 transition-transform ${
+                                                    dropdownsOpen.techStack
+                                                        ? 'rotate-180'
+                                                        : ''
+                                                }`}
+                                                fill="none"
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                                strokeWidth={2}
+                                                viewBox="0 0 24 24"
+                                                stroke="currentColor"
+                                            >
+                                                <path d="M19 9l-7 7-7-7" />
+                                            </svg>
+                                        </button>
+                                        {dropdownsOpen.techStack && (
+                                            <div className="space-y-2">
+                                                {(showAllFilters.techStack
+                                                    ? filterOptions.techStack
+                                                    : filterOptions.techStack.slice(
+                                                          0,
+                                                          INITIAL_ITEMS_TO_SHOW,
+                                                      )
+                                                ).map((tech) => {
+                                                    const currentTechStack =
+                                                        sidebarOpen
+                                                            ? tempMobileFilters.techStack
+                                                            : selectedFilters.techStack;
+                                                    const isSelected =
+                                                        currentTechStack.includes(
+                                                            tech,
+                                                        );
+                                                    return (
+                                                        <label
+                                                            key={tech}
+                                                            className="flex cursor-pointer items-center gap-2 text-sm text-zinc-700 dark:text-zinc-300"
                                                         >
-                                                            {isSelected && (
-                                                                <Check className="h-3 w-3 text-white dark:text-zinc-900" />
-                                                            )}
-                                                        </div>
-                                                        <span>
-                                                            {profession}
-                                                        </span>
-                                                    </label>
-                                                );
-                                            })}
-                                            {filterOptions.profession.length >
-                                                INITIAL_ITEMS_TO_SHOW && (
-                                                <button
-                                                    onClick={() =>
-                                                        toggleShowAll(
-                                                            'profession',
-                                                        )
-                                                    }
-                                                    className="mt-2 text-xs font-medium text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200"
-                                                >
-                                                    {showAllFilters.profession
-                                                        ? '− Show Less'
-                                                        : `+ See More (${filterOptions.profession.length - INITIAL_ITEMS_TO_SHOW} more)`}
-                                                </button>
-                                            )}
-                                        </div>
-                                    )}
+                                                            <div
+                                                                className={`flex h-4 w-4 items-center justify-center rounded border ${
+                                                                    isSelected
+                                                                        ? 'border-zinc-900 bg-zinc-900 dark:border-zinc-100 dark:bg-zinc-100'
+                                                                        : 'border-zinc-300 dark:border-zinc-600'
+                                                                }`}
+                                                                onClick={() => {
+                                                                    if (
+                                                                        window.innerWidth <
+                                                                        1024
+                                                                    ) {
+                                                                        toggleMobileFilter(
+                                                                            'techStack',
+                                                                            tech,
+                                                                        );
+                                                                    } else {
+                                                                        toggleFilter(
+                                                                            'techStack',
+                                                                            tech,
+                                                                        );
+                                                                    }
+                                                                }}
+                                                            >
+                                                                {isSelected && (
+                                                                    <Check className="h-3 w-3 text-white dark:text-zinc-900" />
+                                                                )}
+                                                            </div>
+                                                            <span>{tech}</span>
+                                                        </label>
+                                                    );
+                                                })}
+                                                {filterOptions.techStack
+                                                    .length >
+                                                    INITIAL_ITEMS_TO_SHOW && (
+                                                    <button
+                                                        onClick={() =>
+                                                            toggleShowAll(
+                                                                'techStack',
+                                                            )
+                                                        }
+                                                        className="mt-2 text-xs font-medium text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200"
+                                                    >
+                                                        {showAllFilters.techStack
+                                                            ? '− Show Less'
+                                                            : `+ See More (${filterOptions.techStack.length - INITIAL_ITEMS_TO_SHOW} more)`}
+                                                    </button>
+                                                )}
+                                            </div>
+                                        )}
+                                    </div>
+
+                                    {/* Profession Filter */}
+                                    <div>
+                                        <button
+                                            onClick={() =>
+                                                toggleDropdown('profession')
+                                            }
+                                            className="mb-3 flex w-full items-center justify-between text-sm font-medium text-zinc-900 transition-colors hover:text-zinc-700 dark:text-zinc-100 dark:hover:text-zinc-300"
+                                        >
+                                            <span>Profession</span>
+                                            <svg
+                                                className={`h-4 w-4 transition-transform ${
+                                                    dropdownsOpen.profession
+                                                        ? 'rotate-180'
+                                                        : ''
+                                                }`}
+                                                fill="none"
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                                strokeWidth={2}
+                                                viewBox="0 0 24 24"
+                                                stroke="currentColor"
+                                            >
+                                                <path d="M19 9l-7 7-7-7" />
+                                            </svg>
+                                        </button>
+                                        {dropdownsOpen.profession && (
+                                            <div className="space-y-2">
+                                                {(showAllFilters.profession
+                                                    ? filterOptions.profession
+                                                    : filterOptions.profession.slice(
+                                                          0,
+                                                          INITIAL_ITEMS_TO_SHOW,
+                                                      )
+                                                ).map((profession) => {
+                                                    const currentProfession =
+                                                        sidebarOpen
+                                                            ? tempMobileFilters.profession
+                                                            : selectedFilters.profession;
+                                                    const isSelected =
+                                                        currentProfession.includes(
+                                                            profession,
+                                                        );
+                                                    return (
+                                                        <label
+                                                            key={profession}
+                                                            className="flex cursor-pointer items-center gap-2 text-sm text-zinc-700 dark:text-zinc-300"
+                                                        >
+                                                            <div
+                                                                className={`flex h-4 w-4 items-center justify-center rounded border ${
+                                                                    isSelected
+                                                                        ? 'border-zinc-900 bg-zinc-900 dark:border-zinc-100 dark:bg-zinc-100'
+                                                                        : 'border-zinc-300 dark:border-zinc-600'
+                                                                }`}
+                                                                onClick={() => {
+                                                                    if (
+                                                                        window.innerWidth <
+                                                                        1024
+                                                                    ) {
+                                                                        toggleMobileFilter(
+                                                                            'profession',
+                                                                            profession,
+                                                                        );
+                                                                    } else {
+                                                                        toggleFilter(
+                                                                            'profession',
+                                                                            profession,
+                                                                        );
+                                                                    }
+                                                                }}
+                                                            >
+                                                                {isSelected && (
+                                                                    <Check className="h-3 w-3 text-white dark:text-zinc-900" />
+                                                                )}
+                                                            </div>
+                                                            <span>
+                                                                {profession}
+                                                            </span>
+                                                        </label>
+                                                    );
+                                                })}
+                                                {filterOptions.profession
+                                                    .length >
+                                                    INITIAL_ITEMS_TO_SHOW && (
+                                                    <button
+                                                        onClick={() =>
+                                                            toggleShowAll(
+                                                                'profession',
+                                                            )
+                                                        }
+                                                        className="mt-2 text-xs font-medium text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200"
+                                                    >
+                                                        {showAllFilters.profession
+                                                            ? '− Show Less'
+                                                            : `+ See More (${filterOptions.profession.length - INITIAL_ITEMS_TO_SHOW} more)`}
+                                                    </button>
+                                                )}
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Mobile Action Buttons - Only on mobile */}
+                            <div className="border-t border-zinc-200 bg-white p-4 lg:hidden dark:border-zinc-800 dark:bg-zinc-900">
+                                <div className="flex gap-3">
+                                    <button
+                                        onClick={closeMobileFilters}
+                                        className="flex-1 rounded-lg border border-zinc-300 bg-white px-4 py-2.5 text-sm font-medium text-zinc-700 transition-colors hover:bg-zinc-50 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700"
+                                    >
+                                        Close
+                                    </button>
+                                    <button
+                                        onClick={applyMobileFilters}
+                                        className="flex-1 rounded-lg bg-zinc-900 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-zinc-800 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200"
+                                    >
+                                        Apply Changes
+                                    </button>
                                 </div>
                             </div>
                         </aside>

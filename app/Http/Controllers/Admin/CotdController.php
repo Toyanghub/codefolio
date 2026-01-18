@@ -54,11 +54,14 @@ class CotdController extends Controller
             ->orderByDesc('created_at')
             ->get()
             ->map(function ($user) {
+                // Prioritize Google avatar, fall back to profile_picture
+                $profilePicture = $user->avatar ?? $user->profile_picture;
+
                 return [
                     'id' => $user->id,
                     'name' => $user->name,
                     'email' => $user->email,
-                    'profile_picture' => $user->profile_picture,
+                    'profile_picture' => $profilePicture,
                     'portfolio_desktop_image' => $user->portfolio_desktop_image,
                     'portfolio_mobile_image' => $user->portfolio_mobile_image,
                     'website_url' => $user->website_url,

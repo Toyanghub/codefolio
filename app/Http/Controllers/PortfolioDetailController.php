@@ -23,11 +23,14 @@ class PortfolioDetailController extends Controller
             abort(404, 'Portfolio not found or not published');
         }
 
+        // Prioritize Google avatar, fall back to profile_picture
+        $profilePicture = $user->avatar ?? $user->profile_picture;
+
         $portfolio = [
             'id' => $user->id,
             'name' => $user->name,
             'email' => $user->email,
-            'profilePicture' => $user->profile_picture,
+            'profilePicture' => $profilePicture,
             'desktopImage' => $user->portfolio_desktop_image,
             'mobileImage' => $user->portfolio_mobile_image,
             'description' => $user->portfolio_description,

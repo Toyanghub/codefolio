@@ -23,13 +23,21 @@ class WorksController extends Controller
             ->orderByDesc('featured_at')
             ->get()
             ->map(function ($user) {
+                // Prioritize Google avatar, fall back to profile_picture
+                $avatar = null;
+                if ($user->avatar) {
+                    $avatar = asset('storage/' . $user->avatar);
+                } elseif ($user->profile_picture) {
+                    $avatar = asset('storage/' . $user->profile_picture);
+                } else {
+                    $avatar = "https://api.dicebear.com/7.x/avataaars/svg?seed={$user->name}";
+                }
+
                 return [
                     'id' => $user->id,
                     'name' => $user->name,
                     'role' => $user->professions->first()?->name ?? 'Developer',
-                    'avatar' => $user->profile_picture 
-                        ? asset('storage/' . $user->profile_picture)
-                        : "https://api.dicebear.com/7.x/avataaars/svg?seed={$user->name}",
+                    'avatar' => $avatar,
                     'image' => $user->portfolio_desktop_image 
                         ? asset('storage/' . $user->portfolio_desktop_image)
                         : null,

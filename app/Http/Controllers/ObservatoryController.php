@@ -54,11 +54,19 @@ class ObservatoryController extends Controller
         }
 
         $portfolios = $portfoliosQuery->latest()->get()->map(function ($user) {
+            // Prioritize Google avatar, fall back to profile_picture
+            $authorImage = null;
+            if ($user->avatar) {
+                $authorImage = "/storage/{$user->avatar}";
+            } elseif ($user->profile_picture) {
+                $authorImage = "/storage/{$user->profile_picture}";
+            }
+
             return [
                 'id' => $user->id,
                 'title' => $user->name . "'s Portfolio",
                 'author' => $user->name,
-                'authorImage' => $user->profile_picture ? "/storage/{$user->profile_picture}" : null,
+                'authorImage' => $authorImage,
                 'image' => $user->portfolio_desktop_image ? "/storage/{$user->portfolio_desktop_image}" : null,
                 'mobileImage' => $user->portfolio_mobile_image ? "/storage/{$user->portfolio_mobile_image}" : null,
                 'description' => $user->portfolio_description ?? 'No description provided.',
