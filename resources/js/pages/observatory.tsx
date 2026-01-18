@@ -1341,17 +1341,64 @@ export default function Observatory({
                                     </div>
                                 </div>
                             ) : (
-                                <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3">
-                                    {filteredPortfolios.map(
-                                        (portfolio, index) => (
-                                            <PortfolioCard
-                                                key={portfolio.id}
-                                                portfolio={portfolio}
-                                                index={index}
-                                            />
-                                        ),
-                                    )}
-                                </div>
+                                <>
+                                    <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3">
+                                        {filteredPortfolios.map(
+                                            (portfolio, index) => (
+                                                <PortfolioCard
+                                                    key={portfolio.id}
+                                                    portfolio={portfolio}
+                                                    index={index}
+                                                />
+                                            ),
+                                        )}
+                                    </div>
+
+                                    {/* End of Results & Call to Action */}
+                                    <motion.div
+                                        initial={{ opacity: 0, y: 20 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        transition={{
+                                            duration: 0.5,
+                                            delay: 0.3,
+                                        }}
+                                        className="mt-12 space-y-6"
+                                    >
+                                        {/* End of Results Indicator */}
+                                        <div className="flex items-center justify-center gap-4">
+                                            <div className="h-px w-full max-w-xs bg-gradient-to-r from-transparent via-zinc-300 to-transparent dark:via-zinc-700" />
+                                            <span className="text-sm font-medium whitespace-nowrap text-zinc-500 dark:text-zinc-400">
+                                                End of results
+                                            </span>
+                                            <div className="h-px w-full max-w-xs bg-gradient-to-r from-transparent via-zinc-300 to-transparent dark:via-zinc-700" />
+                                        </div>
+
+                                        {/* Call to Action */}
+                                        <div className="p-8 text-center">
+                                            <div className="mx-auto max-w-2xl space-y-6">
+                                                <h3 className="text-4xl font-bold text-zinc-900 dark:text-zinc-100">
+                                                    Help us grow
+                                                </h3>
+
+                                                <p className="text-lg leading-relaxed text-zinc-600 dark:text-zinc-400">
+                                                    Share your portfolio with
+                                                    our community! Showcase your
+                                                    work and inspire others by
+                                                    submitting your portfolio
+                                                    today.
+                                                </p>
+
+                                                <Link
+                                                    href="/settings/portfolio"
+                                                    className="group inline-flex items-center gap-2 rounded-lg bg-zinc-900 px-4 py-2 text-sm font-semibold text-white transition-all hover:bg-zinc-800 hover:shadow-lg dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200"
+                                                >
+                                                    Submit Your Portfolio
+                                                    <ArrowUpRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                                                </Link>
+                                            </div>
+                                        </div>
+                                    </motion.div>
+                                </>
                             )}
                         </div>
                     </div>

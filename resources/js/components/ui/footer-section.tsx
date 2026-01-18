@@ -66,36 +66,30 @@ function Footerdemo() {
                             Quick Links
                         </h3>
                         <nav className="space-y-2 text-sm">
-                            <a
-                                href="#"
+                            <Link
+                                href="/"
                                 className="block transition-colors hover:text-primary"
                             >
-                                Home
-                            </a>
-                            <a
-                                href="#"
+                                Lobby
+                            </Link>
+                            <Link
+                                href="/observatory"
                                 className="block transition-colors hover:text-primary"
                             >
-                                About Us
-                            </a>
-                            <a
-                                href="#"
+                                Observatory
+                            </Link>
+                            <Link
+                                href="/works"
                                 className="block transition-colors hover:text-primary"
                             >
-                                Services
-                            </a>
-                            <a
-                                href="#"
+                                Works
+                            </Link>
+                            <Link
+                                href="/settings/profile"
                                 className="block transition-colors hover:text-primary"
                             >
-                                Products
-                            </a>
-                            <a
-                                href="#"
-                                className="block transition-colors hover:text-primary"
-                            >
-                                Contact
-                            </a>
+                                Settings
+                            </Link>
                         </nav>
                     </div>
                     <div>
