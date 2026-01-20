@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\CotdController;
 use App\Http\Controllers\Auth\GoogleAuthController;
+use App\Http\Controllers\Auth\GitHubAuthController;
 use App\Http\Controllers\ObservatoryController;
 use App\Http\Controllers\PortfolioDetailController;
 use App\Http\Controllers\WorksController;
@@ -33,6 +34,10 @@ Route::get('/terms-of-service', function () {
 // Google OAuth routes
 Route::get('/auth/google', [GoogleAuthController::class, 'redirectToGoogle'])->name('auth.google');
 Route::get('/auth/google/callback', [GoogleAuthController::class, 'handleGoogleCallback']);
+
+// GitHub OAuth routes
+Route::get('/auth/github', [GitHubAuthController::class, 'redirectToGitHub'])->name('auth.github');
+Route::get('/auth/github/callback', [GitHubAuthController::class, 'handleGitHubCallback']);
 
 // Admin routes
 Route::middleware(['auth', EnsureUserIsAdmin::class])->prefix('admin')->group(function () {
