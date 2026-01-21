@@ -829,7 +829,7 @@ export default function Works({
 
                 <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
                     {/* Page Header */}
-                    <div className="mb-8">
+                    <div className="mb-8 text-center">
                         <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-amber-100 px-4 py-2 dark:bg-amber-950">
                             <svg
                                 className="h-5 w-5 text-amber-600 dark:text-amber-400"
