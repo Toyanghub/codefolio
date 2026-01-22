@@ -373,14 +373,17 @@ export default function PortfolioDetail({ portfolio, canRegister }: PageProps) {
 
                 {/* Featured Portfolio Marquee */}
                 {!!portfolio.isFeatured && (
-                    <div className="w-full overflow-hidden border-y border-zinc-200 bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900">
-                        <InfiniteTextMarquee
-                            text="Featured   Portfolio   ★"
-                            link={`/portfolio/${portfolio.id}`}
-                            speed={40}
-                            showTooltip={false}
-                            fontSize="1.5rem"
-                        />
+                    <div className="w-full overflow-hidden">
+                        <div className="mx-auto max-w-7xl border-y border-amber-200 dark:border-amber-900/50">
+                            <InfiniteTextMarquee
+                                text="Featured   Portfolio   ★"
+                                link={`/portfolio/${portfolio.id}`}
+                                speed={40}
+                                showTooltip={false}
+                                fontSize="1.75rem"
+                                textColor="rgb(217 119 6)"
+                            />
+                        </div>
                     </div>
                 )}
 
@@ -933,6 +936,28 @@ export default function PortfolioDetail({ portfolio, canRegister }: PageProps) {
                             ← Back to Observatory
                         </Link>
                     </motion.div>
+
+                    {/* Bottom Featured Portfolio Marquee (Reversed) */}
+                    {!!portfolio.isFeatured && (
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            transition={{ delay: 0.6 }}
+                            className="mt-16 w-full overflow-hidden"
+                        >
+                            <div className="mx-auto max-w-7xl border-y border-amber-200 dark:border-amber-900/50">
+                                <InfiniteTextMarquee
+                                    text="Featured   Portfolio   ★"
+                                    link={`/portfolio/${portfolio.id}`}
+                                    speed={40}
+                                    showTooltip={false}
+                                    fontSize="1.75rem"
+                                    textColor="rgb(217 119 6)"
+                                    reverse={true}
+                                />
+                            </div>
+                        </motion.div>
+                    )}
                 </div>
 
                 <Footerdemo />

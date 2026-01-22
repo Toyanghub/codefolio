@@ -13,6 +13,7 @@ type InfiniteTextMarqueeProps = {
     fontSize?: string;
     textColor?: string;
     hoverColor?: string;
+    reverse?: boolean;
 };
 
 export const InfiniteTextMarquee: React.FC<InfiniteTextMarqueeProps> = ({
@@ -24,6 +25,7 @@ export const InfiniteTextMarquee: React.FC<InfiniteTextMarqueeProps> = ({
     fontSize = '8rem',
     textColor = '', // optional override
     hoverColor = '', // optional override
+    reverse = false,
 }) => {
     const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
     const [isHovered, setIsHovered] = useState(false);
@@ -70,7 +72,7 @@ export const InfiniteTextMarquee: React.FC<InfiniteTextMarqueeProps> = ({
                     onMouseEnter={() => setIsHovered(true)}
                     onMouseLeave={() => setIsHovered(false)}
                     animate={{
-                        x: [0, -2000],
+                        x: reverse ? [-2000, 0] : [0, -2000],
                         transition: {
                             repeat: Infinity,
                             duration: speed,
@@ -80,9 +82,10 @@ export const InfiniteTextMarquee: React.FC<InfiniteTextMarqueeProps> = ({
                 >
                     <div>
                         <span
-                            className="m-0 py-10 font-bold tracking-tight transition-all text-zinc-900 dark:text-zinc-100"
+                            className="m-0 py-10 font-bold tracking-tight transition-all"
                             style={{
                                 fontSize,
+                                color: textColor || undefined,
                             }}
                         >
                             <span className="hoverable-text">
@@ -91,13 +94,14 @@ export const InfiniteTextMarquee: React.FC<InfiniteTextMarqueeProps> = ({
                             <style jsx>{`
                                 .hoverable-text {
                                     transition: color 0.2s ease;
+                                    color: ${textColor || 'inherit'};
                                 }
                                 .hoverable-text:hover {
-                                    color: rgb(63 63 70);
+                                    color: ${hoverColor || (textColor ? `color-mix(in srgb, ${textColor} 80%, black)` : 'rgb(63 63 70)')};
                                 }
                                 @media (prefers-color-scheme: dark) {
                                     .hoverable-text:hover {
-                                        color: rgb(212 212 216);
+                                        color: ${hoverColor || (textColor ? `color-mix(in srgb, ${textColor} 80%, white)` : 'rgb(212 212 216)')};
                                     }
                                 }
                             `}</style>
