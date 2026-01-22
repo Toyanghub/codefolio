@@ -2,7 +2,7 @@ import { Footerdemo } from '@/components/ui/footer-section';
 import { login, logout, register } from '@/routes';
 import { type SharedData } from '@/types';
 import { Head, Link, router, usePage } from '@inertiajs/react';
-import { ArrowUpRight, Check } from 'lucide-react';
+import { ArrowUpRight, Check, Star } from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
 import { useState } from 'react';
 
@@ -525,144 +525,239 @@ function COTDCard({
     const [isHovered, setIsHovered] = useState(false);
 
     return (
-        <Link href={`/portfolio/${portfolio.id}`}>
-            <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{
-                    duration: 0.5,
-                    delay: 0.4 + index * 0.1,
-                }}
-                onMouseEnter={() => setIsHovered(true)}
-                onMouseLeave={() => setIsHovered(false)}
-                className="group relative overflow-hidden rounded-lg border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900"
-            >
-                {/* Animated Border Gradient */}
-                <div
-                    className="pointer-events-none absolute inset-0 rounded-lg opacity-0 transition-opacity duration-700"
-                    style={{
-                        opacity: isHovered ? 1 : 0,
-                        background:
-                            'linear-gradient(90deg, hsl(var(--foreground) / 0.1) 0%, hsl(var(--foreground) / 0.05) 100%)',
-                        border: '1px solid',
-                        borderImageSource:
-                            'linear-gradient(90deg, hsl(var(--foreground) / 0.3) 0%, hsl(var(--foreground) / 0.1) 100%)',
-                        borderImageSlice: 1,
-                    }}
-                />
-
-                {/* Featured COTD Badge */}
-                <div className="absolute top-3 right-3 z-20">
-                    <div className="flex items-center gap-1.5 rounded-full bg-gradient-to-r from-amber-500 to-amber-600 px-3 py-1.5 shadow-lg shadow-amber-500/30">
-                        <svg
-                            className="h-3.5 w-3.5 text-white"
-                            fill="currentColor"
-                            viewBox="0 0 20 20"
-                        >
-                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                        </svg>
-                        <span className="text-xs font-bold text-white">
-                            COTD
-                        </span>
-                    </div>
-                </div>
-
-                {/* Portfolio Label with Animated Line */}
-                <div className="p-4 pb-0">
-                    <div className="mb-3 flex items-center gap-2">
-                        <div
-                            className="h-[1px] bg-zinc-300 transition-all duration-700 dark:bg-zinc-700"
-                            style={{
-                                width: isHovered ? '32px' : '24px',
-                            }}
-                        />
-                        <span
-                            className="text-xs font-medium text-zinc-500 uppercase transition-all duration-700 dark:text-zinc-400"
-                            style={{
-                                letterSpacing: isHovered ? '0.1em' : '0.05em',
-                            }}
-                        >
-                            Featured Work
-                        </span>
-                    </div>
-                </div>
-
-                {/* Portfolio Image */}
-                <div className="relative mx-4 mb-4 h-56 overflow-hidden rounded-md bg-zinc-100 dark:bg-zinc-800">
-                    <img
-                        src={portfolio.image}
-                        alt={`${portfolio.name}'s portfolio`}
-                        className="h-full w-full object-cover transition-transform duration-700"
+        <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: index * 0.1 }}
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
+            className="group relative"
+        >
+            <Link href={`/portfolio/${portfolio.id}`} className="block">
+                {/* Main Card Container */}
+                <div className="relative overflow-hidden bg-background p-6 transition-all duration-700">
+                    {/* Animated Border Frame */}
+                    <div
+                        className="absolute -inset-px transition-all duration-700"
+                        style={{
+                            background: isHovered
+                                ? 'linear-gradient(90deg, hsl(var(--foreground) / 0.1), transparent)'
+                                : 'transparent',
+                        }}
                     />
-                </div>
 
-                {/* Portfolio Content */}
-                <div className="p-4 pt-0">
-                    {/* Author Info */}
-                    <div className="mb-4 flex items-center gap-3">
-                        <img
-                            src={portfolio.avatar}
-                            alt={portfolio.name}
-                            className="h-10 w-10 rounded-full ring-2 ring-amber-400 dark:ring-amber-500"
-                        />
-                        <div
-                            className="transition-transform duration-700"
-                            style={{
-                                transform: isHovered
-                                    ? 'translateX(4px)'
-                                    : 'translateX(0)',
-                            }}
-                        >
-                            <h3 className="text-base font-semibold text-zinc-900 dark:text-zinc-100">
-                                {portfolio.name}
-                            </h3>
-                            <p className="text-sm text-zinc-600 dark:text-zinc-400">
-                                {portfolio.role}
-                            </p>
+                    {/* Content Container */}
+                    <div className="relative space-y-4">
+                        {/* Top Section: Label and Index */}
+                        <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-2">
+                                <div
+                                    className="h-px bg-foreground transition-all duration-700"
+                                    style={{
+                                        width: isHovered ? 32 : 24,
+                                        transitionTimingFunction:
+                                            'cubic-bezier(0.16, 1, 0.3, 1)',
+                                    }}
+                                />
+                                <span
+                                    className="text-[9px] font-medium tracking-[0.2em] text-foreground/60 uppercase transition-all duration-700 md:text-[10px]"
+                                    style={{
+                                        letterSpacing: isHovered
+                                            ? '0.25em'
+                                            : '0.2em',
+                                        transitionTimingFunction:
+                                            'cubic-bezier(0.16, 1, 0.3, 1)',
+                                    }}
+                                >
+                                    Portfolio
+                                </span>
+                            </div>
                         </div>
-                    </div>
 
-                    {/* Description */}
-                    <p className="mb-4 line-clamp-2 text-sm text-zinc-600 dark:text-zinc-400">
-                        {portfolio.description}
-                    </p>
+                        {/* Portfolio Image */}
+                        <div className="relative">
+                            <div
+                                className="absolute -inset-2 transition-all duration-700"
+                                style={{
+                                    boxShadow: isHovered
+                                        ? '0 16px 48px hsl(var(--foreground) / 0.08)'
+                                        : '0 0 0 transparent',
+                                    transitionTimingFunction:
+                                        'cubic-bezier(0.16, 1, 0.3, 1)',
+                                }}
+                            />
+                            <div className="relative h-48 overflow-hidden">
+                                {/* COTD Badge - Always shown on works page */}
+                                <div className="absolute top-3 right-3 z-10 flex items-center gap-1.5 rounded-full bg-gradient-to-r from-amber-500 to-orange-500 px-3 py-1.5 shadow-lg">
+                                    <Star className="h-3.5 w-3.5 fill-white text-white" />
+                                    <span className="text-xs font-bold text-white">
+                                        COTD
+                                    </span>
+                                </div>
 
-                    {/* Tech Stack */}
-                    <div className="mb-4 flex flex-wrap gap-2">
-                        {portfolio.techStack.slice(0, 3).map((tech) => (
-                            <span
-                                key={tech}
-                                className="inline-flex items-center rounded-md bg-zinc-100 px-2.5 py-1 text-xs font-medium text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300"
+                                {portfolio.image ? (
+                                    <img
+                                        src={portfolio.image}
+                                        alt={`${portfolio.name}'s portfolio`}
+                                        className="h-full w-full object-contain transition-all duration-1000"
+                                    />
+                                ) : (
+                                    <div className="flex h-full w-full items-center justify-center bg-muted text-muted-foreground">
+                                        <svg
+                                            className="h-12 w-12"
+                                            fill="none"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            strokeWidth={1.5}
+                                            viewBox="0 0 24 24"
+                                            stroke="currentColor"
+                                        >
+                                            <path d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                        </svg>
+                                    </div>
+                                )}
+
+                                {/* Gradient Overlay */}
+                                <div
+                                    className="absolute inset-0 bg-gradient-to-t from-black/10 via-transparent to-transparent transition-opacity duration-700"
+                                    style={{
+                                        opacity: isHovered ? 1 : 0,
+                                        transitionTimingFunction:
+                                            'cubic-bezier(0.16, 1, 0.3, 1)',
+                                    }}
+                                />
+                            </div>
+                        </div>
+
+                        {/* Author Info */}
+                        <div className="flex items-center gap-3">
+                            {portfolio.avatar ? (
+                                <img
+                                    src={portfolio.avatar}
+                                    alt={portfolio.name}
+                                    className="h-10 w-10 rounded-full object-cover transition-all duration-700"
+                                    style={{
+                                        transform: isHovered
+                                            ? 'scale(1.1)'
+                                            : 'scale(1)',
+                                        transitionTimingFunction:
+                                            'cubic-bezier(0.16, 1, 0.3, 1)',
+                                    }}
+                                />
+                            ) : (
+                                <div
+                                    className="flex h-10 w-10 items-center justify-center rounded-full bg-foreground text-background transition-all duration-700"
+                                    style={{
+                                        transform: isHovered
+                                            ? 'scale(1.1)'
+                                            : 'scale(1)',
+                                        transitionTimingFunction:
+                                            'cubic-bezier(0.16, 1, 0.3, 1)',
+                                    }}
+                                >
+                                    <span className="text-sm font-semibold">
+                                        {portfolio.name.charAt(0).toUpperCase()}
+                                    </span>
+                                </div>
+                            )}
+                            <div className="min-w-0 flex-1">
+                                <h3
+                                    className="truncate text-base font-normal tracking-tight text-foreground transition-all duration-700"
+                                    style={{
+                                        transform: isHovered
+                                            ? 'translateX(4px)'
+                                            : 'translateX(0)',
+                                        transitionTimingFunction:
+                                            'cubic-bezier(0.16, 1, 0.3, 1)',
+                                    }}
+                                >
+                                    {portfolio.name}
+                                </h3>
+                                <p
+                                    className="text-xs text-muted-foreground transition-all duration-700"
+                                    style={{
+                                        opacity: isHovered ? 1 : 0.7,
+                                        transform: isHovered
+                                            ? 'translateX(4px)'
+                                            : 'translateX(0)',
+                                        transitionTimingFunction:
+                                            'cubic-bezier(0.16, 1, 0.3, 1)',
+                                    }}
+                                >
+                                    {portfolio.role}
+                                </p>
+                            </div>
+                        </div>
+
+                        {/* Skills Preview */}
+                        {portfolio.skills.length > 0 && (
+                            <div
+                                className="flex flex-wrap gap-1.5"
+                                style={{
+                                    opacity: isHovered ? 1 : 0.8,
+                                    transform: isHovered
+                                        ? 'translateY(0)'
+                                        : 'translateY(2px)',
+                                    transition:
+                                        'all 0.7s cubic-bezier(0.16, 1, 0.3, 1)',
+                                }}
                             >
-                                {tech}
-                            </span>
-                        ))}
-                        {portfolio.techStack.length > 3 && (
-                            <span className="inline-flex items-center rounded-md bg-zinc-100 px-2.5 py-1 text-xs font-medium text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300">
-                                +{portfolio.techStack.length - 3}
-                            </span>
+                                {portfolio.skills.slice(0, 3).map((skill) => (
+                                    <span
+                                        key={skill}
+                                        className="rounded-full bg-muted px-2 py-0.5 text-[10px] font-medium text-muted-foreground"
+                                    >
+                                        {skill}
+                                    </span>
+                                ))}
+                                {portfolio.skills.length > 3 && (
+                                    <span className="rounded-full bg-muted px-2 py-0.5 text-[10px] font-medium text-muted-foreground">
+                                        +{portfolio.skills.length - 3}
+                                    </span>
+                                )}
+                            </div>
                         )}
-                    </div>
 
-                    {/* View Portfolio CTA */}
-                    <div className="flex items-center justify-between">
-                        <span className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
-                            View Portfolio
-                        </span>
-                        <div
-                            className="flex h-8 w-8 items-center justify-center rounded-full bg-amber-500 text-white transition-all duration-700"
-                            style={{
-                                transform: isHovered
-                                    ? 'rotate(45deg)'
-                                    : 'rotate(0deg)',
-                            }}
-                        >
-                            <ArrowUpRight className="h-4 w-4" />
+                        {/* View Arrow - Bottom Right */}
+                        <div className="flex justify-end">
+                            <div
+                                className="flex h-8 w-8 items-center justify-center rounded-full border transition-all duration-500"
+                                style={{
+                                    borderColor: isHovered
+                                        ? 'hsl(var(--foreground))'
+                                        : 'hsl(var(--muted-foreground) / 0.3)',
+                                    backgroundColor: isHovered
+                                        ? 'hsl(var(--foreground))'
+                                        : 'transparent',
+                                    color: isHovered
+                                        ? 'hsl(var(--background))'
+                                        : 'hsl(var(--foreground))',
+                                    transform: isHovered
+                                        ? 'scale(1.1)'
+                                        : 'scale(1)',
+                                    boxShadow: isHovered
+                                        ? '0 4px 16px hsl(var(--foreground) / 0.15)'
+                                        : '0 0 0 transparent',
+                                    transitionTimingFunction:
+                                        'cubic-bezier(0.16, 1, 0.3, 1)',
+                                }}
+                            >
+                                <ArrowUpRight
+                                    className="h-3.5 w-3.5 transition-transform duration-500"
+                                    style={{
+                                        transform: isHovered
+                                            ? 'rotate(45deg)'
+                                            : 'rotate(0deg)',
+                                        transitionTimingFunction:
+                                            'cubic-bezier(0.16, 1, 0.3, 1)',
+                                    }}
+                                />
+                            </div>
                         </div>
                     </div>
                 </div>
-            </motion.div>
-        </Link>
+            </Link>
+        </motion.div>
     );
 }
 
@@ -1283,41 +1378,49 @@ export default function Works({
                                         )}
                                     </div>
 
-                                    {/* Call to Action */}
+                                    {/* End of Results & Call to Action */}
                                     <motion.div
                                         initial={{ opacity: 0, y: 20 }}
                                         animate={{ opacity: 1, y: 0 }}
                                         transition={{
                                             duration: 0.5,
-                                            delay: 0.8,
+                                            delay: 0.3,
                                         }}
-                                        className="mt-16 rounded-lg border border-amber-200 bg-amber-50 p-8 text-center dark:border-amber-900 dark:bg-amber-950/30"
+                                        className="mt-12 space-y-6"
                                     >
-                                        <h3 className="mb-2 text-xl font-bold text-zinc-900 dark:text-zinc-100">
-                                            Want your portfolio featured?
-                                        </h3>
-                                        <p className="mb-6 text-zinc-600 dark:text-zinc-400">
-                                            Submit your best work and get a
-                                            chance to be featured as the next
-                                            Codefolio of the Day
-                                        </p>
-                                        <Link
-                                            href="/observatory"
-                                            className="inline-flex items-center gap-2 rounded-full bg-amber-500 px-6 py-3 font-semibold text-white transition-colors hover:bg-amber-600"
-                                        >
-                                            Explore More Portfolios
-                                            <svg
-                                                className="h-5 w-5"
-                                                fill="none"
-                                                strokeLinecap="round"
-                                                strokeLinejoin="round"
-                                                strokeWidth={2}
-                                                viewBox="0 0 24 24"
-                                                stroke="currentColor"
-                                            >
-                                                <path d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                                            </svg>
-                                        </Link>
+                                        {/* End of Results Indicator */}
+                                        <div className="flex items-center justify-center gap-4">
+                                            <div className="h-px w-full max-w-xs bg-gradient-to-r from-transparent via-zinc-300 to-transparent dark:via-zinc-700" />
+                                            <span className="text-sm font-medium whitespace-nowrap text-zinc-500 dark:text-zinc-400">
+                                                End of results
+                                            </span>
+                                            <div className="h-px w-full max-w-xs bg-gradient-to-r from-transparent via-zinc-300 to-transparent dark:via-zinc-700" />
+                                        </div>
+
+                                        {/* Call to Action */}
+                                        <div className="p-8 text-center">
+                                            <div className="mx-auto max-w-2xl space-y-6">
+                                                <h3 className="text-4xl font-bold text-zinc-900 dark:text-zinc-100">
+                                                    Help us grow
+                                                </h3>
+
+                                                <p className="text-lg leading-relaxed text-zinc-600 dark:text-zinc-400">
+                                                    Share your portfolio with
+                                                    our community! Showcase your
+                                                    work and inspire others by
+                                                    submitting your portfolio
+                                                    today.
+                                                </p>
+
+                                                <Link
+                                                    href="/settings/portfolio"
+                                                    className="group inline-flex items-center gap-2 rounded-lg bg-zinc-900 px-4 py-2 text-sm font-semibold text-white transition-all hover:bg-zinc-800 hover:shadow-lg dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200"
+                                                >
+                                                    Submit Your Portfolio
+                                                    <ArrowUpRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                                                </Link>
+                                            </div>
+                                        </div>
                                     </motion.div>
                                 </>
                             )}
