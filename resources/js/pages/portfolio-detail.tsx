@@ -626,57 +626,17 @@ export default function PortfolioDetail({ portfolio, canRegister }: PageProps) {
                                     'cubic-bezier(0.16, 1, 0.3, 1)',
                             }}
                         >
-                            {/* Frame outline */}
-                            <div
-                                className="absolute -inset-3 border transition-all duration-700 md:-inset-4"
-                                style={{
-                                    borderColor: isHovered
-                                        ? 'hsl(var(--foreground) / 0.15)'
-                                        : 'transparent',
-                                    transform: isHovered
-                                        ? 'scale(1.01)'
-                                        : 'scale(1)',
-                                    transitionTimingFunction:
-                                        'cubic-bezier(0.16, 1, 0.3, 1)',
-                                }}
-                            />
-
                             {/* Image container - responsive sizing with support for both/desktop/mobile */}
                             {activeImage === 'both' ? (
                                 /* Both Images Side by Side */
                                 <div className="flex gap-4 md:gap-6">
                                     {/* Desktop Image */}
                                     <div className="relative flex-1">
-                                        <div
-                                            className="absolute -inset-1 transition-all duration-700"
-                                            style={{
-                                                boxShadow: isHovered
-                                                    ? '0 24px 64px hsl(var(--foreground) / 0.1)'
-                                                    : '0 0 0 transparent',
-                                                transitionTimingFunction:
-                                                    'cubic-bezier(0.16, 1, 0.3, 1)',
-                                            }}
-                                        />
                                         <div className="relative h-[280px] w-full overflow-hidden sm:h-[320px] md:h-[360px] lg:h-[420px]">
                                             <img
                                                 src={`/storage/${portfolio.desktopImage}`}
                                                 alt={`${portfolio.name}'s portfolio - Desktop`}
-                                                className="h-full w-full object-contain transition-all duration-1000"
-                                                style={{
-                                                    transform: isHovered
-                                                        ? 'scale(1.03)'
-                                                        : 'scale(1)',
-                                                    transitionTimingFunction:
-                                                        'cubic-bezier(0.16, 1, 0.3, 1)',
-                                                }}
-                                            />
-                                            <div
-                                                className="absolute inset-0 bg-gradient-to-t from-black/10 via-transparent to-transparent transition-opacity duration-700"
-                                                style={{
-                                                    opacity: isHovered ? 1 : 0,
-                                                    transitionTimingFunction:
-                                                        'cubic-bezier(0.16, 1, 0.3, 1)',
-                                                }}
+                                                className="h-full w-full object-contain"
                                             />
                                         </div>
                                         <span className="mt-2 block text-center text-xs font-medium tracking-wider text-muted-foreground uppercase">
@@ -687,38 +647,11 @@ export default function PortfolioDetail({ portfolio, canRegister }: PageProps) {
                                     {/* Mobile Image */}
                                     {portfolio.mobileImage && (
                                         <div className="relative w-[140px] sm:w-[160px] md:w-[180px] lg:w-[200px]">
-                                            <div
-                                                className="absolute -inset-1 transition-all duration-700"
-                                                style={{
-                                                    boxShadow: isHovered
-                                                        ? '0 24px 64px hsl(var(--foreground) / 0.1)'
-                                                        : '0 0 0 transparent',
-                                                    transitionTimingFunction:
-                                                        'cubic-bezier(0.16, 1, 0.3, 1)',
-                                                }}
-                                            />
                                             <div className="relative h-[280px] w-full overflow-hidden sm:h-[320px] md:h-[360px] lg:h-[420px]">
                                                 <img
                                                     src={`/storage/${portfolio.mobileImage}`}
                                                     alt={`${portfolio.name}'s portfolio - Mobile`}
-                                                    className="h-full w-full object-contain transition-all duration-1000"
-                                                    style={{
-                                                        transform: isHovered
-                                                            ? 'scale(1.03)'
-                                                            : 'scale(1)',
-                                                        transitionTimingFunction:
-                                                            'cubic-bezier(0.16, 1, 0.3, 1)',
-                                                    }}
-                                                />
-                                                <div
-                                                    className="absolute inset-0 bg-gradient-to-t from-black/10 via-transparent to-transparent transition-opacity duration-700"
-                                                    style={{
-                                                        opacity: isHovered
-                                                            ? 1
-                                                            : 0,
-                                                        transitionTimingFunction:
-                                                            'cubic-bezier(0.16, 1, 0.3, 1)',
-                                                    }}
+                                                    className="h-full w-full object-contain"
                                                 />
                                             </div>
                                             <span className="mt-2 block text-center text-xs font-medium tracking-wider text-muted-foreground uppercase">
@@ -736,16 +669,6 @@ export default function PortfolioDetail({ portfolio, canRegister }: PageProps) {
                                             : 'h-[280px] w-[360px] sm:h-[340px] sm:w-[440px] md:h-[400px] md:w-[520px] lg:h-[460px] lg:w-[600px]'
                                     }`}
                                 >
-                                    <div
-                                        className="absolute -inset-1 transition-all duration-700"
-                                        style={{
-                                            boxShadow: isHovered
-                                                ? '0 24px 64px hsl(var(--foreground) / 0.1)'
-                                                : '0 0 0 transparent',
-                                            transitionTimingFunction:
-                                                'cubic-bezier(0.16, 1, 0.3, 1)',
-                                        }}
-                                    />
                                     <img
                                         src={`/storage/${
                                             activeImage === 'mobile' &&
@@ -754,77 +677,7 @@ export default function PortfolioDetail({ portfolio, canRegister }: PageProps) {
                                                 : portfolio.desktopImage
                                         }`}
                                         alt={`${portfolio.name}'s portfolio - ${activeImage}`}
-                                        className="h-full w-full object-contain transition-all duration-1000"
-                                        style={{
-                                            transform: isHovered
-                                                ? 'scale(1.03)'
-                                                : 'scale(1)',
-                                            transitionTimingFunction:
-                                                'cubic-bezier(0.16, 1, 0.3, 1)',
-                                        }}
-                                    />
-
-                                    <div
-                                        className="absolute inset-0 bg-gradient-to-t from-black/10 via-transparent to-transparent transition-opacity duration-700"
-                                        style={{
-                                            opacity: isHovered ? 1 : 0,
-                                            transitionTimingFunction:
-                                                'cubic-bezier(0.16, 1, 0.3, 1)',
-                                        }}
-                                    />
-
-                                    {/* Corner accents */}
-                                    <div
-                                        className="absolute top-2 left-2 h-5 w-px bg-white/80 transition-all duration-500 md:top-3 md:left-3 md:h-6"
-                                        style={{
-                                            opacity: isHovered ? 1 : 0,
-                                            transform: isHovered
-                                                ? 'scaleY(1)'
-                                                : 'scaleY(0)',
-                                            transformOrigin: 'top',
-                                            transitionTimingFunction:
-                                                'cubic-bezier(0.16, 1, 0.3, 1)',
-                                            transitionDelay: '50ms',
-                                        }}
-                                    />
-                                    <div
-                                        className="absolute top-2 left-2 h-px w-5 bg-white/80 transition-all duration-500 md:top-3 md:left-3 md:w-6"
-                                        style={{
-                                            opacity: isHovered ? 1 : 0,
-                                            transform: isHovered
-                                                ? 'scaleX(1)'
-                                                : 'scaleX(0)',
-                                            transformOrigin: 'left',
-                                            transitionTimingFunction:
-                                                'cubic-bezier(0.16, 1, 0.3, 1)',
-                                            transitionDelay: '100ms',
-                                        }}
-                                    />
-                                    <div
-                                        className="absolute right-2 bottom-2 h-5 w-px bg-white/80 transition-all duration-500 md:right-3 md:bottom-3 md:h-6"
-                                        style={{
-                                            opacity: isHovered ? 1 : 0,
-                                            transform: isHovered
-                                                ? 'scaleY(1)'
-                                                : 'scaleY(0)',
-                                            transformOrigin: 'bottom',
-                                            transitionTimingFunction:
-                                                'cubic-bezier(0.16, 1, 0.3, 1)',
-                                            transitionDelay: '150ms',
-                                        }}
-                                    />
-                                    <div
-                                        className="absolute right-2 bottom-2 h-px w-5 bg-white/80 transition-all duration-500 md:right-3 md:bottom-3 md:w-6"
-                                        style={{
-                                            opacity: isHovered ? 1 : 0,
-                                            transform: isHovered
-                                                ? 'scaleX(1)'
-                                                : 'scaleX(0)',
-                                            transformOrigin: 'right',
-                                            transitionTimingFunction:
-                                                'cubic-bezier(0.16, 1, 0.3, 1)',
-                                            transitionDelay: '200ms',
-                                        }}
+                                        className="h-full w-full object-contain"
                                     />
                                 </div>
                             )}
