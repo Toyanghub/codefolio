@@ -43,6 +43,7 @@ Route::get('/auth/github/callback', [GitHubAuthController::class, 'handleGitHubC
 Route::middleware(['auth', EnsureUserIsAdmin::class])->prefix('admin')->group(function () {
     Route::get('/cotd', [CotdController::class, 'index'])->name('admin.cotd');
     Route::post('/cotd/{user}/toggle', [CotdController::class, 'toggleFeatured'])->name('admin.cotd.toggle');
+    Route::delete('/cotd/{user}', [CotdController::class, 'destroy'])->name('admin.cotd.destroy');
 });
 
 require __DIR__.'/settings.php';

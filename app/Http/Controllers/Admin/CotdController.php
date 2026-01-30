@@ -99,4 +99,23 @@ class CotdController extends Controller
             ? "Portfolio featured successfully!" 
             : "Portfolio unfeatured successfully!");
     }
+
+    /**
+     * Delete a user's portfolio (soft delete).
+     */
+    public function destroy(User $user)
+    {
+        // Store user info for response message
+        $userName = $user->name;
+        
+        // Detach all relationships
+        $user->skills()->detach();
+        $user->techStacks()->detach();
+        $user->professions()->detach();
+        
+        // Soft delete the user
+        $user->delete();
+        
+        return back()->with('success', "Portfolio for {$userName} has been deleted successfully.");
+    }
 }

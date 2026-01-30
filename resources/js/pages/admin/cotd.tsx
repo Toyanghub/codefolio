@@ -1,9 +1,17 @@
+import { DeletePortfolioDialog } from '@/components/admin/delete-portfolio-dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
 import { Head, Link, router } from '@inertiajs/react';
-import { Calendar, ExternalLink, Search, Star, StarOff } from 'lucide-react';
+import {
+    Calendar,
+    ExternalLink,
+    Search,
+    Star,
+    StarOff,
+    Trash2,
+} from 'lucide-react';
 import { useState } from 'react';
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -47,6 +55,10 @@ export default function AdminCotd({
     const [searchQuery, setSearchQuery] = useState(initialSearch);
     const [processing, setProcessing] = useState<number | null>(null);
     const [activeFilter, setActiveFilter] = useState(initialFilter);
+    const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+    const [portfolioToDelete, setPortfolioToDelete] =
+        useState<Portfolio | null>(null);
+    const [isDeleting, setIsDeleting] = useState(false);
 
     const handleSearch = (e: React.FormEvent) => {
         e.preventDefault();
@@ -74,6 +86,26 @@ export default function AdminCotd({
                 onFinish: () => setProcessing(null),
             },
         );
+    };
+
+    const handleDeleteClick = (portfolio: Portfolio) => {
+        setPortfolioToDelete(portfolio);
+        setDeleteDialogOpen(true);
+    };
+
+    const handleDeleteConfirm = () => {
+        if (!portfolioToDelete) return;
+
+        setIsDeleting(true);
+        router.delete(`/admin/cotd/${portfolioToDelete.id}`, {
+            onSuccess: () => {
+                setDeleteDialogOpen(false);
+                setPortfolioToDelete(null);
+            },
+            onFinish: () => {
+                setIsDeleting(false);
+            },
+        });
     };
 
     const featuredCount = portfolios.filter((p) => p.is_featured).length;
@@ -314,6 +346,16 @@ export default function AdminCotd({
                                             <ExternalLink className="h-4 w-4" />
                                         </Button>
                                     </Link>
+                                    <Button
+                                        variant="outline"
+                                        size="sm"
+                                        onClick={() =>
+                                            handleDeleteClick(portfolio)
+                                        }
+                                        className="text-red-600 hover:bg-red-50 hover:text-red-700 dark:text-red-500 dark:hover:bg-red-950 dark:hover:text-red-400"
+                                    >
+                                        <Trash2 className="h-4 w-4" />
+                                    </Button>
                                 </div>
                             </div>
                         </div>
@@ -346,6 +388,15 @@ export default function AdminCotd({
                         </p>
                     </div>
                 )}
+
+                {/* Delete Confirmation Dialog */}
+                <DeletePortfolioDialog
+                    open={deleteDialogOpen}
+                    onOpenChange={setDeleteDialogOpen}
+                    onConfirm={handleDeleteConfirm}
+                    portfolioName={portfolioToDelete?.name || ''}
+                    isDeleting={isDeleting}
+                />
             </div>
         </AppLayout>
     );
