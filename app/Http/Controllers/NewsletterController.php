@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\NewsletterWelcome;
 use App\Models\NewsletterSubscription;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 class NewsletterController extends Controller
 {
@@ -30,18 +32,21 @@ class NewsletterController extends Controller
             }
 
             // Subscribe the user
-            NewsletterSubscription::subscribe(
+            $subscription = NewsletterSubscription::subscribe(
                 $validated['email'],
                 $validated['name'] ?? null,
                 $request->ip()
             );
 
-            Log::info('Newsletter subscription', [
+            // Send welcome email (queued automatically)
+            Mail::to($subscription->email)->send(new NewsletterWelcome($subscription));
+
+            Log::info('Newsletter subscription with email sent', [
                 'email' => $validated['email'],
                 'ip' => $request->ip()
             ]);
 
-            return back()->with('message', 'Thank you for subscribing! You\'ll receive our latest updates.');
+            return back()->with('message', 'Thank you for subscribing! Check your email for confirmation.');
 
         } catch (\Exception $e) {
             Log::error('Newsletter subscription failed', [
