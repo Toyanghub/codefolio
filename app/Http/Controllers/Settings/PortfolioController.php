@@ -256,5 +256,22 @@ class PortfolioController extends Controller
         return redirect()->route('home')
             ->with('success', 'Portfolio setup completed!');
     }
-}
 
+    /**
+     * Generate portfolio screenshots from website URL.
+     */
+    public function generateScreenshots(Request $request): RedirectResponse
+    {
+        $request->validate([
+            'website_url' => ['required', 'url', 'max:255'],
+        ]);
+
+        $user = $request->user();
+        $url = $request->website_url;
+
+        // Dispatch job to generate screenshots
+        \App\Jobs\GeneratePortfolioScreenshots::dispatch($user, $url);
+
+        return back()->with('status', 'screenshot-generation-started');
+    }
+}

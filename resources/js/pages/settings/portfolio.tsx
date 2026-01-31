@@ -1,6 +1,6 @@
 import { type BreadcrumbItem } from '@/types';
 import { Head, router, useForm } from '@inertiajs/react';
-import { Monitor, Smartphone, Upload, X } from 'lucide-react';
+import { Monitor, Smartphone, Upload, X, Wand2 } from 'lucide-react';
 import { useRef, useState } from 'react';
 
 import InputError from '@/components/input-error';
@@ -53,6 +53,7 @@ export default function Portfolio({
     const [mobileFile, setMobileFile] = useState<File | null>(null);
     const [processingDesktop, setProcessingDesktop] = useState(false);
     const [processingMobile, setProcessingMobile] = useState(false);
+    const [generatingScreenshots, setGeneratingScreenshots] = useState(false);
     const [errors, setErrors] = useState<{ desktop?: string; mobile?: string }>(
         {},
     );
@@ -240,20 +241,110 @@ export default function Portfolio({
         }
     };
 
+    const handleGenerateScreenshots = () => {
+        if (!data.website_url) {
+            setErrors((prev) => ({
+                ...prev,
+                desktop: 'Please enter a website URL first',
+            }));
+            return;
+        }
+
+        if (
+            !confirm(
+                'This will automatically generate screenshots from your website URL. This may take a few moments. Continue?',
+            )
+        ) {
+            return;
+        }
+
+        setGeneratingScreenshots(true);
+        router.post(
+            '/settings/portfolio/generate-screenshots',
+            {
+                website_url: data.website_url,
+            },
+            {
+                onSuccess: () => {
+                    alert(
+                        'Screenshot generation started! This may take 1-2 minutes. Refresh the page to see the results.',
+                    );
+                },
+                onError: (errors) => {
+                    setErrors((prev) => ({
+                        ...prev,
+                        desktop:
+                            errors.website_url ||
+                            'Failed to start screenshot generation',
+                    }));
+                },
+                onFinish: () => {
+                    setGeneratingScreenshots(false);
+                },
+            },
+        );
+    };
+
     return (
         <SettingsAppLayout breadcrumbs={breadcrumbs}>
             <Head title="Portfolio settings" />
 
             <SettingsLayout>
                 <div>
+                    {/* Portfolio Screenshots Section */}
                     <div className="mb-6">
                         <h2 className="text-xl font-semibold">
                             Portfolio Screenshots
                         </h2>
                         <p className="mt-1 text-sm text-muted-foreground">
-                            Upload screenshots of your portfolio for desktop and
-                            mobile views
+                            Upload screenshots manually or generate them
+                            automatically from your portfolio URL
                         </p>
+
+                        {/* Auto-Generate Button */}
+                        <div className="mt-4 rounded-lg border border-amber-200 bg-amber-50 p-4 dark:border-amber-800 dark:bg-amber-950/20">
+                            <div className="flex items-start gap-3">
+                                <Wand2 className="mt-0.5 h-5 w-5 text-amber-600 dark:text-amber-500" />
+                                <div className="flex-1">
+                                    <h4 className="font-medium text-amber-900 dark:text-amber-100">
+                                        Automatic Screenshot Generation
+                                    </h4>
+                                    <p className="mt-1 text-sm text-amber-800 dark:text-amber-200">
+                                        Have your portfolio URL? Click below to
+                                        automatically generate desktop and
+                                        mobile screenshots.
+                                    </p>
+                                    <Button
+                                        onClick={handleGenerateScreenshots}
+                                        disabled={
+                                            !data.website_url ||
+                                            generatingScreenshots
+                                        }
+                                        variant="default"
+                                        size="sm"
+                                        className="mt-3 bg-amber-600 hover:bg-amber-700 dark:bg-amber-600 dark:hover:bg-amber-700"
+                                    >
+                                        {generatingScreenshots ? (
+                                            <>
+                                                <div className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
+                                                Generating...
+                                            </>
+                                        ) : (
+                                            <>
+                                                <Wand2 className="mr-2 h-4 w-4" />
+                                                Generate from URL
+                                            </>
+                                        )}
+                                    </Button>
+                                    {!data.website_url && (
+                                        <p className="mt-2 text-xs text-amber-700 dark:text-amber-300">
+                                            💡 Enter your website URL in the
+                                            Portfolio Link section below first
+                                        </p>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                     <div className="grid gap-6 md:grid-cols-2">

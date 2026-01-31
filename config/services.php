@@ -47,4 +47,8 @@ return [
         'redirect' => env('GITHUB_REDIRECT_URI', env('APP_URL') . '/auth/github/callback'),
     ],
 
+    'screenshot' => [
+        'api_key' => env('SCREENSHOT_API_KEY'),
+    ],
+
 ];
