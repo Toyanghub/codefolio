@@ -1,6 +1,6 @@
 import { type BreadcrumbItem } from '@/types';
 import { Head, router, useForm } from '@inertiajs/react';
-import { Monitor, Smartphone, Upload, X, Wand2 } from 'lucide-react';
+import { Monitor, Smartphone, Upload, Wand2, X } from 'lucide-react';
 import { useRef, useState } from 'react';
 
 import InputError from '@/components/input-error';

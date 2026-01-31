@@ -7,7 +7,7 @@ import {
     TooltipTrigger,
 } from '@/components/ui/tooltip';
 import { useAppearance } from '@/hooks/use-appearance';
-import { Link } from '@inertiajs/react';
+import { Link, router } from '@inertiajs/react';
 import {
     Facebook,
     Instagram,
@@ -22,6 +22,12 @@ import * as React from 'react';
 function Footerdemo() {
     const { appearance, updateAppearance } = useAppearance();
     const [isChatOpen, setIsChatOpen] = React.useState(false);
+    const [email, setEmail] = React.useState('');
+    const [isLoading, setIsLoading] = React.useState(false);
+    const [message, setMessage] = React.useState<{
+        text: string;
+        type: 'success' | 'error' | 'info';
+    } | null>(null);
 
     const isDarkMode =
         appearance === 'dark' ||
@@ -30,6 +36,47 @@ function Footerdemo() {
 
     const toggleDarkMode = (checked: boolean) => {
         updateAppearance(checked ? 'dark' : 'light');
+    };
+
+    const handleNewsletterSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        
+        // Basic email validation
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            setMessage({
+                text: 'Please enter a valid email address',
+                type: 'error',
+            });
+            return;
+        }
+
+        setIsLoading(true);
+        setMessage(null);
+
+        router.post(
+            '/newsletter/subscribe',
+            { email },
+            {
+                preserveScroll: true,
+                onSuccess: () => {
+                    setMessage({
+                        text: 'Thank you for subscribing! You\'ll receive our latest updates.',
+                        type: 'success',
+                    });
+                    setEmail('');
+                },
+                onError: (errors) => {
+                    setMessage({
+                        text: errors.email || 'Something went wrong. Please try again.',
+                        type: 'error',
+                    });
+                },
+                onFinish: () => {
+                    setIsLoading(false);
+                },
+            }
+        );
     };
 
     return (
@@ -44,21 +91,38 @@ function Footerdemo() {
                             Join our newsletter for the latest updates and
                             exclusive offers.
                         </p>
-                        <form className="relative">
+                        <form onSubmit={handleNewsletterSubmit} className="relative">
                             <Input
                                 type="email"
                                 placeholder="Enter your email"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                disabled={isLoading}
                                 className="pr-12 backdrop-blur-sm selection:bg-zinc-900 selection:text-white dark:selection:bg-zinc-100 dark:selection:text-zinc-900"
                             />
                             <Button
                                 type="submit"
                                 size="icon"
-                                className="absolute top-1 right-1 h-8 w-8 rounded-full bg-primary text-primary-foreground transition-transform hover:scale-105"
+                                disabled={isLoading || !email}
+                                className="absolute top-1 right-1 h-8 w-8 rounded-full bg-primary text-primary-foreground transition-transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
                             >
                                 <Send className="h-4 w-4" />
                                 <span className="sr-only">Subscribe</span>
                             </Button>
                         </form>
+                        {message && (
+                            <p
+                                className={`mt-2 text-sm ${
+                                    message.type === 'success'
+                                        ? 'text-green-600 dark:text-green-400'
+                                        : message.type === 'error'
+                                        ? 'text-red-600 dark:text-red-400'
+                                        : 'text-blue-600 dark:text-blue-400'
+                                }`}
+                            >
+                                {message.text}
+                            </p>
+                        )}
                         <div className="absolute top-0 -right-4 h-24 w-24 rounded-full bg-primary/10 blur-2xl" />
                     </div>
                     <div>

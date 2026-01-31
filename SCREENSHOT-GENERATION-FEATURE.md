@@ -1,14 +1,17 @@
 # Automated Screenshot Generation Feature
 
 ## Overview
+
 Automated screenshot generation allows users to automatically create desktop and mobile portfolio screenshots from their website URL, eliminating the need for manual screenshot uploads.
 
 ## ✨ Features Implemented
 
 ### 1. Screenshot Service
+
 **Location:** `app/Services/ScreenshotService.php`
 
 **Capabilities:**
+
 - Generates both desktop (1920x1080) and mobile (375x667) screenshots
 - Uses ScreenshotAPI as primary service (with API key)
 - Falls back to ApiFlash for demo/testing
@@ -16,15 +19,18 @@ Automated screenshot generation allows users to automatically create desktop and
 - Cleanup of old screenshot files
 
 **Supported Services:**
+
 - **ScreenshotAPI** (recommended): https://screenshotapi.net
 - **ApiFlash**: https://apiflash.com
 - **Urlbox**: https://urlbox.io
 - **ScreenshotOne**: https://screenshotone.com
 
 ### 2. Background Processing
+
 **Location:** `app/Jobs/GeneratePortfolioScreenshots.php`
 
 **Benefits:**
+
 - Non-blocking operation (doesn't timeout)
 - Queue-based processing
 - Automatic retries on failure
@@ -32,14 +38,17 @@ Automated screenshot generation allows users to automatically create desktop and
 - Cleanup of old temporary files
 
 **Configuration:**
+
 - Timeout: 120 seconds (2 minutes)
 - Max Retries: 2 attempts
 - Queue: database (default)
 
 ### 3. User Interface
+
 **Location:** `resources/js/pages/settings/portfolio.tsx`
 
 **UI Features:**
+
 - Prominent "Auto-Generate" section with amber styling
 - Clear instructions and requirements
 - Loading state with spinner
@@ -48,15 +57,18 @@ Automated screenshot generation allows users to automatically create desktop and
 - User feedback messages
 
 **Button States:**
+
 - Disabled if no URL entered
 - Loading state during generation
 - Re-enabled after completion
 
 ### 4. Backend Integration
+
 **Controller:** `app/Http/Controllers/Settings/PortfolioController.php`
 **Route:** `/settings/portfolio/generate-screenshots`
 
 **Process Flow:**
+
 1. Validate website URL
 2. Dispatch background job
 3. Return immediate response
@@ -75,11 +87,13 @@ Automated screenshot generation allows users to automatically create desktop and
 1. Sign up at https://screenshotapi.net
 2. Get your API key from the dashboard
 3. Add to `.env`:
+
 ```env
 SCREENSHOT_API_KEY=your_api_key_here
 ```
 
 **Pricing:**
+
 - Free tier: 100 screenshots/month
 - Pro: $9/month for 1,000 screenshots
 - Enterprise: Custom pricing
@@ -91,6 +105,7 @@ SCREENSHOT_API_KEY=your_api_key_here
 3. Update `ScreenshotService.php` to use ApiFlash as primary
 
 **Pricing:**
+
 - Free tier: 100 screenshots/month
 - Plus: $9/month for 1,000 screenshots
 
@@ -162,6 +177,7 @@ php artisan storage:link
 
 **Manual Upload (Alternative):**
 Users can still manually upload screenshots if they prefer:
+
 - Click the desktop/mobile upload areas
 - Select an image file (PNG/JPG, max 2MB)
 - Click "Upload Desktop Image" or "Upload Mobile Image"
@@ -194,6 +210,7 @@ php artisan queue:retry all
 ```
 
 **View Logs:**
+
 ```bash
 # Laravel logs
 tail -f storage/logs/laravel.log | grep Screenshot
@@ -203,6 +220,7 @@ tail -f storage/logs/laravel.log | grep "user_id.*123"
 ```
 
 **Manual Testing:**
+
 ```php
 // In tinker
 php artisan tinker
@@ -225,6 +243,7 @@ GeneratePortfolioScreenshots::dispatch($user, $url);
 Edit `app/Services/ScreenshotService.php` to customize:
 
 **Desktop Screenshot Size:**
+
 ```php
 private function captureDesktop(string $url): ?string
 {
@@ -237,6 +256,7 @@ private function captureDesktop(string $url): ?string
 ```
 
 **Mobile Screenshot Size:**
+
 ```php
 private function captureMobile(string $url): ?string
 {
@@ -249,6 +269,7 @@ private function captureMobile(string $url): ?string
 ```
 
 **Popular Device Sizes:**
+
 - iPhone SE: 375x667
 - iPhone 12/13/14: 390x844
 - iPhone 12/13/14 Pro Max: 428x926
@@ -258,6 +279,7 @@ private function captureMobile(string $url): ?string
 ### API Parameters
 
 **ScreenshotAPI Additional Options:**
+
 ```php
 $response = Http::timeout(30)->get('https://shot.screenshotapi.net/screenshot', [
     'token' => $apiKey,
@@ -277,6 +299,7 @@ $response = Http::timeout(30)->get('https://shot.screenshotapi.net/screenshot', 
 ### Cleanup Settings
 
 **Adjust Screenshot Cleanup Time:**
+
 ```php
 // In ScreenshotService.php
 public function cleanupOldScreenshots(int $userId): void
@@ -295,12 +318,14 @@ public function cleanupOldScreenshots(int $userId): void
 ### Issue: "Screenshot generation started but images don't appear"
 
 **Possible Causes:**
+
 1. Queue worker not running
 2. Job failed silently
 3. API rate limit exceeded
 4. Invalid website URL
 
 **Solutions:**
+
 ```bash
 # Check if queue worker is running
 ps aux | grep "queue:work"
@@ -318,6 +343,7 @@ php artisan queue:work --once
 ### Issue: "Invalid URL format error"
 
 **Solution:**
+
 - Ensure URL includes protocol: `https://example.com` (not `example.com`)
 - Check URL is publicly accessible
 - Verify no typos in URL
@@ -325,12 +351,14 @@ php artisan queue:work --once
 ### Issue: "Screenshots are blank or error images"
 
 **Possible Causes:**
+
 1. Website requires authentication
 2. Website blocks automated requests
 3. Website takes too long to load
 4. JavaScript-heavy site not fully rendered
 
 **Solutions:**
+
 - Use manual upload for private sites
 - Increase `delay` parameter in service
 - Check if website allows bot access
@@ -339,11 +367,13 @@ php artisan queue:work --once
 ### Issue: "Generation takes too long"
 
 **Normal Behavior:**
+
 - Desktop: 10-30 seconds
 - Mobile: 10-30 seconds
 - Total: 30-60 seconds typically
 
 **If Longer Than 2 Minutes:**
+
 ```bash
 # Check job status
 php artisan queue:failed
@@ -355,6 +385,7 @@ public int $timeout = 180; // 3 minutes
 ### Issue: "API key not working"
 
 **Checklist:**
+
 - ✅ API key added to `.env` file
 - ✅ Config cache cleared: `php artisan config:clear`
 - ✅ API key is valid and active
@@ -370,6 +401,7 @@ php artisan tinker
 ### Issue: "Storage disk not found"
 
 **Solution:**
+
 ```bash
 # Create storage link
 php artisan storage:link
@@ -383,30 +415,35 @@ chmod -R 775 storage/app/public
 ## 💡 Best Practices
 
 ### 1. API Key Security
+
 - Never commit API keys to version control
 - Use `.env` file for sensitive credentials
 - Rotate keys periodically
 - Monitor usage and costs
 
 ### 2. Queue Management
+
 - Always run queue worker in production
 - Monitor failed jobs regularly
 - Set up alerts for queue failures
 - Use Redis or database for queue in production
 
 ### 3. User Experience
+
 - Show clear loading indicators
 - Provide estimated wait times
 - Send notifications when complete (future enhancement)
 - Allow manual uploads as fallback
 
 ### 4. Cost Optimization
+
 - Cache screenshots to avoid regeneration
 - Set reasonable rate limits per user
 - Use free tiers for development
 - Monitor API usage and costs
 
 ### 5. Error Handling
+
 - Log all failures for debugging
 - Show user-friendly error messages
 - Provide retry mechanisms
@@ -416,14 +453,15 @@ chmod -R 775 storage/app/public
 
 ## 📊 Alternative Services Comparison
 
-| Service | Free Tier | Pro Price | Best For |
-|---------|-----------|-----------|----------|
-| **ScreenshotAPI** | 100/month | $9/month (1K) | Best reliability |
-| **ApiFlash** | 100/month | $9/month (1K) | Fast processing |
-| **Urlbox** | 50/month | $19/month (5K) | Advanced features |
+| Service           | Free Tier | Pro Price      | Best For           |
+| ----------------- | --------- | -------------- | ------------------ |
+| **ScreenshotAPI** | 100/month | $9/month (1K)  | Best reliability   |
+| **ApiFlash**      | 100/month | $9/month (1K)  | Fast processing    |
+| **Urlbox**        | 50/month  | $19/month (5K) | Advanced features  |
 | **ScreenshotOne** | 100/month | $12/month (1K) | Good documentation |
 
 ### Recommendation:
+
 - **Development:** Use free tier of any service
 - **Small Projects:** ScreenshotAPI or ApiFlash
 - **Large Projects:** Enterprise plan or self-hosted solution
@@ -433,6 +471,7 @@ chmod -R 775 storage/app/public
 ## 🔮 Future Enhancements
 
 ### Planned Features:
+
 1. **Real-time Progress**: WebSocket notifications for job progress
 2. **Preview Before Save**: Show generated screenshots before applying
 3. **Bulk Generation**: Generate screenshots for multiple URLs
@@ -443,6 +482,7 @@ chmod -R 775 storage/app/public
 8. **Video Capture**: Short video walkthroughs of portfolio
 
 ### Self-Hosted Alternative:
+
 For unlimited screenshots, consider self-hosting with Puppeteer:
 
 ```bash
@@ -462,12 +502,14 @@ This requires additional setup but eliminates API costs.
 ### Key Files Created/Modified:
 
 **New Files:**
+
 ```
 app/Services/ScreenshotService.php
 app/Jobs/GeneratePortfolioScreenshots.php
 ```
 
 **Modified Files:**
+
 ```
 app/Http/Controllers/Settings/PortfolioController.php
 resources/js/pages/settings/portfolio.tsx
@@ -476,10 +518,13 @@ config/services.php
 ```
 
 ### Database Changes:
+
 No new migrations required. Uses existing `portfolio_desktop_image` and `portfolio_mobile_image` columns in `users` table.
 
 ### Dependencies:
+
 No new Composer or NPM packages required. Uses built-in:
+
 - Laravel HTTP client
 - Laravel Queue system
 - Laravel Storage
@@ -490,12 +535,14 @@ No new Composer or NPM packages required. Uses built-in:
 ## 🆘 Support & Resources
 
 ### Documentation Links:
+
 - ScreenshotAPI Docs: https://screenshotapi.net/documentation
 - ApiFlash Docs: https://apiflash.com/docs
 - Laravel Queues: https://laravel.com/docs/queues
 - Laravel HTTP Client: https://laravel.com/docs/http-client
 
 ### Getting Help:
+
 1. Check Laravel logs: `storage/logs/laravel.log`
 2. Review queue failed jobs: `php artisan queue:failed`
 3. Test in Tinker for debugging
@@ -506,6 +553,7 @@ No new Composer or NPM packages required. Uses built-in:
 ## ✅ Testing Checklist
 
 ### Frontend Testing:
+
 - [ ] Generate button appears on portfolio settings page
 - [ ] Button disabled when no URL entered
 - [ ] Loading state shows during generation
@@ -514,6 +562,7 @@ No new Composer or NPM packages required. Uses built-in:
 - [ ] Error messages shown for invalid URLs
 
 ### Backend Testing:
+
 - [ ] Queue job dispatched successfully
 - [ ] Screenshots generated with correct dimensions
 - [ ] Images saved to storage/app/public
@@ -522,6 +571,7 @@ No new Composer or NPM packages required. Uses built-in:
 - [ ] Failed jobs logged properly
 
 ### Integration Testing:
+
 - [ ] Queue worker processes jobs
 - [ ] Generated images appear in UI after refresh
 - [ ] Manual upload still works alongside auto-generation
@@ -542,6 +592,7 @@ The automated screenshot generation feature is now fully implemented and ready f
 ✅ Comprehensive documentation
 
 **To start using:**
+
 1. Add `SCREENSHOT_API_KEY` to `.env`
 2. Start queue worker: `php artisan queue:work`
 3. Visit `/settings/portfolio`

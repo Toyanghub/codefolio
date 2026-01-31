@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\CotdController;
 use App\Http\Controllers\Auth\GoogleAuthController;
 use App\Http\Controllers\Auth\GitHubAuthController;
+use App\Http\Controllers\NewsletterController;
 use App\Http\Controllers\ObservatoryController;
 use App\Http\Controllers\PortfolioDetailController;
 use App\Http\Controllers\WorksController;
@@ -38,6 +39,14 @@ Route::get('/auth/google/callback', [GoogleAuthController::class, 'handleGoogleC
 // GitHub OAuth routes
 Route::get('/auth/github', [GitHubAuthController::class, 'redirectToGitHub'])->name('auth.github');
 Route::get('/auth/github/callback', [GitHubAuthController::class, 'handleGitHubCallback']);
+
+// Newsletter routes
+Route::post('/newsletter/subscribe', [NewsletterController::class, 'subscribe'])
+    ->middleware('throttle:6,1')
+    ->name('newsletter.subscribe');
+Route::post('/newsletter/unsubscribe', [NewsletterController::class, 'unsubscribe'])
+    ->middleware('throttle:6,1')
+    ->name('newsletter.unsubscribe');
 
 // Admin routes
 Route::middleware(['auth', EnsureUserIsAdmin::class])->prefix('admin')->group(function () {
