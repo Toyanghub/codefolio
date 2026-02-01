@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\CotdController;
 use App\Http\Controllers\Auth\GoogleAuthController;
 use App\Http\Controllers\Auth\GitHubAuthController;
+use App\Http\Controllers\ContactController;
 use App\Http\Controllers\NewsletterController;
 use App\Http\Controllers\ObservatoryController;
 use App\Http\Controllers\PortfolioDetailController;
@@ -38,6 +39,10 @@ Route::get('/contact', function () {
     ]);
 })->name('contact');
 
+Route::post('/contact', [ContactController::class, 'store'])
+    ->middleware('throttle:5,1')
+    ->name('contact.store');
+
 // Google OAuth routes
 Route::get('/auth/google', [GoogleAuthController::class, 'redirectToGoogle'])->name('auth.google');
 Route::get('/auth/google/callback', [GoogleAuthController::class, 'handleGoogleCallback']);
@@ -59,6 +64,8 @@ Route::middleware(['auth', EnsureUserIsAdmin::class])->prefix('admin')->group(fu
     Route::get('/cotd', [CotdController::class, 'index'])->name('admin.cotd');
     Route::post('/cotd/{user}/toggle', [CotdController::class, 'toggleFeatured'])->name('admin.cotd.toggle');
     Route::delete('/cotd/{user}', [CotdController::class, 'destroy'])->name('admin.cotd.destroy');
+    
+    Route::get('/contacts', [ContactController::class, 'index'])->name('admin.contacts');
 });
 
 require __DIR__.'/settings.php';

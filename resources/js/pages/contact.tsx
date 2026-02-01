@@ -409,15 +409,27 @@ export default function Contact({
         setIsSubmitting(true);
         setSubmitMessage(null);
 
-        // Simulate form submission (replace with actual API call)
-        setTimeout(() => {
-            setSubmitMessage({
-                type: 'success',
-                text: "Thank you for your message! We'll get back to you soon.",
-            });
-            setFormData({ name: '', email: '', message: '' });
-            setIsSubmitting(false);
-        }, 1000);
+        router.post('/contact', formData, {
+            preserveScroll: true,
+            onSuccess: () => {
+                setSubmitMessage({
+                    type: 'success',
+                    text: "Thank you for your message! We'll get back to you soon.",
+                });
+                setFormData({ name: '', email: '', message: '' });
+                setIsSubmitting(false);
+            },
+            onError: (errors) => {
+                const errorMessage = Object.values(errors).flat().join(' ');
+                setSubmitMessage({
+                    type: 'error',
+                    text:
+                        errorMessage ||
+                        'Something went wrong. Please try again.',
+                });
+                setIsSubmitting(false);
+            },
+        });
     };
 
     const handleChange = (

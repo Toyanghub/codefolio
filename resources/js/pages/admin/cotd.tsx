@@ -115,17 +115,37 @@ export default function AdminCotd({
             <Head title="COTD Management" />
             <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
                 {/* Header */}
-                <div className="mb-4">
-                    <h1 className="text-3xl font-bold text-zinc-900 dark:text-zinc-100">
-                        Card of the Day Management
-                    </h1>
-                    <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
-                        Select portfolios to feature on the Works page.{' '}
-                        <span className="font-semibold">
-                            {featuredCount} portfolio
-                            {featuredCount !== 1 ? 's' : ''} currently featured
-                        </span>
-                    </p>
+                <div className="mb-4 flex items-center justify-between">
+                    <div>
+                        <h1 className="text-3xl font-bold text-zinc-900 dark:text-zinc-100">
+                            Card of the Day Management
+                        </h1>
+                        <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
+                            Select portfolios to feature on the Works page.{' '}
+                            <span className="font-semibold">
+                                {featuredCount} portfolio
+                                {featuredCount !== 1 ? 's' : ''} currently
+                                featured
+                            </span>
+                        </p>
+                    </div>
+                    <Link
+                        href="/admin/contacts"
+                        className="inline-flex items-center gap-2 rounded-lg border border-zinc-200 bg-white px-4 py-2 text-sm font-medium text-zinc-700 transition-colors hover:bg-zinc-100 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700"
+                    >
+                        <svg
+                            className="h-4 w-4"
+                            fill="none"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                        >
+                            <path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                        </svg>
+                        Contact Messages
+                    </Link>
                 </div>
 
                 {/* Filter Tabs */}
