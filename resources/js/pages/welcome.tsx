@@ -1,6 +1,7 @@
 import FaqSection from '@/components/faq-sections';
 import { TestimonialsMinimal } from '@/components/minimal-testimonial';
 import { MagneticText } from '@/components/morphing-cursor';
+import Newsletter from '@/components/newsletter';
 import { Footerdemo } from '@/components/ui/footer-section';
 import { login, logout, register } from '@/routes';
 import { type SharedData } from '@/types';
@@ -833,6 +834,9 @@ export default function Welcome({
                     </div>
                 </div>
             </div>
+
+            {/* Newsletter Section */}
+            <Newsletter />
 
             {/* Testimonials Section */}
             <div className="bg-zinc-50 py-8 md:py-12 dark:bg-zinc-950">
