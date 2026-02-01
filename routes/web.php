@@ -32,6 +32,12 @@ Route::get('/terms-of-service', function () {
     return Inertia::render('terms-of-service');
 })->name('terms.of.service');
 
+Route::get('/contact', function () {
+    return Inertia::render('contact', [
+        'canRegister' => Features::enabled(Features::registration()),
+    ]);
+})->name('contact');
+
 // Google OAuth routes
 Route::get('/auth/google', [GoogleAuthController::class, 'redirectToGoogle'])->name('auth.google');
 Route::get('/auth/google/callback', [GoogleAuthController::class, 'handleGoogleCallback']);

@@ -154,6 +154,12 @@ function Footerdemo() {
                             >
                                 Settings
                             </Link>
+                            <Link
+                                href="/contact"
+                                className="block transition-colors hover:text-primary"
+                            >
+                                Contact Us
+                            </Link>
                         </nav>
                     </div>
                     <div>
