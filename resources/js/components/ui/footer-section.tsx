@@ -164,14 +164,22 @@ function Footerdemo() {
                     </div>
                     <div>
                         <h3 className="mb-4 text-lg font-semibold">
-                            Contact Us
+                            Legal
                         </h3>
-                        <address className="space-y-2 text-sm not-italic">
-                            <p>123 Innovation Street</p>
-                            <p>Tech City, TC 12345</p>
-                            <p>Phone: (123) 456-7890</p>
-                            <p>Email: hello@example.com</p>
-                        </address>
+                        <nav className="space-y-2 text-sm">
+                            <Link
+                                href="/privacy-policy"
+                                className="block transition-colors hover:text-primary"
+                            >
+                                Privacy Policy
+                            </Link>
+                            <Link
+                                href="/terms-of-service"
+                                className="block transition-colors hover:text-primary"
+                            >
+                                Terms of Service
+                            </Link>
+                        </nav>
                     </div>
                     <div className="relative">
                         <h3 className="mb-4 text-lg font-semibold">
@@ -286,28 +294,11 @@ function Footerdemo() {
                 </div>
                 <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t pt-8 text-center md:flex-row">
                     <p className="text-sm text-muted-foreground">
-                        © 2024 Your Company. All rights reserved.
+                        © 2026 Codefolio. All rights reserved.
                     </p>
-                    <nav className="flex gap-4 text-sm">
-                        <Link
-                            href="/privacy-policy"
-                            className="transition-colors hover:text-primary"
-                        >
-                            Privacy Policy
-                        </Link>
-                        <Link
-                            href="/terms-of-service"
-                            className="transition-colors hover:text-primary"
-                        >
-                            Terms of Service
-                        </Link>
-                        <a
-                            href="#"
-                            className="transition-colors hover:text-primary"
-                        >
-                            Cookie Settings
-                        </a>
-                    </nav>
+                    <p className="text-sm text-muted-foreground">
+                        Developed by toyangdev
+                    </p>
                 </div>
             </div>
         </footer>
