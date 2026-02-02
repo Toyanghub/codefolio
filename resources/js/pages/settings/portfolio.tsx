@@ -160,7 +160,7 @@ export default function Portfolio({
         });
 
         setSavingAll(false);
-        
+
         // Only show success message if there were no errors
         if (!hasErrors) {
             setAllSavedSuccessfully(true);

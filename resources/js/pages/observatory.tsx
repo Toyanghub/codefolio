@@ -1,8 +1,9 @@
 import { Footerdemo } from '@/components/ui/footer-section';
+import { useAppearance } from '@/hooks/use-appearance';
 import { login, logout, register } from '@/routes';
 import { type SharedData } from '@/types';
 import { Head, Link, router, usePage } from '@inertiajs/react';
-import { ArrowUpRight, Check, Star } from 'lucide-react';
+import { ArrowUpRight, Check, Moon, Star, Sun } from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
 import { useState } from 'react';
 
@@ -12,10 +13,21 @@ function Navbar({ canRegister = true }: { canRegister?: boolean }) {
     const [userMenuOpen, setUserMenuOpen] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
     const [searchOpen, setSearchOpen] = useState(false);
+    const { appearance, updateAppearance } = useAppearance();
 
     const handleLogout = () => {
         router.post(logout.url());
     };
+
+    const toggleTheme = () => {
+        const newTheme = appearance === 'dark' ? 'light' : 'dark';
+        updateAppearance(newTheme);
+    };
+
+    const isDark =
+        appearance === 'dark' ||
+        (appearance === 'system' &&
+            window.matchMedia('(prefers-color-scheme: dark)').matches);
 
     const handleSearch = (e: React.FormEvent) => {
         e.preventDefault();
@@ -194,6 +206,25 @@ function Navbar({ canRegister = true }: { canRegister?: boolean }) {
                                                     </span>
                                                 </div>
                                             </div>
+
+                                            <div className="border-t border-zinc-200 dark:border-zinc-800" />
+
+                                            <button
+                                                onClick={toggleTheme}
+                                                className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm text-zinc-700 transition-colors hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-800"
+                                            >
+                                                {isDark ? (
+                                                    <>
+                                                        <Sun className="h-4 w-4" />
+                                                        Light Mode
+                                                    </>
+                                                ) : (
+                                                    <>
+                                                        <Moon className="h-4 w-4" />
+                                                        Dark Mode
+                                                    </>
+                                                )}
+                                            </button>
 
                                             <div className="border-t border-zinc-200 dark:border-zinc-800" />
 
