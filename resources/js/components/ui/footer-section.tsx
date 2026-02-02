@@ -296,9 +296,26 @@ function Footerdemo() {
                     <p className="text-sm text-muted-foreground">
                         © 2026 Codefolio. All rights reserved.
                     </p>
-                    <p className="text-sm text-muted-foreground">
-                        Developed by toyangdev
-                    </p>
+                    <nav className="flex gap-4 text-sm">
+                        <Link
+                            href="/privacy-policy"
+                            className="transition-colors hover:text-primary"
+                        >
+                            Privacy Policy
+                        </Link>
+                        <Link
+                            href="/terms-of-service"
+                            className="transition-colors hover:text-primary"
+                        >
+                            Terms of Service
+                        </Link>
+                        <a
+                            href="#"
+                            className="transition-colors hover:text-primary"
+                        >
+                            Cookie Settings
+                        </a>
+                    </nav>
                 </div>
             </div>
         </footer>
