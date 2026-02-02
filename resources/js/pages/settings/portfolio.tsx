@@ -106,10 +106,15 @@ export default function Portfolio({
         setSavingAll(true);
         setAllSavedSuccessfully(false);
 
+        let hasErrors = false;
+
         // Save all sections sequentially
         await new Promise<void>((resolve) => {
             patch('/settings/portfolio/website-url', {
                 preserveScroll: true,
+                onError: () => {
+                    hasErrors = true;
+                },
                 onFinish: () => resolve(),
             });
         });
@@ -117,6 +122,9 @@ export default function Portfolio({
         await new Promise<void>((resolve) => {
             patch('/settings/portfolio/description', {
                 preserveScroll: true,
+                onError: () => {
+                    hasErrors = true;
+                },
                 onFinish: () => resolve(),
             });
         });
@@ -124,6 +132,9 @@ export default function Portfolio({
         await new Promise<void>((resolve) => {
             patchSkills('/settings/portfolio/skills', {
                 preserveScroll: true,
+                onError: () => {
+                    hasErrors = true;
+                },
                 onFinish: () => resolve(),
             });
         });
@@ -131,6 +142,9 @@ export default function Portfolio({
         await new Promise<void>((resolve) => {
             patchTechStacks('/settings/portfolio/tech-stacks', {
                 preserveScroll: true,
+                onError: () => {
+                    hasErrors = true;
+                },
                 onFinish: () => resolve(),
             });
         });
@@ -138,13 +152,20 @@ export default function Portfolio({
         await new Promise<void>((resolve) => {
             patchProfessions('/settings/portfolio/professions', {
                 preserveScroll: true,
+                onError: () => {
+                    hasErrors = true;
+                },
                 onFinish: () => resolve(),
             });
         });
 
         setSavingAll(false);
-        setAllSavedSuccessfully(true);
-        setTimeout(() => setAllSavedSuccessfully(false), 3000);
+        
+        // Only show success message if there were no errors
+        if (!hasErrors) {
+            setAllSavedSuccessfully(true);
+            setTimeout(() => setAllSavedSuccessfully(false), 3000);
+        }
     };
 
     const handleDesktopChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -572,7 +593,6 @@ export default function Portfolio({
 
                         <div className="space-y-4">
                             <div className="grid gap-2">
-                                <Label htmlFor="website_url">Website URL</Label>
                                 <Input
                                     id="website_url"
                                     type="url"
@@ -605,9 +625,6 @@ export default function Portfolio({
 
                         <div className="space-y-4">
                             <div className="grid gap-2">
-                                <Label htmlFor="portfolio_description">
-                                    Description
-                                </Label>
                                 <Textarea
                                     id="portfolio_description"
                                     value={data.portfolio_description}
@@ -645,7 +662,6 @@ export default function Portfolio({
 
                         <div className="space-y-4">
                             <div className="grid gap-2">
-                                <Label htmlFor="skills">Select Skills</Label>
                                 <MultiSelect
                                     options={availableSkills}
                                     selected={skillsData.skills}
@@ -680,9 +696,6 @@ export default function Portfolio({
 
                         <div className="space-y-4">
                             <div className="grid gap-2">
-                                <Label htmlFor="tech_stacks">
-                                    Select Technologies
-                                </Label>
                                 <MultiSelect
                                     options={availableTechStacks}
                                     selected={techStacksData.tech_stacks}
@@ -720,9 +733,6 @@ export default function Portfolio({
 
                         <div className="space-y-4">
                             <div className="grid gap-2">
-                                <Label htmlFor="professions">
-                                    Select Professions
-                                </Label>
                                 <MultiSelect
                                     options={availableProfessions}
                                     selected={professionsData.professions}
