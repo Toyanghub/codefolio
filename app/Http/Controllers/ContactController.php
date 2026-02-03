@@ -21,12 +21,25 @@ class ContactController extends Controller
         return back()->with('success', 'Thank you for your message! We\'ll get back to you soon.');
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $messages = ContactMessage::orderBy('created_at', 'desc')->paginate(20);
+        $search = $request->input('search');
+
+        $query = ContactMessage::orderBy('created_at', 'desc');
+
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                    ->orWhere('email', 'like', "%{$search}%")
+                    ->orWhere('message', 'like', "%{$search}%");
+            });
+        }
+
+        $messages = $query->paginate(20);
 
         return Inertia::render('admin/contacts', [
             'messages' => $messages,
+            'search' => $search,
         ]);
     }
 

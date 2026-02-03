@@ -192,16 +192,20 @@ function Footerdemo() {
                                         <Button
                                             variant="outline"
                                             size="icon"
-                                            className="rounded-full"
+                                            className="rounded-full cursor-default opacity-60 hover:opacity-70"
+                                            disabled
                                         >
                                             <Facebook className="h-4 w-4" />
                                             <span className="sr-only">
-                                                Facebook
+                                                Facebook - Coming Soon
                                             </span>
                                         </Button>
                                     </TooltipTrigger>
                                     <TooltipContent className="bg-zinc-900 px-3 py-2 text-sm font-medium text-white dark:bg-zinc-100 dark:text-zinc-900">
-                                        <p>Follow us on Facebook</p>
+                                        <div className="flex flex-col items-center gap-1">
+                                            <p className="font-semibold">Facebook</p>
+                                            <p className="text-xs opacity-80">Coming Soon</p>
+                                        </div>
                                     </TooltipContent>
                                 </Tooltip>
                             </TooltipProvider>
@@ -211,16 +215,20 @@ function Footerdemo() {
                                         <Button
                                             variant="outline"
                                             size="icon"
-                                            className="rounded-full"
+                                            className="rounded-full cursor-default opacity-60 hover:opacity-70"
+                                            disabled
                                         >
                                             <Twitter className="h-4 w-4" />
                                             <span className="sr-only">
-                                                Twitter
+                                                Twitter - Coming Soon
                                             </span>
                                         </Button>
                                     </TooltipTrigger>
                                     <TooltipContent className="bg-zinc-900 px-3 py-2 text-sm font-medium text-white dark:bg-zinc-100 dark:text-zinc-900">
-                                        <p>Follow us on Twitter</p>
+                                        <div className="flex flex-col items-center gap-1">
+                                            <p className="font-semibold">Twitter</p>
+                                            <p className="text-xs opacity-80">Coming Soon</p>
+                                        </div>
                                     </TooltipContent>
                                 </Tooltip>
                             </TooltipProvider>
@@ -230,16 +238,20 @@ function Footerdemo() {
                                         <Button
                                             variant="outline"
                                             size="icon"
-                                            className="rounded-full"
+                                            className="rounded-full cursor-default opacity-60 hover:opacity-70"
+                                            disabled
                                         >
                                             <Instagram className="h-4 w-4" />
                                             <span className="sr-only">
-                                                Instagram
+                                                Instagram - Coming Soon
                                             </span>
                                         </Button>
                                     </TooltipTrigger>
                                     <TooltipContent className="bg-zinc-900 px-3 py-2 text-sm font-medium text-white dark:bg-zinc-100 dark:text-zinc-900">
-                                        <p>Follow us on Instagram</p>
+                                        <div className="flex flex-col items-center gap-1">
+                                            <p className="font-semibold">Instagram</p>
+                                            <p className="text-xs opacity-80">Coming Soon</p>
+                                        </div>
                                     </TooltipContent>
                                 </Tooltip>
                             </TooltipProvider>
@@ -249,16 +261,20 @@ function Footerdemo() {
                                         <Button
                                             variant="outline"
                                             size="icon"
-                                            className="rounded-full"
+                                            className="rounded-full cursor-default opacity-60 hover:opacity-70"
+                                            disabled
                                         >
                                             <Linkedin className="h-4 w-4" />
                                             <span className="sr-only">
-                                                LinkedIn
+                                                LinkedIn - Coming Soon
                                             </span>
                                         </Button>
                                     </TooltipTrigger>
                                     <TooltipContent className="bg-zinc-900 px-3 py-2 text-sm font-medium text-white dark:bg-zinc-100 dark:text-zinc-900">
-                                        <p>Connect with us on LinkedIn</p>
+                                        <div className="flex flex-col items-center gap-1">
+                                            <p className="font-semibold">LinkedIn</p>
+                                            <p className="text-xs opacity-80">Coming Soon</p>
+                                        </div>
                                     </TooltipContent>
                                 </Tooltip>
                             </TooltipProvider>

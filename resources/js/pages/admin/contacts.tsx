@@ -3,7 +3,7 @@ import { useAppearance } from '@/hooks/use-appearance';
 import { login, logout, register } from '@/routes';
 import { type SharedData } from '@/types';
 import { Head, Link, router, usePage } from '@inertiajs/react';
-import { Mail, Moon, Sun, Trash2 } from 'lucide-react';
+import { Mail, Moon, Search, Sun, Trash2, X } from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
 import { useState } from 'react';
 
@@ -21,6 +21,11 @@ interface PaginatedMessages {
     last_page: number;
     per_page: number;
     total: number;
+}
+
+interface AdminContactsProps {
+    messages: PaginatedMessages;
+    search?: string;
 }
 
 function Navbar({ canRegister = true }: { canRegister?: boolean }) {
@@ -501,12 +506,12 @@ function Navbar({ canRegister = true }: { canRegister?: boolean }) {
 
 export default function AdminContacts({
     messages,
-}: {
-    messages: PaginatedMessages;
-}) {
+    search: initialSearch = '',
+}: AdminContactsProps) {
     const [selectedMessages, setSelectedMessages] = useState<number[]>([]);
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
+    const [searchQuery, setSearchQuery] = useState(initialSearch);
 
     const formatDate = (dateString: string) => {
         const date = new Date(dateString);
@@ -560,6 +565,32 @@ export default function AdminContacts({
                 onFinish: () => {
                     setIsDeleting(false);
                 },
+            },
+        );
+    };
+
+    const handleSearch = (value: string) => {
+        setSearchQuery(value);
+        setSelectedMessages([]); // Clear selections when searching
+        router.get(
+            '/admin/contacts',
+            { search: value },
+            {
+                preserveState: true,
+                preserveScroll: true,
+            },
+        );
+    };
+
+    const clearSearch = () => {
+        setSearchQuery('');
+        setSelectedMessages([]);
+        router.get(
+            '/admin/contacts',
+            {},
+            {
+                preserveState: true,
+                preserveScroll: true,
             },
         );
     };
@@ -640,6 +671,38 @@ export default function AdminContacts({
                                 </p>
                             </div>
                         </div>
+                    </motion.div>
+
+                    {/* Search Bar */}
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.4 }}
+                        className="mb-6"
+                    >
+                        <div className="relative max-w-md">
+                            <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-zinc-400" />
+                            <input
+                                type="text"
+                                value={searchQuery}
+                                onChange={(e) => handleSearch(e.target.value)}
+                                placeholder="Search by name, email, or message..."
+                                className="w-full rounded-lg border border-zinc-300 bg-white py-2 pr-10 pl-10 text-sm text-zinc-900 placeholder-zinc-500 transition-colors focus:border-zinc-400 focus:ring-2 focus:ring-zinc-200 focus:outline-none dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100 dark:placeholder-zinc-400 dark:focus:border-zinc-600 dark:focus:ring-zinc-800"
+                            />
+                            {searchQuery && (
+                                <button
+                                    onClick={clearSearch}
+                                    className="absolute top-1/2 right-3 -translate-y-1/2 rounded-full p-1 text-zinc-400 transition-colors hover:bg-zinc-100 hover:text-zinc-600 dark:hover:bg-zinc-800 dark:hover:text-zinc-300"
+                                >
+                                    <X className="h-4 w-4" />
+                                </button>
+                            )}
+                        </div>
+                        {searchQuery && (
+                            <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
+                                Showing results for "{searchQuery}"
+                            </p>
+                        )}
                     </motion.div>
 
                     {/* Messages Table */}
