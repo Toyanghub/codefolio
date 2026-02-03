@@ -3,7 +3,7 @@ import { useAppearance } from '@/hooks/use-appearance';
 import { login, logout, register } from '@/routes';
 import { type SharedData } from '@/types';
 import { Head, Link, router, usePage } from '@inertiajs/react';
-import { Mail, Moon, Sun } from 'lucide-react';
+import { Mail, Moon, Sun, Trash2 } from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
 import { useState } from 'react';
 
@@ -504,6 +504,10 @@ export default function AdminContacts({
 }: {
     messages: PaginatedMessages;
 }) {
+    const [selectedMessages, setSelectedMessages] = useState<number[]>([]);
+    const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+    const [isDeleting, setIsDeleting] = useState(false);
+
     const formatDate = (dateString: string) => {
         const date = new Date(dateString);
         return new Intl.DateTimeFormat('en-US', {
@@ -514,6 +518,55 @@ export default function AdminContacts({
             minute: '2-digit',
         }).format(date);
     };
+
+    const handleSelectAll = () => {
+        if (selectedMessages.length === messages.data.length) {
+            setSelectedMessages([]);
+        } else {
+            setSelectedMessages(messages.data.map((msg) => msg.id));
+        }
+    };
+
+    const handleSelectMessage = (id: number) => {
+        if (selectedMessages.includes(id)) {
+            setSelectedMessages(
+                selectedMessages.filter((msgId) => msgId !== id),
+            );
+        } else {
+            setSelectedMessages([...selectedMessages, id]);
+        }
+    };
+
+    const handleDeleteClick = () => {
+        if (selectedMessages.length > 0) {
+            setDeleteDialogOpen(true);
+        }
+    };
+
+    const handleDeleteConfirm = () => {
+        if (selectedMessages.length === 0) return;
+
+        setIsDeleting(true);
+        router.post(
+            '/admin/contacts/delete',
+            {
+                message_ids: selectedMessages,
+            },
+            {
+                onSuccess: () => {
+                    setSelectedMessages([]);
+                    setDeleteDialogOpen(false);
+                },
+                onFinish: () => {
+                    setIsDeleting(false);
+                },
+            },
+        );
+    };
+
+    const allSelected =
+        messages.data.length > 0 &&
+        selectedMessages.length === messages.data.length;
 
     return (
         <>
@@ -537,23 +590,34 @@ export default function AdminContacts({
                                 </span>
                             </p>
                         </div>
-                        <Link
-                            href="/admin/cotd"
-                            className="inline-flex items-center gap-2 rounded-lg border border-zinc-200 bg-white px-4 py-2 text-sm font-medium text-zinc-700 transition-colors hover:bg-zinc-100 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700"
-                        >
-                            <svg
-                                className="h-4 w-4"
-                                fill="none"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                viewBox="0 0 24 24"
-                                stroke="currentColor"
+                        <div className="flex gap-2">
+                            {selectedMessages.length > 0 && (
+                                <button
+                                    onClick={handleDeleteClick}
+                                    className="inline-flex items-center gap-2 rounded-lg border border-red-200 bg-red-50 px-4 py-2 text-sm font-medium text-red-700 transition-colors hover:bg-red-100 dark:border-red-900 dark:bg-red-950 dark:text-red-400 dark:hover:bg-red-900"
+                                >
+                                    <Trash2 className="h-4 w-4" />
+                                    Delete Selected ({selectedMessages.length})
+                                </button>
+                            )}
+                            <Link
+                                href="/admin/cotd"
+                                className="inline-flex items-center gap-2 rounded-lg border border-zinc-200 bg-white px-4 py-2 text-sm font-medium text-zinc-700 transition-colors hover:bg-zinc-100 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700"
                             >
-                                <path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                            </svg>
-                            COTD Admin
-                        </Link>
+                                <svg
+                                    className="h-4 w-4"
+                                    fill="none"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                >
+                                    <path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                                </svg>
+                                COTD Admin
+                            </Link>
+                        </div>
                     </div>
 
                     {/* Stats Card */}
@@ -590,6 +654,14 @@ export default function AdminContacts({
                                 <table className="w-full">
                                     <thead className="border-b border-zinc-200 bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-800">
                                         <tr>
+                                            <th className="w-12 px-6 py-3">
+                                                <input
+                                                    type="checkbox"
+                                                    checked={allSelected}
+                                                    onChange={handleSelectAll}
+                                                    className="h-4 w-4 rounded border-zinc-300 text-zinc-900 focus:ring-2 focus:ring-zinc-500 dark:border-zinc-600 dark:bg-zinc-800 dark:focus:ring-zinc-400"
+                                                />
+                                            </th>
                                             <th className="px-6 py-3 text-left text-xs font-medium tracking-wider text-zinc-700 uppercase dark:text-zinc-300">
                                                 Name
                                             </th>
@@ -610,6 +682,20 @@ export default function AdminContacts({
                                                 key={message.id}
                                                 className="transition-colors hover:bg-zinc-50 dark:hover:bg-zinc-800/50"
                                             >
+                                                <td className="px-6 py-4">
+                                                    <input
+                                                        type="checkbox"
+                                                        checked={selectedMessages.includes(
+                                                            message.id,
+                                                        )}
+                                                        onChange={() =>
+                                                            handleSelectMessage(
+                                                                message.id,
+                                                            )
+                                                        }
+                                                        className="h-4 w-4 rounded border-zinc-300 text-zinc-900 focus:ring-2 focus:ring-zinc-500 dark:border-zinc-600 dark:bg-zinc-800 dark:focus:ring-zinc-400"
+                                                    />
+                                                </td>
                                                 <td className="px-6 py-4 whitespace-nowrap">
                                                     <div className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
                                                         {message.name}
@@ -699,6 +785,66 @@ export default function AdminContacts({
                         </motion.div>
                     )}
                 </div>
+
+                {/* Delete Confirmation Dialog */}
+                <AnimatePresence>
+                    {deleteDialogOpen && (
+                        <>
+                            <motion.div
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                exit={{ opacity: 0 }}
+                                className="fixed inset-0 z-50 bg-black/50"
+                                onClick={() =>
+                                    !isDeleting && setDeleteDialogOpen(false)
+                                }
+                            />
+                            <motion.div
+                                initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                                animate={{ opacity: 1, scale: 1, y: 0 }}
+                                exit={{ opacity: 0, scale: 0.95, y: 20 }}
+                                className="fixed top-1/2 left-1/2 z-50 w-full max-w-md -translate-x-1/2 -translate-y-1/2 rounded-lg border border-zinc-200 bg-white p-6 shadow-xl dark:border-zinc-800 dark:bg-zinc-900"
+                            >
+                                <div className="mb-4">
+                                    <div className="mb-2 flex items-center gap-3">
+                                        <div className="rounded-full bg-red-100 p-2 dark:bg-red-950">
+                                            <Trash2 className="h-5 w-5 text-red-600 dark:text-red-400" />
+                                        </div>
+                                        <h3 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100">
+                                            Delete Messages
+                                        </h3>
+                                    </div>
+                                    <p className="text-sm text-zinc-600 dark:text-zinc-400">
+                                        Are you sure you want to delete{' '}
+                                        {selectedMessages.length} message
+                                        {selectedMessages.length !== 1
+                                            ? 's'
+                                            : ''}
+                                        ? This action cannot be undone.
+                                    </p>
+                                </div>
+                                <div className="flex justify-end gap-3">
+                                    <button
+                                        onClick={() =>
+                                            setDeleteDialogOpen(false)
+                                        }
+                                        disabled={isDeleting}
+                                        className="rounded-lg border border-zinc-300 bg-white px-4 py-2 text-sm font-medium text-zinc-700 transition-colors hover:bg-zinc-50 disabled:opacity-50 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700"
+                                    >
+                                        Cancel
+                                    </button>
+                                    <button
+                                        onClick={handleDeleteConfirm}
+                                        disabled={isDeleting}
+                                        className="rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-red-700 disabled:opacity-50 dark:bg-red-700 dark:hover:bg-red-800"
+                                    >
+                                        {isDeleting ? 'Deleting...' : 'Delete'}
+                                    </button>
+                                </div>
+                            </motion.div>
+                        </>
+                    )}
+                </AnimatePresence>
 
                 <Footerdemo />
             </div>

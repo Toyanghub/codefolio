@@ -66,6 +66,7 @@ Route::middleware(['auth', EnsureUserIsAdmin::class])->prefix('admin')->group(fu
     Route::delete('/cotd/{user}', [CotdController::class, 'destroy'])->name('admin.cotd.destroy');
     
     Route::get('/contacts', [ContactController::class, 'index'])->name('admin.contacts');
+    Route::post('/contacts/delete', [ContactController::class, 'deleteMultiple'])->name('admin.contacts.delete');
 });
 
 require __DIR__.'/settings.php';

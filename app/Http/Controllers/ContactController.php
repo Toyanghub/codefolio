@@ -29,4 +29,16 @@ class ContactController extends Controller
             'messages' => $messages,
         ]);
     }
+
+    public function deleteMultiple(Request $request)
+    {
+        $validated = $request->validate([
+            'message_ids' => 'required|array',
+            'message_ids.*' => 'integer|exists:contact_messages,id',
+        ]);
+
+        ContactMessage::whereIn('id', $validated['message_ids'])->delete();
+
+        return back()->with('success', 'Selected messages have been deleted successfully.');
+    }
 }
