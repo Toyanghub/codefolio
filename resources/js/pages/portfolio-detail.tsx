@@ -775,21 +775,6 @@ export default function PortfolioDetail({ portfolio, canRegister }: PageProps) {
                         </div>
                     </div>
 
-                    {/* Back to Observatory */}
-                    <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ delay: 0.5 }}
-                        className="mt-16 text-center"
-                    >
-                        <Link
-                            href="/observatory"
-                            className="inline-flex items-center gap-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
-                        >
-                            ← Back to Observatory
-                        </Link>
-                    </motion.div>
-
                     {/* Bottom Featured Portfolio Marquee (Reversed) */}
                     {!!portfolio.isFeatured && (
                         <motion.div

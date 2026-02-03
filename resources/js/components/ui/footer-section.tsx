@@ -297,24 +297,17 @@ function Footerdemo() {
                         © 2026 Codefolio. All rights reserved.
                     </p>
                     <nav className="flex gap-4 text-sm">
-                        <Link
-                            href="/privacy-policy"
-                            className="transition-colors hover:text-primary"
-                        >
-                            Privacy Policy
-                        </Link>
-                        <Link
-                            href="/terms-of-service"
-                            className="transition-colors hover:text-primary"
-                        >
-                            Terms of Service
-                        </Link>
-                        <a
-                            href="#"
-                            className="transition-colors hover:text-primary"
-                        >
-                            Cookie Settings
-                        </a>
+                        <span className="text-muted-foreground">
+                            Developed by{' '}
+                            <a
+                                href="https://toyang-pix.vercel.app/"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="transition-colors hover:text-primary hover:underline"
+                            >
+                                toyangdev
+                            </a>
+                        </span>
                     </nav>
                 </div>
             </div>
