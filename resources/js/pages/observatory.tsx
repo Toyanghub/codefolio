@@ -3,7 +3,15 @@ import { useAppearance } from '@/hooks/use-appearance';
 import { login, logout, register } from '@/routes';
 import { type SharedData } from '@/types';
 import { Head, Link, router, usePage } from '@inertiajs/react';
-import { ArrowUpRight, Check, Moon, Star, Sun } from 'lucide-react';
+import {
+    ArrowUpRight,
+    Check,
+    Eye,
+    EyeOff,
+    Moon,
+    Star,
+    Sun,
+} from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
 import { useState } from 'react';
 
@@ -920,6 +928,7 @@ export default function Observatory({
         cotd: 'all',
     });
     const [sidebarOpen, setSidebarOpen] = useState(false);
+    const [desktopSidebarOpen, setDesktopSidebarOpen] = useState(true);
     const [dropdownsOpen, setDropdownsOpen] = useState({
         cotd: true,
         skills: true,
@@ -1090,13 +1099,36 @@ export default function Observatory({
                 <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
                     {/* Page Header */}
                     <div className="mb-8">
-                        <h1 className="text-3xl font-bold text-zinc-900 dark:text-zinc-100">
-                            Observe
-                        </h1>
-                        <p className="mt-2 text-zinc-600 dark:text-zinc-400">
-                            Discover amazing portfolios from developers around
-                            the world
-                        </p>
+                        <div className="flex items-start justify-between">
+                            <div>
+                                <h1 className="text-3xl font-bold text-zinc-900 dark:text-zinc-100">
+                                    Observe
+                                </h1>
+                                <p className="mt-2 text-zinc-600 dark:text-zinc-400">
+                                    Discover amazing portfolios from developers
+                                    around the world
+                                </p>
+                            </div>
+                            {/* Desktop Filter Toggle */}
+                            <button
+                                onClick={() =>
+                                    setDesktopSidebarOpen(!desktopSidebarOpen)
+                                }
+                                className="hidden items-center gap-2 rounded-lg border border-zinc-200 bg-white px-4 py-2 text-sm font-medium text-zinc-900 transition-all duration-200 hover:bg-zinc-50 hover:shadow-md lg:flex dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-100 dark:hover:bg-zinc-800"
+                            >
+                                {desktopSidebarOpen ? (
+                                    <>
+                                        <EyeOff className="h-4 w-4" />
+                                        Hide Filters
+                                    </>
+                                ) : (
+                                    <>
+                                        <Eye className="h-4 w-4" />
+                                        Show Filters
+                                    </>
+                                )}
+                            </button>
+                        </div>
                         {searchQuery && (
                             <div className="mt-4 flex items-center gap-2">
                                 <span className="text-sm text-zinc-600 dark:text-zinc-400">
@@ -1155,7 +1187,9 @@ export default function Observatory({
                                 sidebarOpen
                                     ? 'translate-x-0'
                                     : 'translate-x-full'
-                            } fixed top-0 right-0 z-50 flex h-full w-80 flex-col space-y-0 overflow-hidden bg-zinc-50 shadow-xl transition-transform duration-300 lg:relative lg:block lg:h-auto lg:w-64 lg:translate-x-0 lg:overflow-visible lg:bg-transparent lg:shadow-none dark:bg-zinc-950`}
+                            } fixed top-0 right-0 z-50 flex h-full w-80 flex-col space-y-0 overflow-hidden bg-zinc-50 shadow-xl transition-all duration-300 lg:relative lg:h-auto lg:w-64 lg:translate-x-0 lg:overflow-visible lg:bg-transparent lg:shadow-none dark:bg-zinc-950 ${
+                                desktopSidebarOpen ? 'lg:block' : 'lg:hidden'
+                            }`}
                         >
                             {/* Mobile Header with Counter - Only on mobile */}
                             <div className="flex items-center justify-between border-b border-zinc-200 bg-white p-4 lg:hidden dark:border-zinc-800 dark:bg-zinc-900">
@@ -1632,7 +1666,13 @@ export default function Observatory({
                                 </div>
                             ) : (
                                 <>
-                                    <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3">
+                                    <div
+                                        className={`grid grid-cols-1 gap-6 transition-all duration-300 sm:grid-cols-2 ${
+                                            desktopSidebarOpen
+                                                ? 'lg:grid-cols-2 xl:grid-cols-3'
+                                                : 'lg:grid-cols-3 xl:grid-cols-4'
+                                        }`}
+                                    >
                                         {filteredPortfolios.map(
                                             (portfolio, index) => (
                                                 <PortfolioCard
