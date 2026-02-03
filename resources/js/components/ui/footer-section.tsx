@@ -179,6 +179,14 @@ function Footerdemo() {
                             >
                                 Terms of Service
                             </Link>
+                            <a
+                                href="/sitemap.xml"
+                                className="block transition-colors hover:text-primary"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                Sitemap
+                            </a>
                         </nav>
                     </div>
                     <div className="relative">
