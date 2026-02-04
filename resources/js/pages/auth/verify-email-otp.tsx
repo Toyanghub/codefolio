@@ -1,4 +1,5 @@
-import { Head, useForm } from '@inertiajs/react';
+import { resend, verify } from '@/routes/verify-otp';
+import { Head, router, useForm } from '@inertiajs/react';
 import { Mail, RefreshCw } from 'lucide-react';
 import { FormEventHandler, useEffect, useRef, useState } from 'react';
 
@@ -15,14 +16,12 @@ export default function VerifyEmailOtp({
 }: Props) {
     const [otp, setOtp] = useState<string[]>(['', '', '', '', '', '']);
     const [timeLeft, setTimeLeft] = useState(remainingTime || 0);
+    const [resending, setResending] = useState(false);
     const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
-    const { data, setData, post, processing, errors, recentlySuccessful } =
-        useForm({
-            otp: '',
-        });
-
-    const resendForm = useForm({});
+    const { processing, errors } = useForm({
+        otp: '',
+    });
 
     useEffect(() => {
         // Focus first input on mount
@@ -54,10 +53,11 @@ export default function VerifyEmailOtp({
 
         // Auto-submit when all 6 digits are entered
         if (newOtp.every((d) => d !== '') && newOtp.join('').length === 6) {
-            setData('otp', newOtp.join(''));
             // Submit after a short delay to show complete code
             setTimeout(() => {
-                post(route('verify-otp.verify'));
+                router.post(verify.url(), {
+                    otp: newOtp.join(''),
+                });
             }, 100);
         }
     };
@@ -81,36 +81,47 @@ export default function VerifyEmailOtp({
         if (pastedData.length === 6) {
             const newOtp = pastedData.split('');
             setOtp(newOtp);
-            setData('otp', pastedData);
             inputRefs.current[5]?.focus();
 
             // Auto-submit after paste
             setTimeout(() => {
-                post(route('verify-otp.verify'));
+                router.post(verify.url(), {
+                    otp: pastedData,
+                });
             }, 100);
         }
     };
 
     const handleResend = () => {
-        if (!canRequestOtp) {
+        if (!canRequestOtp || resending) {
             return;
         }
 
-        resendForm.post(route('verify-otp.resend'), {
-            onSuccess: () => {
-                setTimeLeft(900); // Reset to 15 minutes
-                setOtp(['', '', '', '', '', '']);
-                inputRefs.current[0]?.focus();
+        setResending(true);
+        router.post(
+            resend.url(),
+            {},
+            {
+                onSuccess: () => {
+                    setTimeLeft(900); // Reset to 15 minutes
+                    setOtp(['', '', '', '', '', '']);
+                    inputRefs.current[0]?.focus();
+                    setResending(false);
+                },
+                onError: () => {
+                    setResending(false);
+                },
             },
-        });
+        );
     };
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
         const otpCode = otp.join('');
         if (otpCode.length === 6) {
-            setData('otp', otpCode);
-            post(route('verify-otp.verify'));
+            router.post(verify.url(), {
+                otp: otpCode,
+            });
         }
     };
 
@@ -148,9 +159,9 @@ export default function VerifyEmailOtp({
                                 {otp.map((digit, index) => (
                                     <input
                                         key={index}
-                                        ref={(el) =>
-                                            (inputRefs.current[index] = el)
-                                        }
+                                        ref={(el) => {
+                                            inputRefs.current[index] = el;
+                                        }}
                                         type="text"
                                         inputMode="numeric"
                                         maxLength={1}
@@ -199,15 +210,11 @@ export default function VerifyEmailOtp({
                             <button
                                 type="button"
                                 onClick={handleResend}
-                                disabled={
-                                    resendForm.processing || !canRequestOtp
-                                }
+                                disabled={resending || !canRequestOtp}
                                 className="flex w-full items-center justify-center gap-2 rounded-lg border-2 border-gray-300 bg-white px-4 py-3 text-sm font-medium text-gray-700 shadow-sm transition-colors hover:bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
                             >
                                 <RefreshCw className="h-4 w-4" />
-                                {resendForm.processing
-                                    ? 'Sending...'
-                                    : 'Resend Code'}
+                                {resending ? 'Sending...' : 'Resend Code'}
                             </button>
                         </div>
 

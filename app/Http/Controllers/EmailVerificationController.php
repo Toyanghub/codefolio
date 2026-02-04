@@ -17,9 +17,14 @@ class EmailVerificationController extends Controller
     /**
      * Display the email verification page
      */
-    public function show(Request $request): Response
+    public function show(Request $request): Response|RedirectResponse
     {
         $user = $request->user();
+        
+        // If already verified, redirect to intended destination
+        if ($user->email_verified) {
+            return redirect()->intended(route('home'));
+        }
         
         $remainingTime = $this->otpService->getRemainingTime($user);
         $canRequestOtp = $this->otpService->canRequestOtp($user);
@@ -44,6 +49,9 @@ class EmailVerificationController extends Controller
         $result = $this->otpService->verifyOtp($user, $request->otp);
 
         if ($result['success']) {
+            // Refresh the user in session to update email_verified status
+            $request->user()->refresh();
+            
             return redirect()->intended(route('home'))
                 ->with('success', $result['message']);
         }
