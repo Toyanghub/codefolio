@@ -126,9 +126,9 @@ function Footerdemo() {
                         <div className="absolute top-0 -right-4 h-24 w-24 rounded-full bg-primary/10 blur-2xl" />
                     </div>
                     <div>
-                        <h3 className="mb-4 text-lg font-semibold">
+                        {/* <h3 className="mb-4 text-lg font-semibold">
                             Quick Links
-                        </h3>
+                        </h3> */}
                         <nav className="space-y-2 text-sm">
                             <Link
                                 href="/"
@@ -154,18 +154,13 @@ function Footerdemo() {
                             >
                                 Settings
                             </Link>
-                            <Link
-                                href="/contact"
-                                className="block transition-colors hover:text-primary"
-                            >
-                                Contact Us
-                            </Link>
+                            
                         </nav>
                     </div>
                     <div>
-                        <h3 className="mb-4 text-lg font-semibold">
+                        {/* <h3 className="mb-4 text-lg font-semibold">
                             Legal
-                        </h3>
+                        </h3> */}
                         <nav className="space-y-2 text-sm">
                             <Link
                                 href="/privacy-policy"
@@ -187,6 +182,12 @@ function Footerdemo() {
                             >
                                 Sitemap
                             </a>
+                            <Link
+                                href="/contact"
+                                className="block transition-colors hover:text-primary"
+                            >
+                                Contact Us
+                            </Link>
                         </nav>
                     </div>
                     <div className="relative">
