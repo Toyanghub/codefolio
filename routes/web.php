@@ -4,11 +4,13 @@ use App\Http\Controllers\Admin\CotdController;
 use App\Http\Controllers\Auth\GoogleAuthController;
 use App\Http\Controllers\Auth\GitHubAuthController;
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\EmailVerificationController;
 use App\Http\Controllers\NewsletterController;
 use App\Http\Controllers\ObservatoryController;
 use App\Http\Controllers\PortfolioDetailController;
 use App\Http\Controllers\SitemapController;
 use App\Http\Controllers\WorksController;
+use App\Http\Middleware\EnsureEmailIsVerified;
 use App\Http\Middleware\EnsureUserIsAdmin;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -63,8 +65,15 @@ Route::post('/newsletter/unsubscribe', [NewsletterController::class, 'unsubscrib
 // Sitemap route
 Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
 
+// Email OTP verification routes
+Route::middleware('auth')->group(function () {
+    Route::get('/verify-otp', [EmailVerificationController::class, 'show'])->name('verify-otp');
+    Route::post('/verify-otp', [EmailVerificationController::class, 'verifyOtp'])->name('verify-otp.verify');
+    Route::post('/verify-otp/resend', [EmailVerificationController::class, 'resendOtp'])->name('verify-otp.resend');
+});
+
 // Admin routes
-Route::middleware(['auth', EnsureUserIsAdmin::class])->prefix('admin')->group(function () {
+Route::middleware(['auth', EnsureEmailIsVerified::class, EnsureUserIsAdmin::class])->prefix('admin')->group(function () {
     Route::get('/cotd', [CotdController::class, 'index'])->name('admin.cotd');
     Route::post('/cotd/{user}/toggle', [CotdController::class, 'toggleFeatured'])->name('admin.cotd.toggle');
     Route::delete('/cotd/{user}', [CotdController::class, 'destroy'])->name('admin.cotd.destroy');

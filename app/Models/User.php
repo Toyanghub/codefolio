@@ -37,6 +37,10 @@ class User extends Authenticatable
         'portfolio_setup_completed',
         'is_featured',
         'featured_at',
+        'email_verified',
+        'email_otp',
+        'email_otp_expires_at',
+        'email_otp_attempts',
     ];
 
     public function skills(): BelongsToMany
@@ -64,6 +68,7 @@ class User extends Authenticatable
         'two_factor_secret',
         'two_factor_recovery_codes',
         'remember_token',
+        'email_otp',
     ];
 
     /**
@@ -77,6 +82,9 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'two_factor_confirmed_at' => 'datetime',
+            'email_verified' => 'boolean',
+            'email_otp_expires_at' => 'datetime',
+            'email_otp_attempts' => 'integer',
         ];
     }
 }
