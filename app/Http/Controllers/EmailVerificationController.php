@@ -21,6 +21,12 @@ class EmailVerificationController extends Controller
     {
         $user = $request->user();
         
+        // Redirect unauthenticated users to login
+        if (!$user) {
+            return redirect()->route('login')
+                ->with('error', 'Please log in to verify your email.');
+        }
+        
         // If already verified, redirect to intended destination
         if ($user->email_verified) {
             return redirect()->intended(route('home'));
@@ -46,6 +52,12 @@ class EmailVerificationController extends Controller
         ]);
 
         $user = $request->user();
+        
+        // Redirect unauthenticated users to login
+        if (!$user) {
+            return redirect()->route('login')
+                ->with('error', 'Please log in to verify your email.');
+        }
         $result = $this->otpService->verifyOtp($user, $request->otp);
 
         if ($result['success']) {
@@ -67,6 +79,12 @@ class EmailVerificationController extends Controller
     public function resendOtp(Request $request): RedirectResponse
     {
         $user = $request->user();
+        
+        // Redirect unauthenticated users to login
+        if (!$user) {
+            return redirect()->route('login')
+                ->with('error', 'Please log in to verify your email.');
+        }
         
         $canRequest = $this->otpService->canRequestOtp($user);
         

@@ -65,15 +65,13 @@ Route::post('/newsletter/unsubscribe', [NewsletterController::class, 'unsubscrib
 // Sitemap route
 Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
 
-// Email OTP verification routes
-Route::middleware('auth')->group(function () {
-    Route::get('/verify-otp', [EmailVerificationController::class, 'show'])->name('verify-otp');
-    Route::post('/verify-otp', [EmailVerificationController::class, 'verifyOtp'])->name('verify-otp.verify');
-    Route::post('/verify-otp/resend', [EmailVerificationController::class, 'resendOtp'])->name('verify-otp.resend');
-});
+// Email OTP verification routes (auth check handled by controller)
+Route::get('/verify-otp', [EmailVerificationController::class, 'show'])->name('verify-otp');
+Route::post('/verify-otp', [EmailVerificationController::class, 'verifyOtp'])->name('verify-otp.verify');
+Route::post('/verify-otp/resend', [EmailVerificationController::class, 'resendOtp'])->name('verify-otp.resend');
 
 // Admin routes
-Route::middleware(['auth', EnsureEmailIsVerified::class, EnsureUserIsAdmin::class])->prefix('admin')->group(function () {
+Route::middleware(['auth', EnsureUserIsAdmin::class])->prefix('admin')->group(function () {
     Route::get('/cotd', [CotdController::class, 'index'])->name('admin.cotd');
     Route::post('/cotd/{user}/toggle', [CotdController::class, 'toggleFeatured'])->name('admin.cotd.toggle');
     Route::delete('/cotd/{user}', [CotdController::class, 'destroy'])->name('admin.cotd.destroy');
