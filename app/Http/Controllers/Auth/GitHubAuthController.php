@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Services\OtpService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
@@ -12,6 +13,10 @@ use Illuminate\Support\Str;
 
 class GitHubAuthController extends Controller
 {
+    public function __construct(
+        protected OtpService $otpService
+    ) {}
+
     /**
      * Redirect the user to the GitHub authentication page.
      */
@@ -49,6 +54,9 @@ class GitHubAuthController extends Controller
                         $user->avatar = $avatarPath;
                     }
                 }
+                
+                // Set email_verified to false to require OTP verification
+                $user->email_verified = false;
                 $user->save();
             } else {
                 // Download and store the GitHub profile picture
@@ -57,21 +65,27 @@ class GitHubAuthController extends Controller
                     $avatar = $this->downloadGitHubAvatar($githubUser->avatar, $githubUser->id);
                 }
 
-                // Create new user
+                // Create new user with email_verified = false
                 $user = User::create([
                     'name' => $githubUser->name ?? $githubUser->nickname ?? 'GitHub User',
                     'email' => $githubUser->email,
                     'github_id' => $githubUser->id,
                     'avatar' => $avatar,
                     'password' => Hash::make(Str::random(24)), // Random password for OAuth users
-                    'email_verified_at' => now(), // GitHub accounts are already verified
+                    'email_verified_at' => now(), // Keep for compatibility
+                    'email_verified' => false, // Require OTP verification
                 ]);
             }
+
+            // Generate and send OTP
+            $this->otpService->generateAndSendOtp($user);
 
             // Log the user in
             Auth::login($user, true);
 
-            return redirect()->intended('/');
+            // Redirect to OTP verification page
+            return redirect()->route('verify-otp')
+                ->with('success', 'Please verify your email with the code we just sent to ' . $user->email);
             
         } catch (\Exception $e) {
             return redirect('/login')->with('error', 'Unable to authenticate with GitHub. Please try again.');

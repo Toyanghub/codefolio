@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Services\OtpService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
@@ -12,6 +13,10 @@ use Illuminate\Support\Str;
 
 class GoogleAuthController extends Controller
 {
+    public function __construct(
+        protected OtpService $otpService
+    ) {}
+
     /**
      * Redirect the user to the Google authentication page.
      */
@@ -49,6 +54,9 @@ class GoogleAuthController extends Controller
                         $user->avatar = $avatarPath;
                     }
                 }
+                
+                // Set email_verified to false to require OTP verification
+                $user->email_verified = false;
                 $user->save();
             } else {
                 // Download and store the Google profile picture
@@ -57,21 +65,27 @@ class GoogleAuthController extends Controller
                     $avatar = $this->downloadGoogleAvatar($googleUser->avatar, $googleUser->id);
                 }
 
-                // Create new user
+                // Create new user with email_verified = false
                 $user = User::create([
                     'name' => $googleUser->name,
                     'email' => $googleUser->email,
                     'google_id' => $googleUser->id,
                     'avatar' => $avatar,
                     'password' => Hash::make(Str::random(24)), // Random password for OAuth users
-                    'email_verified_at' => now(), // Google accounts are already verified
+                    'email_verified_at' => now(), // Keep for compatibility
+                    'email_verified' => false, // Require OTP verification
                 ]);
             }
+
+            // Generate and send OTP
+            $this->otpService->generateAndSendOtp($user);
 
             // Log the user in
             Auth::login($user, true);
 
-            return redirect()->intended('/');
+            // Redirect to OTP verification page
+            return redirect()->route('verify-otp')
+                ->with('success', 'Please verify your email with the code we just sent to ' . $user->email);
             
         } catch (\Exception $e) {
             return redirect('/login')->with('error', 'Unable to authenticate with Google. Please try again.');
