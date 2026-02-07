@@ -56,20 +56,22 @@ class AccountHandlerController extends Controller
                 break;
         }
         
+        // Laravel automatically excludes soft-deleted users when querying
         $users = $query
             ->orderBy('created_at', 'desc')
             ->paginate($perPage)
             ->withQueryString();
         
-        // Get statistics
+        // Get statistics (automatically excludes soft-deleted users)
         $stats = [
             'total' => User::count(),
             'verified' => User::where('email_verified', true)->count(),
             'unverified' => User::where('email_verified', false)->count(),
             'admins' => User::where('is_admin', true)->count(),
-            'oauth_users' => User::whereNotNull('google_id')
-                ->orWhereNotNull('github_id')
-                ->count(),
+            'oauth_users' => User::where(function($q) {
+                $q->whereNotNull('google_id')
+                  ->orWhereNotNull('github_id');
+            })->count(),
         ];
         
         return Inertia::render('admin/account-handler', [
@@ -137,6 +139,10 @@ class AccountHandlerController extends Controller
     
     /**
      * Delete a user account
+     * 
+     * Note: Uses soft delete (User model has SoftDeletes trait).
+     * The user record will remain in database with deleted_at timestamp.
+     * To permanently delete, use forceDelete() instead.
      */
     public function destroy(Request $request, User $user)
     {
@@ -145,19 +151,59 @@ class AccountHandlerController extends Controller
             return back()->with('error', 'You cannot delete your own account.');
         }
         
-        Log::warning('User account deleted', [
-            'admin_user' => $request->user()->email,
-            'deleted_user' => [
-                'id' => $user->id,
-                'name' => $user->name,
-                'email' => $user->email,
-            ],
-        ]);
-        
         $userName = $user->name;
+        $userEmail = $user->email;
+        $userId = $user->id;
+        
+        // Soft delete the user (sets deleted_at timestamp)
         $user->delete();
         
+        Log::warning('User account soft-deleted', [
+            'admin_user' => $request->user()->email,
+            'deleted_user' => [
+                'id' => $userId,
+                'name' => $userName,
+                'email' => $userEmail,
+            ],
+            'deletion_type' => 'soft_delete',
+            'deleted_at' => now(),
+        ]);
+        
         return back()->with('success', "Account for {$userName} has been deleted.");
+    }
+    
+    /**
+     * Permanently delete a user account (force delete)
+     * 
+     * WARNING: This permanently removes the record from the database.
+     * Only use this if you want to completely remove all traces of the user.
+     */
+    public function forceDestroy(Request $request, User $user)
+    {
+        // Prevent user from deleting their own account
+        if ($user->id === $request->user()->id) {
+            return back()->with('error', 'You cannot delete your own account.');
+        }
+        
+        $userName = $user->name;
+        $userEmail = $user->email;
+        $userId = $user->id;
+        
+        Log::critical('User account permanently deleted', [
+            'admin_user' => $request->user()->email,
+            'deleted_user' => [
+                'id' => $userId,
+                'name' => $userName,
+                'email' => $userEmail,
+            ],
+            'deletion_type' => 'force_delete',
+            'deleted_at' => now(),
+        ]);
+        
+        // Permanently delete the user (removes from database)
+        $user->forceDelete();
+        
+        return back()->with('success', "Account for {$userName} has been permanently deleted from the database.");
     }
     
     /**

@@ -12,10 +12,19 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->boolean('email_verified')->default(false)->after('email');
-            $table->string('email_otp', 6)->nullable()->after('email_verified');
-            $table->timestamp('email_otp_expires_at')->nullable()->after('email_otp');
-            $table->integer('email_otp_attempts')->default(0)->after('email_otp_expires_at');
+            // Check if columns exist before adding to prevent duplicate column errors
+            if (!Schema::hasColumn('users', 'email_verified')) {
+                $table->boolean('email_verified')->default(false)->after('email');
+            }
+            if (!Schema::hasColumn('users', 'email_otp')) {
+                $table->string('email_otp', 6)->nullable()->after('email_verified');
+            }
+            if (!Schema::hasColumn('users', 'email_otp_expires_at')) {
+                $table->timestamp('email_otp_expires_at')->nullable()->after('email_otp');
+            }
+            if (!Schema::hasColumn('users', 'email_otp_attempts')) {
+                $table->integer('email_otp_attempts')->default(0)->after('email_otp_expires_at');
+            }
         });
     }
 
@@ -25,7 +34,18 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn(['email_verified', 'email_otp', 'email_otp_expires_at', 'email_otp_attempts']);
+            if (Schema::hasColumn('users', 'email_verified')) {
+                $table->dropColumn('email_verified');
+            }
+            if (Schema::hasColumn('users', 'email_otp')) {
+                $table->dropColumn('email_otp');
+            }
+            if (Schema::hasColumn('users', 'email_otp_expires_at')) {
+                $table->dropColumn('email_otp_expires_at');
+            }
+            if (Schema::hasColumn('users', 'email_otp_attempts')) {
+                $table->dropColumn('email_otp_attempts');
+            }
         });
     }
 };
