@@ -304,7 +304,7 @@ function ConfirmDialog({
     return (
         <AnimatePresence mode="wait">
             {open && (
-                <div 
+                <div
                     className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4"
                     onClick={(e) => {
                         // Close on backdrop click (but only if clicking backdrop, not the dialog)
@@ -328,8 +328,12 @@ function ConfirmDialog({
                             </h3>
                             <button
                                 onClick={() => onOpenChange(false)}
-                                className="text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300 disabled:cursor-not-allowed disabled:opacity-50"
-                                title={isProcessing ? "Processing... Dialog will close automatically" : "Close dialog"}
+                                className="text-zinc-400 hover:text-zinc-600 disabled:cursor-not-allowed disabled:opacity-50 dark:hover:text-zinc-300"
+                                title={
+                                    isProcessing
+                                        ? 'Processing... Dialog will close automatically'
+                                        : 'Close dialog'
+                                }
                             >
                                 <X className="h-5 w-5" />
                             </button>
