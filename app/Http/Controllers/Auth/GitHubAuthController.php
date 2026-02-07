@@ -55,9 +55,18 @@ class GitHubAuthController extends Controller
                     }
                 }
                 
-                // Set email_verified to false to require OTP verification
-                $user->email_verified = false;
                 $user->save();
+                
+                // Check if user is already verified
+                if ($user->email_verified) {
+                    // Existing verified user - skip OTP and go directly to home
+                    Auth::login($user, true);
+                    return redirect()->intended('/')
+                        ->with('success', 'Welcome back, ' . $user->name . '!');
+                }
+                
+                // User exists but not verified - require OTP verification
+                // (email_verified remains false, will be caught by middleware)
             } else {
                 // Download and store the GitHub profile picture
                 $avatar = null;
@@ -77,15 +86,21 @@ class GitHubAuthController extends Controller
                 ]);
             }
 
-            // Generate and send OTP
-            $this->otpService->generateAndSendOtp($user);
-
-            // Log the user in
+            // Only generate and send OTP for unverified users (new or existing unverified)
+            if (!$user->email_verified) {
+                $this->otpService->generateAndSendOtp($user);
+                
+                // Log the user in
+                Auth::login($user, true);
+                
+                // Redirect to OTP verification page
+                return redirect()->route('verify-otp')
+                    ->with('success', 'Please verify your email with the code we just sent to ' . $user->email);
+            }
+            
+            // This should never be reached due to the check above, but just in case
             Auth::login($user, true);
-
-            // Redirect to OTP verification page
-            return redirect()->route('verify-otp')
-                ->with('success', 'Please verify your email with the code we just sent to ' . $user->email);
+            return redirect()->intended('/');
             
         } catch (\Exception $e) {
             return redirect('/login')->with('error', 'Unable to authenticate with GitHub. Please try again.');
