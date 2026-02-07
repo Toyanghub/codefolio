@@ -578,46 +578,57 @@ export default function PortfolioDetail({ portfolio, canRegister }: PageProps) {
 
                             {/* Image Toggle Buttons - Three Options */}
                             {portfolio.mobileImage && (
-                                <div className="mt-8 flex gap-1.5 rounded-lg bg-muted/50 p-1">
-                                    <button
+                                <motion.div
+                                    initial={{ opacity: 0, y: 10 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: 0.4 }}
+                                    className="mt-8 flex gap-1.5 rounded-lg bg-muted/50 p-1"
+                                >
+                                    <motion.button
                                         onClick={() => setActiveImage('both')}
+                                        whileHover={{ scale: 1.02 }}
+                                        whileTap={{ scale: 0.98 }}
                                         className={`rounded-md px-4 py-2 text-xs font-medium tracking-wider uppercase transition-all duration-300 ${
                                             activeImage === 'both'
                                                 ? 'bg-foreground text-background shadow-sm'
-                                                : 'text-muted-foreground hover:text-foreground'
+                                                : 'text-muted-foreground hover:bg-muted/80 hover:text-foreground'
                                         }`}
                                     >
                                         Both
-                                    </button>
-                                    <button
+                                    </motion.button>
+                                    <motion.button
                                         onClick={() =>
                                             setActiveImage('desktop')
                                         }
+                                        whileHover={{ scale: 1.02 }}
+                                        whileTap={{ scale: 0.98 }}
                                         className={`rounded-md px-4 py-2 text-xs font-medium tracking-wider uppercase transition-all duration-300 ${
                                             activeImage === 'desktop'
                                                 ? 'bg-foreground text-background shadow-sm'
-                                                : 'text-muted-foreground hover:text-foreground'
+                                                : 'text-muted-foreground hover:bg-muted/80 hover:text-foreground'
                                         }`}
                                     >
                                         Desktop
-                                    </button>
-                                    <button
+                                    </motion.button>
+                                    <motion.button
                                         onClick={() => setActiveImage('mobile')}
+                                        whileHover={{ scale: 1.02 }}
+                                        whileTap={{ scale: 0.98 }}
                                         className={`rounded-md px-4 py-2 text-xs font-medium tracking-wider uppercase transition-all duration-300 ${
                                             activeImage === 'mobile'
                                                 ? 'bg-foreground text-background shadow-sm'
-                                                : 'text-muted-foreground hover:text-foreground'
+                                                : 'text-muted-foreground hover:bg-muted/80 hover:text-foreground'
                                         }`}
                                     >
                                         Mobile
-                                    </button>
-                                </div>
+                                    </motion.button>
+                                </motion.div>
                             )}
                         </div>
 
                         {/* Right: Portfolio Screenshot Block */}
                         <div
-                            className="relative transition-all duration-700"
+                            className="relative flex w-full items-center justify-center transition-all duration-700"
                             style={{
                                 transform: isHovered
                                     ? 'translateX(4px) translateY(-4px)'
@@ -627,60 +638,148 @@ export default function PortfolioDetail({ portfolio, canRegister }: PageProps) {
                             }}
                         >
                             {/* Image container - responsive sizing with support for both/desktop/mobile */}
-                            {activeImage === 'both' ? (
-                                /* Both Images Side by Side */
-                                <div className="flex gap-4 md:gap-6">
-                                    {/* Desktop Image */}
-                                    <div className="relative flex-1">
-                                        <div className="relative h-[280px] w-full overflow-hidden sm:h-[320px] md:h-[360px] lg:h-[420px]">
-                                            <img
-                                                src={`/storage/${portfolio.desktopImage}`}
-                                                alt={`${portfolio.name}'s portfolio - Desktop`}
-                                                className="h-full w-full object-contain"
-                                            />
-                                        </div>
-                                        <span className="mt-2 block text-center text-xs font-medium tracking-wider text-muted-foreground uppercase">
-                                            Desktop
-                                        </span>
-                                    </div>
-
-                                    {/* Mobile Image */}
-                                    {portfolio.mobileImage && (
-                                        <div className="relative w-[140px] sm:w-[160px] md:w-[180px] lg:w-[200px]">
-                                            <div className="relative h-[280px] w-full overflow-hidden sm:h-[320px] md:h-[360px] lg:h-[420px]">
+                            <AnimatePresence mode="wait">
+                                {activeImage === 'both' ? (
+                                    /* Both Images Side by Side */
+                                    <motion.div
+                                        key="both"
+                                        initial={{
+                                            opacity: 0,
+                                            y: 20,
+                                            scale: 0.96,
+                                        }}
+                                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                                        exit={{
+                                            opacity: 0,
+                                            y: -20,
+                                            scale: 0.96,
+                                        }}
+                                        transition={{
+                                            duration: 0.35,
+                                            ease: [0.16, 1, 0.3, 1],
+                                        }}
+                                        className="flex gap-4 md:gap-6"
+                                    >
+                                        {/* Desktop Image */}
+                                        <motion.div
+                                            className="relative flex-1"
+                                            initial={{ opacity: 0, x: -20 }}
+                                            animate={{ opacity: 1, x: 0 }}
+                                            transition={{
+                                                duration: 0.35,
+                                                delay: 0.1,
+                                                ease: [0.16, 1, 0.3, 1],
+                                            }}
+                                        >
+                                            <div className="relative h-[280px] w-full overflow-hidden rounded-lg sm:h-[320px] md:h-[360px] lg:h-[420px]">
                                                 <img
-                                                    src={`/storage/${portfolio.mobileImage}`}
-                                                    alt={`${portfolio.name}'s portfolio - Mobile`}
+                                                    src={`/storage/${portfolio.desktopImage}`}
+                                                    alt={`${portfolio.name}'s portfolio - Desktop`}
                                                     className="h-full w-full object-contain"
                                                 />
                                             </div>
                                             <span className="mt-2 block text-center text-xs font-medium tracking-wider text-muted-foreground uppercase">
-                                                Mobile
+                                                Desktop
                                             </span>
+                                        </motion.div>
+
+                                        {/* Mobile Image */}
+                                        {portfolio.mobileImage && (
+                                            <motion.div
+                                                className="relative w-[140px] sm:w-[160px] md:w-[180px] lg:w-[200px]"
+                                                initial={{ opacity: 0, x: 20 }}
+                                                animate={{ opacity: 1, x: 0 }}
+                                                transition={{
+                                                    duration: 0.35,
+                                                    delay: 0.15,
+                                                    ease: [0.16, 1, 0.3, 1],
+                                                }}
+                                            >
+                                                <div className="relative h-[280px] w-full overflow-hidden rounded-lg sm:h-[320px] md:h-[360px] lg:h-[420px]">
+                                                    <img
+                                                        src={`/storage/${portfolio.mobileImage}`}
+                                                        alt={`${portfolio.name}'s portfolio - Mobile`}
+                                                        className="h-full w-full object-contain"
+                                                    />
+                                                </div>
+                                                <span className="mt-2 block text-center text-xs font-medium tracking-wider text-muted-foreground uppercase">
+                                                    Mobile
+                                                </span>
+                                            </motion.div>
+                                        )}
+                                    </motion.div>
+                                ) : (
+                                    /* Single Image View - Centered */
+                                    <motion.div
+                                        key={activeImage}
+                                        initial={{
+                                            opacity: 0,
+                                            y: 20,
+                                            scale: 0.96,
+                                        }}
+                                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                                        exit={{
+                                            opacity: 0,
+                                            y: -20,
+                                            scale: 0.96,
+                                        }}
+                                        transition={{
+                                            duration: 0.35,
+                                            ease: [0.16, 1, 0.3, 1],
+                                        }}
+                                        className="flex items-center justify-center"
+                                    >
+                                        <div className="flex flex-col items-center">
+                                            <div
+                                                className={`relative overflow-hidden rounded-lg shadow-lg ${
+                                                    activeImage === 'mobile'
+                                                        ? 'h-[420px] w-[220px] sm:h-[480px] sm:w-[260px] md:h-[540px] md:w-[300px]'
+                                                        : 'h-[280px] w-[360px] sm:h-[340px] sm:w-[440px] md:h-[400px] md:w-[520px] lg:h-[460px] lg:w-[600px]'
+                                                }`}
+                                            >
+                                                <motion.img
+                                                    src={`/storage/${
+                                                        activeImage ===
+                                                            'mobile' &&
+                                                        portfolio.mobileImage
+                                                            ? portfolio.mobileImage
+                                                            : portfolio.desktopImage
+                                                    }`}
+                                                    alt={`${portfolio.name}'s portfolio - ${activeImage}`}
+                                                    className="h-full w-full object-contain"
+                                                    initial={{
+                                                        opacity: 0,
+                                                        scale: 1.05,
+                                                    }}
+                                                    animate={{
+                                                        opacity: 1,
+                                                        scale: 1,
+                                                    }}
+                                                    transition={{
+                                                        duration: 0.4,
+                                                        delay: 0.05,
+                                                        ease: [0.16, 1, 0.3, 1],
+                                                    }}
+                                                />
+                                            </div>
+                                            <motion.span
+                                                initial={{ opacity: 0, y: 10 }}
+                                                animate={{ opacity: 1, y: 0 }}
+                                                transition={{
+                                                    duration: 0.3,
+                                                    delay: 0.2,
+                                                }}
+                                                className="mt-3 block text-center text-xs font-medium tracking-wider text-muted-foreground uppercase"
+                                            >
+                                                {activeImage === 'mobile'
+                                                    ? 'Mobile'
+                                                    : 'Desktop'}{' '}
+                                                View
+                                            </motion.span>
                                         </div>
-                                    )}
-                                </div>
-                            ) : (
-                                /* Single Image View */
-                                <div
-                                    className={`relative overflow-hidden ${
-                                        activeImage === 'mobile'
-                                            ? 'h-[420px] w-[220px] sm:h-[480px] sm:w-[260px] md:h-[540px] md:w-[300px]'
-                                            : 'h-[280px] w-[360px] sm:h-[340px] sm:w-[440px] md:h-[400px] md:w-[520px] lg:h-[460px] lg:w-[600px]'
-                                    }`}
-                                >
-                                    <img
-                                        src={`/storage/${
-                                            activeImage === 'mobile' &&
-                                            portfolio.mobileImage
-                                                ? portfolio.mobileImage
-                                                : portfolio.desktopImage
-                                        }`}
-                                        alt={`${portfolio.name}'s portfolio - ${activeImage}`}
-                                        className="h-full w-full object-contain"
-                                    />
-                                </div>
-                            )}
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
                         </div>
                     </div>
 
