@@ -3,7 +3,15 @@ import { useAppearance } from '@/hooks/use-appearance';
 import { login, logout, register } from '@/routes';
 import { type SharedData } from '@/types';
 import { Head, Link, router, usePage } from '@inertiajs/react';
-import { ArrowUpRight, Check, Moon, Star, Sun } from 'lucide-react';
+import {
+    ArrowUpRight,
+    Check,
+    Eye,
+    EyeOff,
+    Moon,
+    Star,
+    Sun,
+} from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
 import { useState } from 'react';
 
@@ -873,6 +881,7 @@ export default function Works({
     });
 
     const [sidebarOpen, setSidebarOpen] = useState(false);
+    const [desktopSidebarOpen, setDesktopSidebarOpen] = useState(true);
     const [dropdownsOpen, setDropdownsOpen] = useState({
         skills: true,
         techStack: true,
@@ -1006,26 +1015,49 @@ export default function Works({
 
                 <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
                     {/* Page Header */}
-                    <div className="mb-8 text-center">
-                        <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-amber-100 px-4 py-2 dark:bg-amber-950">
-                            <svg
-                                className="h-5 w-5 text-amber-600 dark:text-amber-400"
-                                fill="currentColor"
-                                viewBox="0 0 20 20"
+                    <div className="mb-8">
+                        <div className="flex items-start justify-between">
+                            <div className="flex-1 text-center lg:text-left">
+                                <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-amber-100 px-4 py-2 dark:bg-amber-950">
+                                    <svg
+                                        className="h-5 w-5 text-amber-600 dark:text-amber-400"
+                                        fill="currentColor"
+                                        viewBox="0 0 20 20"
+                                    >
+                                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                    </svg>
+                                    <span className="text-sm font-semibold text-amber-700 dark:text-amber-300">
+                                        Codefolio of the Day
+                                    </span>
+                                </div>
+                                <h1 className="text-3xl font-bold text-zinc-900 dark:text-zinc-100">
+                                    Featured Works
+                                </h1>
+                                <p className="mt-2 text-zinc-600 dark:text-zinc-400">
+                                    Discover exceptional portfolios, handpicked
+                                    by our community
+                                </p>
+                            </div>
+                            {/* Desktop Filter Toggle */}
+                            <button
+                                onClick={() =>
+                                    setDesktopSidebarOpen(!desktopSidebarOpen)
+                                }
+                                className="hidden items-center gap-2 rounded-lg border border-zinc-200 bg-white px-4 py-2 text-sm font-medium text-zinc-900 transition-all duration-200 hover:bg-zinc-50 hover:shadow-md lg:flex dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-100 dark:hover:bg-zinc-800"
                             >
-                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                            </svg>
-                            <span className="text-sm font-semibold text-amber-700 dark:text-amber-300">
-                                Codefolio of the Day
-                            </span>
+                                {desktopSidebarOpen ? (
+                                    <>
+                                        <EyeOff className="h-4 w-4" />
+                                        Hide Filters
+                                    </>
+                                ) : (
+                                    <>
+                                        <Eye className="h-4 w-4" />
+                                        Show Filters
+                                    </>
+                                )}
+                            </button>
                         </div>
-                        <h1 className="text-3xl font-bold text-zinc-900 dark:text-zinc-100">
-                            Featured Works
-                        </h1>
-                        <p className="mt-2 text-zinc-600 dark:text-zinc-400">
-                            Discover exceptional portfolios, handpicked by our
-                            community
-                        </p>
                     </div>
 
                     <div className="flex flex-col gap-6 lg:flex-row">
@@ -1062,372 +1094,427 @@ export default function Works({
                         )}
 
                         {/* Sidebar */}
-                        <aside
-                            className={`${
-                                sidebarOpen
-                                    ? 'translate-x-0'
-                                    : 'translate-x-full'
-                            } fixed top-0 right-0 z-50 flex h-full w-80 flex-col space-y-0 overflow-hidden bg-zinc-50 shadow-xl transition-transform duration-300 lg:relative lg:block lg:h-auto lg:w-64 lg:translate-x-0 lg:overflow-visible lg:bg-transparent lg:shadow-none dark:bg-zinc-950`}
-                        >
-                            {/* Mobile Header with Counter - Only on mobile */}
-                            <div className="flex items-center justify-between border-b border-zinc-200 bg-white p-4 lg:hidden dark:border-zinc-800 dark:bg-zinc-900">
-                                <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100">
-                                    Filters ({getMobileFilterCount()})
-                                </h2>
-                                {getMobileFilterCount() > 0 && (
-                                    <button
-                                        onClick={clearMobileFilters}
-                                        className="text-sm font-medium text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
-                                    >
-                                        Clear ({getMobileFilterCount()})
-                                    </button>
-                                )}
-                            </div>
-
-                            {/* Scrollable Filter Content */}
-                            <div className="flex-1 space-y-6 overflow-y-auto p-4 lg:overflow-visible lg:p-0">
-                                <div className="rounded-lg border border-zinc-200 bg-white p-4 dark:border-zinc-800 dark:bg-zinc-900">
-                                    {/* Desktop Header - Only on desktop */}
-                                    <div className="mb-4 hidden items-center justify-between lg:flex">
+                        <AnimatePresence mode="wait">
+                            {(sidebarOpen || desktopSidebarOpen) && (
+                                <motion.aside
+                                    initial={{
+                                        opacity: 0,
+                                        width: 0,
+                                        x:
+                                            window.innerWidth >= 1024
+                                                ? -20
+                                                : 320,
+                                    }}
+                                    animate={{
+                                        opacity: 1,
+                                        width:
+                                            window.innerWidth >= 1024
+                                                ? 256
+                                                : 320,
+                                        x: 0,
+                                    }}
+                                    exit={{
+                                        opacity: 0,
+                                        width: 0,
+                                        x:
+                                            window.innerWidth >= 1024
+                                                ? -20
+                                                : 320,
+                                    }}
+                                    transition={{
+                                        duration: 0.3,
+                                        ease: 'easeInOut',
+                                    }}
+                                    className={`${
+                                        sidebarOpen
+                                            ? 'translate-x-0'
+                                            : 'translate-x-full'
+                                    } fixed top-0 right-0 z-50 flex h-full flex-col space-y-0 overflow-hidden bg-zinc-50 shadow-xl lg:relative lg:h-auto lg:translate-x-0 lg:overflow-visible lg:bg-transparent lg:shadow-none dark:bg-zinc-950 ${
+                                        desktopSidebarOpen
+                                            ? 'lg:block'
+                                            : 'lg:hidden'
+                                    }`}
+                                >
+                                    {/* Mobile Header with Counter - Only on mobile */}
+                                    <div className="flex items-center justify-between border-b border-zinc-200 bg-white p-4 lg:hidden dark:border-zinc-800 dark:bg-zinc-900">
                                         <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100">
-                                            Filters
+                                            Filters ({getMobileFilterCount()})
                                         </h2>
-                                        {(selectedFilters.skills.length > 0 ||
-                                            selectedFilters.techStack.length >
-                                                0 ||
-                                            selectedFilters.profession.length >
-                                                0) && (
+                                        {getMobileFilterCount() > 0 && (
                                             <button
-                                                onClick={clearFilters}
-                                                className="text-xs text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
+                                                onClick={clearMobileFilters}
+                                                className="text-sm font-medium text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
                                             >
-                                                Clear all
+                                                Clear ({getMobileFilterCount()})
                                             </button>
                                         )}
                                     </div>
 
-                                    {/* Skills Filter */}
-                                    <div className="mb-6">
-                                        <button
-                                            onClick={() =>
-                                                toggleDropdown('skills')
-                                            }
-                                            className="mb-3 flex w-full items-center justify-between text-sm font-medium text-zinc-900 transition-colors hover:text-zinc-700 dark:text-zinc-100 dark:hover:text-zinc-300"
-                                        >
-                                            <span>Skills</span>
-                                            <svg
-                                                className={`h-4 w-4 transition-transform ${
-                                                    dropdownsOpen.skills
-                                                        ? 'rotate-180'
-                                                        : ''
-                                                }`}
-                                                fill="none"
-                                                strokeLinecap="round"
-                                                strokeLinejoin="round"
-                                                strokeWidth={2}
-                                                viewBox="0 0 24 24"
-                                                stroke="currentColor"
-                                            >
-                                                <path d="M19 9l-7 7-7-7" />
-                                            </svg>
-                                        </button>
-                                        {dropdownsOpen.skills && (
-                                            <div className="space-y-2">
-                                                {(showAllFilters.skills
-                                                    ? filterOptions.skills
-                                                    : filterOptions.skills.slice(
-                                                          0,
-                                                          INITIAL_ITEMS_TO_SHOW,
-                                                      )
-                                                ).map((skill) => {
-                                                    // Use temp filters for mobile, regular filters for desktop
-                                                    const currentSkills =
-                                                        sidebarOpen
-                                                            ? tempMobileFilters.skills
-                                                            : selectedFilters.skills;
-                                                    const isSelected =
-                                                        currentSkills.includes(
-                                                            skill,
-                                                        );
-                                                    return (
-                                                        <label
-                                                            key={skill}
-                                                            className="flex cursor-pointer items-center gap-2 text-sm text-zinc-700 dark:text-zinc-300"
-                                                        >
-                                                            <div
-                                                                className={`flex h-4 w-4 items-center justify-center rounded border ${
-                                                                    isSelected
-                                                                        ? 'border-zinc-900 bg-zinc-900 dark:border-zinc-100 dark:bg-zinc-100'
-                                                                        : 'border-zinc-300 dark:border-zinc-600'
-                                                                }`}
-                                                                onClick={() => {
-                                                                    // Use mobile function on mobile, desktop on desktop
-                                                                    if (
-                                                                        window.innerWidth <
-                                                                        1024
-                                                                    ) {
-                                                                        toggleMobileFilter(
-                                                                            'skills',
-                                                                            skill,
-                                                                        );
-                                                                    } else {
-                                                                        toggleFilter(
-                                                                            'skills',
-                                                                            skill,
-                                                                        );
-                                                                    }
-                                                                }}
-                                                            >
-                                                                {isSelected && (
-                                                                    <Check className="h-3 w-3 text-white dark:text-zinc-900" />
-                                                                )}
-                                                            </div>
-                                                            <span>{skill}</span>
-                                                        </label>
-                                                    );
-                                                })}
-                                                {filterOptions.skills.length >
-                                                    INITIAL_ITEMS_TO_SHOW && (
+                                    {/* Scrollable Filter Content */}
+                                    <div className="flex-1 space-y-6 overflow-y-auto p-4 lg:overflow-visible lg:p-0">
+                                        <div className="rounded-lg border border-zinc-200 bg-white p-4 dark:border-zinc-800 dark:bg-zinc-900">
+                                            {/* Desktop Header - Only on desktop */}
+                                            <div className="mb-4 hidden items-center justify-between lg:flex">
+                                                <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100">
+                                                    Filters
+                                                </h2>
+                                                {(selectedFilters.skills
+                                                    .length > 0 ||
+                                                    selectedFilters.techStack
+                                                        .length > 0 ||
+                                                    selectedFilters.profession
+                                                        .length > 0) && (
                                                     <button
-                                                        onClick={() =>
-                                                            toggleShowAll(
-                                                                'skills',
-                                                            )
-                                                        }
+                                                        onClick={clearFilters}
                                                         className="text-xs text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
                                                     >
-                                                        {showAllFilters.skills
-                                                            ? '− Show Less'
-                                                            : `+ See More (${filterOptions.skills.length - INITIAL_ITEMS_TO_SHOW} more)`}
+                                                        Clear all
                                                     </button>
                                                 )}
                                             </div>
-                                        )}
-                                    </div>
 
-                                    {/* Tech Stack Filter */}
-                                    <div className="mb-6">
-                                        <button
-                                            onClick={() =>
-                                                toggleDropdown('techStack')
-                                            }
-                                            className="mb-3 flex w-full items-center justify-between text-sm font-medium text-zinc-900 transition-colors hover:text-zinc-700 dark:text-zinc-100 dark:hover:text-zinc-300"
-                                        >
-                                            <span>Tech Stack</span>
-                                            <svg
-                                                className={`h-4 w-4 transition-transform ${
-                                                    dropdownsOpen.techStack
-                                                        ? 'rotate-180'
-                                                        : ''
-                                                }`}
-                                                fill="none"
-                                                strokeLinecap="round"
-                                                strokeLinejoin="round"
-                                                strokeWidth={2}
-                                                viewBox="0 0 24 24"
-                                                stroke="currentColor"
-                                            >
-                                                <path d="M19 9l-7 7-7-7" />
-                                            </svg>
-                                        </button>
-                                        {dropdownsOpen.techStack && (
-                                            <div className="space-y-2">
-                                                {(showAllFilters.techStack
-                                                    ? filterOptions.techStack
-                                                    : filterOptions.techStack.slice(
-                                                          0,
-                                                          INITIAL_ITEMS_TO_SHOW,
-                                                      )
-                                                ).map((tech) => {
-                                                    // Use temp filters for mobile, regular filters for desktop
-                                                    const currentTechStack =
-                                                        sidebarOpen
-                                                            ? tempMobileFilters.techStack
-                                                            : selectedFilters.techStack;
-                                                    const isSelected =
-                                                        currentTechStack.includes(
-                                                            tech,
-                                                        );
-                                                    return (
-                                                        <label
-                                                            key={tech}
-                                                            className="flex cursor-pointer items-center gap-2 text-sm text-zinc-700 dark:text-zinc-300"
-                                                        >
-                                                            <div
-                                                                className={`flex h-4 w-4 items-center justify-center rounded border ${
-                                                                    isSelected
-                                                                        ? 'border-zinc-900 bg-zinc-900 dark:border-zinc-100 dark:bg-zinc-100'
-                                                                        : 'border-zinc-300 dark:border-zinc-600'
-                                                                }`}
-                                                                onClick={() => {
-                                                                    // Use mobile function on mobile, desktop on desktop
-                                                                    if (
-                                                                        window.innerWidth <
-                                                                        1024
-                                                                    ) {
-                                                                        toggleMobileFilter(
-                                                                            'techStack',
-                                                                            tech,
-                                                                        );
-                                                                    } else {
-                                                                        toggleFilter(
-                                                                            'techStack',
-                                                                            tech,
-                                                                        );
-                                                                    }
-                                                                }}
-                                                            >
-                                                                {isSelected && (
-                                                                    <Check className="h-3 w-3 text-white dark:text-zinc-900" />
-                                                                )}
-                                                            </div>
-                                                            <span>{tech}</span>
-                                                        </label>
-                                                    );
-                                                })}
-                                                {filterOptions.techStack
-                                                    .length >
-                                                    INITIAL_ITEMS_TO_SHOW && (
-                                                    <button
-                                                        onClick={() =>
-                                                            toggleShowAll(
-                                                                'techStack',
-                                                            )
-                                                        }
-                                                        className="text-xs text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
+                                            {/* Skills Filter */}
+                                            <div className="mb-6">
+                                                <button
+                                                    onClick={() =>
+                                                        toggleDropdown('skills')
+                                                    }
+                                                    className="mb-3 flex w-full items-center justify-between text-sm font-medium text-zinc-900 transition-colors hover:text-zinc-700 dark:text-zinc-100 dark:hover:text-zinc-300"
+                                                >
+                                                    <span>Skills</span>
+                                                    <svg
+                                                        className={`h-4 w-4 transition-transform ${
+                                                            dropdownsOpen.skills
+                                                                ? 'rotate-180'
+                                                                : ''
+                                                        }`}
+                                                        fill="none"
+                                                        strokeLinecap="round"
+                                                        strokeLinejoin="round"
+                                                        strokeWidth={2}
+                                                        viewBox="0 0 24 24"
+                                                        stroke="currentColor"
                                                     >
-                                                        {showAllFilters.techStack
-                                                            ? '− Show Less'
-                                                            : `+ See More (${filterOptions.techStack.length - INITIAL_ITEMS_TO_SHOW} more)`}
-                                                    </button>
+                                                        <path d="M19 9l-7 7-7-7" />
+                                                    </svg>
+                                                </button>
+                                                {dropdownsOpen.skills && (
+                                                    <div className="space-y-2">
+                                                        {(showAllFilters.skills
+                                                            ? filterOptions.skills
+                                                            : filterOptions.skills.slice(
+                                                                  0,
+                                                                  INITIAL_ITEMS_TO_SHOW,
+                                                              )
+                                                        ).map((skill) => {
+                                                            // Use temp filters for mobile, regular filters for desktop
+                                                            const currentSkills =
+                                                                sidebarOpen
+                                                                    ? tempMobileFilters.skills
+                                                                    : selectedFilters.skills;
+                                                            const isSelected =
+                                                                currentSkills.includes(
+                                                                    skill,
+                                                                );
+                                                            return (
+                                                                <label
+                                                                    key={skill}
+                                                                    className="flex cursor-pointer items-center gap-2 text-sm text-zinc-700 dark:text-zinc-300"
+                                                                >
+                                                                    <div
+                                                                        className={`flex h-4 w-4 items-center justify-center rounded border ${
+                                                                            isSelected
+                                                                                ? 'border-zinc-900 bg-zinc-900 dark:border-zinc-100 dark:bg-zinc-100'
+                                                                                : 'border-zinc-300 dark:border-zinc-600'
+                                                                        }`}
+                                                                        onClick={() => {
+                                                                            // Use mobile function on mobile, desktop on desktop
+                                                                            if (
+                                                                                window.innerWidth <
+                                                                                1024
+                                                                            ) {
+                                                                                toggleMobileFilter(
+                                                                                    'skills',
+                                                                                    skill,
+                                                                                );
+                                                                            } else {
+                                                                                toggleFilter(
+                                                                                    'skills',
+                                                                                    skill,
+                                                                                );
+                                                                            }
+                                                                        }}
+                                                                    >
+                                                                        {isSelected && (
+                                                                            <Check className="h-3 w-3 text-white dark:text-zinc-900" />
+                                                                        )}
+                                                                    </div>
+                                                                    <span>
+                                                                        {skill}
+                                                                    </span>
+                                                                </label>
+                                                            );
+                                                        })}
+                                                        {filterOptions.skills
+                                                            .length >
+                                                            INITIAL_ITEMS_TO_SHOW && (
+                                                            <button
+                                                                onClick={() =>
+                                                                    toggleShowAll(
+                                                                        'skills',
+                                                                    )
+                                                                }
+                                                                className="text-xs text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
+                                                            >
+                                                                {showAllFilters.skills
+                                                                    ? '− Show Less'
+                                                                    : `+ See More (${filterOptions.skills.length - INITIAL_ITEMS_TO_SHOW} more)`}
+                                                            </button>
+                                                        )}
+                                                    </div>
                                                 )}
                                             </div>
-                                        )}
-                                    </div>
 
-                                    {/* Profession Filter */}
-                                    <div className="mb-6">
-                                        <button
-                                            onClick={() =>
-                                                toggleDropdown('profession')
-                                            }
-                                            className="mb-3 flex w-full items-center justify-between text-sm font-medium text-zinc-900 transition-colors hover:text-zinc-700 dark:text-zinc-100 dark:hover:text-zinc-300"
-                                        >
-                                            <span>Profession</span>
-                                            <svg
-                                                className={`h-4 w-4 transition-transform ${
-                                                    dropdownsOpen.profession
-                                                        ? 'rotate-180'
-                                                        : ''
-                                                }`}
-                                                fill="none"
-                                                strokeLinecap="round"
-                                                strokeLinejoin="round"
-                                                strokeWidth={2}
-                                                viewBox="0 0 24 24"
-                                                stroke="currentColor"
-                                            >
-                                                <path d="M19 9l-7 7-7-7" />
-                                            </svg>
-                                        </button>
-                                        {dropdownsOpen.profession && (
-                                            <div className="space-y-2">
-                                                {(showAllFilters.profession
-                                                    ? filterOptions.profession
-                                                    : filterOptions.profession.slice(
-                                                          0,
-                                                          INITIAL_ITEMS_TO_SHOW,
-                                                      )
-                                                ).map((prof) => {
-                                                    // Use temp filters for mobile, regular filters for desktop
-                                                    const currentProfession =
-                                                        sidebarOpen
-                                                            ? tempMobileFilters.profession
-                                                            : selectedFilters.profession;
-                                                    const isSelected =
-                                                        currentProfession.includes(
-                                                            prof,
-                                                        );
-                                                    return (
-                                                        <label
-                                                            key={prof}
-                                                            className="flex cursor-pointer items-center gap-2 text-sm text-zinc-700 dark:text-zinc-300"
-                                                        >
-                                                            <div
-                                                                className={`flex h-4 w-4 items-center justify-center rounded border ${
-                                                                    isSelected
-                                                                        ? 'border-zinc-900 bg-zinc-900 dark:border-zinc-100 dark:bg-zinc-100'
-                                                                        : 'border-zinc-300 dark:border-zinc-600'
-                                                                }`}
-                                                                onClick={() => {
-                                                                    // Use mobile function on mobile, desktop on desktop
-                                                                    if (
-                                                                        window.innerWidth <
-                                                                        1024
-                                                                    ) {
-                                                                        toggleMobileFilter(
-                                                                            'profession',
-                                                                            prof,
-                                                                        );
-                                                                    } else {
-                                                                        toggleFilter(
-                                                                            'profession',
-                                                                            prof,
-                                                                        );
-                                                                    }
-                                                                }}
-                                                            >
-                                                                {isSelected && (
-                                                                    <Check className="h-3 w-3 text-white dark:text-zinc-900" />
-                                                                )}
-                                                            </div>
-                                                            <span>{prof}</span>
-                                                        </label>
-                                                    );
-                                                })}
-                                                {filterOptions.profession
-                                                    .length >
-                                                    INITIAL_ITEMS_TO_SHOW && (
-                                                    <button
-                                                        onClick={() =>
-                                                            toggleShowAll(
-                                                                'profession',
-                                                            )
-                                                        }
-                                                        className="text-xs text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
+                                            {/* Tech Stack Filter */}
+                                            <div className="mb-6">
+                                                <button
+                                                    onClick={() =>
+                                                        toggleDropdown(
+                                                            'techStack',
+                                                        )
+                                                    }
+                                                    className="mb-3 flex w-full items-center justify-between text-sm font-medium text-zinc-900 transition-colors hover:text-zinc-700 dark:text-zinc-100 dark:hover:text-zinc-300"
+                                                >
+                                                    <span>Tech Stack</span>
+                                                    <svg
+                                                        className={`h-4 w-4 transition-transform ${
+                                                            dropdownsOpen.techStack
+                                                                ? 'rotate-180'
+                                                                : ''
+                                                        }`}
+                                                        fill="none"
+                                                        strokeLinecap="round"
+                                                        strokeLinejoin="round"
+                                                        strokeWidth={2}
+                                                        viewBox="0 0 24 24"
+                                                        stroke="currentColor"
                                                     >
-                                                        {showAllFilters.profession
-                                                            ? '− Show Less'
-                                                            : `+ See More (${filterOptions.profession.length - INITIAL_ITEMS_TO_SHOW} more)`}
-                                                    </button>
+                                                        <path d="M19 9l-7 7-7-7" />
+                                                    </svg>
+                                                </button>
+                                                {dropdownsOpen.techStack && (
+                                                    <div className="space-y-2">
+                                                        {(showAllFilters.techStack
+                                                            ? filterOptions.techStack
+                                                            : filterOptions.techStack.slice(
+                                                                  0,
+                                                                  INITIAL_ITEMS_TO_SHOW,
+                                                              )
+                                                        ).map((tech) => {
+                                                            // Use temp filters for mobile, regular filters for desktop
+                                                            const currentTechStack =
+                                                                sidebarOpen
+                                                                    ? tempMobileFilters.techStack
+                                                                    : selectedFilters.techStack;
+                                                            const isSelected =
+                                                                currentTechStack.includes(
+                                                                    tech,
+                                                                );
+                                                            return (
+                                                                <label
+                                                                    key={tech}
+                                                                    className="flex cursor-pointer items-center gap-2 text-sm text-zinc-700 dark:text-zinc-300"
+                                                                >
+                                                                    <div
+                                                                        className={`flex h-4 w-4 items-center justify-center rounded border ${
+                                                                            isSelected
+                                                                                ? 'border-zinc-900 bg-zinc-900 dark:border-zinc-100 dark:bg-zinc-100'
+                                                                                : 'border-zinc-300 dark:border-zinc-600'
+                                                                        }`}
+                                                                        onClick={() => {
+                                                                            // Use mobile function on mobile, desktop on desktop
+                                                                            if (
+                                                                                window.innerWidth <
+                                                                                1024
+                                                                            ) {
+                                                                                toggleMobileFilter(
+                                                                                    'techStack',
+                                                                                    tech,
+                                                                                );
+                                                                            } else {
+                                                                                toggleFilter(
+                                                                                    'techStack',
+                                                                                    tech,
+                                                                                );
+                                                                            }
+                                                                        }}
+                                                                    >
+                                                                        {isSelected && (
+                                                                            <Check className="h-3 w-3 text-white dark:text-zinc-900" />
+                                                                        )}
+                                                                    </div>
+                                                                    <span>
+                                                                        {tech}
+                                                                    </span>
+                                                                </label>
+                                                            );
+                                                        })}
+                                                        {filterOptions.techStack
+                                                            .length >
+                                                            INITIAL_ITEMS_TO_SHOW && (
+                                                            <button
+                                                                onClick={() =>
+                                                                    toggleShowAll(
+                                                                        'techStack',
+                                                                    )
+                                                                }
+                                                                className="text-xs text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
+                                                            >
+                                                                {showAllFilters.techStack
+                                                                    ? '− Show Less'
+                                                                    : `+ See More (${filterOptions.techStack.length - INITIAL_ITEMS_TO_SHOW} more)`}
+                                                            </button>
+                                                        )}
+                                                    </div>
                                                 )}
                                             </div>
-                                        )}
-                                    </div>
-                                </div>
-                            </div>
 
-                            {/* Mobile Action Buttons - Only on mobile */}
-                            <div className="border-t border-zinc-200 bg-white p-4 lg:hidden dark:border-zinc-800 dark:bg-zinc-900">
-                                <div className="flex gap-3">
-                                    <button
-                                        onClick={closeMobileFilters}
-                                        className="flex-1 rounded-lg border border-zinc-300 bg-white px-4 py-2.5 text-sm font-medium text-zinc-700 transition-colors hover:bg-zinc-50 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700"
-                                    >
-                                        Close
-                                    </button>
-                                    <button
-                                        onClick={applyMobileFilters}
-                                        className="flex-1 rounded-lg bg-zinc-900 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-zinc-800 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200"
-                                    >
-                                        Apply Changes
-                                    </button>
-                                </div>
-                            </div>
-                        </aside>
+                                            {/* Profession Filter */}
+                                            <div className="mb-6">
+                                                <button
+                                                    onClick={() =>
+                                                        toggleDropdown(
+                                                            'profession',
+                                                        )
+                                                    }
+                                                    className="mb-3 flex w-full items-center justify-between text-sm font-medium text-zinc-900 transition-colors hover:text-zinc-700 dark:text-zinc-100 dark:hover:text-zinc-300"
+                                                >
+                                                    <span>Profession</span>
+                                                    <svg
+                                                        className={`h-4 w-4 transition-transform ${
+                                                            dropdownsOpen.profession
+                                                                ? 'rotate-180'
+                                                                : ''
+                                                        }`}
+                                                        fill="none"
+                                                        strokeLinecap="round"
+                                                        strokeLinejoin="round"
+                                                        strokeWidth={2}
+                                                        viewBox="0 0 24 24"
+                                                        stroke="currentColor"
+                                                    >
+                                                        <path d="M19 9l-7 7-7-7" />
+                                                    </svg>
+                                                </button>
+                                                {dropdownsOpen.profession && (
+                                                    <div className="space-y-2">
+                                                        {(showAllFilters.profession
+                                                            ? filterOptions.profession
+                                                            : filterOptions.profession.slice(
+                                                                  0,
+                                                                  INITIAL_ITEMS_TO_SHOW,
+                                                              )
+                                                        ).map((prof) => {
+                                                            // Use temp filters for mobile, regular filters for desktop
+                                                            const currentProfession =
+                                                                sidebarOpen
+                                                                    ? tempMobileFilters.profession
+                                                                    : selectedFilters.profession;
+                                                            const isSelected =
+                                                                currentProfession.includes(
+                                                                    prof,
+                                                                );
+                                                            return (
+                                                                <label
+                                                                    key={prof}
+                                                                    className="flex cursor-pointer items-center gap-2 text-sm text-zinc-700 dark:text-zinc-300"
+                                                                >
+                                                                    <div
+                                                                        className={`flex h-4 w-4 items-center justify-center rounded border ${
+                                                                            isSelected
+                                                                                ? 'border-zinc-900 bg-zinc-900 dark:border-zinc-100 dark:bg-zinc-100'
+                                                                                : 'border-zinc-300 dark:border-zinc-600'
+                                                                        }`}
+                                                                        onClick={() => {
+                                                                            // Use mobile function on mobile, desktop on desktop
+                                                                            if (
+                                                                                window.innerWidth <
+                                                                                1024
+                                                                            ) {
+                                                                                toggleMobileFilter(
+                                                                                    'profession',
+                                                                                    prof,
+                                                                                );
+                                                                            } else {
+                                                                                toggleFilter(
+                                                                                    'profession',
+                                                                                    prof,
+                                                                                );
+                                                                            }
+                                                                        }}
+                                                                    >
+                                                                        {isSelected && (
+                                                                            <Check className="h-3 w-3 text-white dark:text-zinc-900" />
+                                                                        )}
+                                                                    </div>
+                                                                    <span>
+                                                                        {prof}
+                                                                    </span>
+                                                                </label>
+                                                            );
+                                                        })}
+                                                        {filterOptions
+                                                            .profession.length >
+                                                            INITIAL_ITEMS_TO_SHOW && (
+                                                            <button
+                                                                onClick={() =>
+                                                                    toggleShowAll(
+                                                                        'profession',
+                                                                    )
+                                                                }
+                                                                className="text-xs text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
+                                                            >
+                                                                {showAllFilters.profession
+                                                                    ? '− Show Less'
+                                                                    : `+ See More (${filterOptions.profession.length - INITIAL_ITEMS_TO_SHOW} more)`}
+                                                            </button>
+                                                        )}
+                                                    </div>
+                                                )}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* Mobile Action Buttons - Only on mobile */}
+                                    <div className="border-t border-zinc-200 bg-white p-4 lg:hidden dark:border-zinc-800 dark:bg-zinc-900">
+                                        <div className="flex gap-3">
+                                            <button
+                                                onClick={closeMobileFilters}
+                                                className="flex-1 rounded-lg border border-zinc-300 bg-white px-4 py-2.5 text-sm font-medium text-zinc-700 transition-colors hover:bg-zinc-50 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700"
+                                            >
+                                                Close
+                                            </button>
+                                            <button
+                                                onClick={applyMobileFilters}
+                                                className="flex-1 rounded-lg bg-zinc-900 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-zinc-800 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200"
+                                            >
+                                                Apply Changes
+                                            </button>
+                                        </div>
+                                    </div>
+                                </motion.aside>
+                            )}
+                        </AnimatePresence>
 
                         {/* Portfolio Grid */}
-                        <div className="flex-1">
+                        <motion.div
+                            layout
+                            transition={{
+                                duration: 0.3,
+                                ease: 'easeInOut',
+                            }}
+                            className="flex-1"
+                        >
                             <div className="mb-4 text-sm text-zinc-600 dark:text-zinc-400">
                                 Showing {filteredPortfolios.length} of{' '}
                                 {cotdPortfolios.length} featured portfolios
@@ -1448,7 +1535,13 @@ export default function Works({
                                 </div>
                             ) : (
                                 <>
-                                    <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3">
+                                    <div
+                                        className={`grid grid-cols-1 gap-6 transition-all duration-300 sm:grid-cols-2 ${
+                                            desktopSidebarOpen
+                                                ? 'lg:grid-cols-2 xl:grid-cols-3'
+                                                : 'lg:grid-cols-3 xl:grid-cols-4'
+                                        }`}
+                                    >
                                         {filteredPortfolios.map(
                                             (portfolio, index) => (
                                                 <COTDCard
@@ -1506,7 +1599,7 @@ export default function Works({
                                     </motion.div>
                                 </>
                             )}
-                        </div>
+                        </motion.div>
                     </div>
                 </div>
 
