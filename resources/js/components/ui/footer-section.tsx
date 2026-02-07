@@ -194,100 +194,90 @@ function Footerdemo() {
                         <h3 className="mb-4 text-lg font-semibold">
                             Follow Us
                         </h3>
-                        <div className="mb-6 flex space-x-4">
-                            <TooltipProvider>
+                        <TooltipProvider delayDuration={200}>
+                            <div className="mb-6 flex space-x-4">
                                 <Tooltip>
                                     <TooltipTrigger asChild>
-                                        <Button
-                                            variant="outline"
-                                            size="icon"
-                                            className="rounded-full cursor-default opacity-60 hover:opacity-70"
-                                            disabled
-                                        >
-                                            <Facebook className="h-4 w-4" />
-                                            <span className="sr-only">
-                                                Facebook - Coming Soon
-                                            </span>
-                                        </Button>
+                                        <span className="inline-block">
+                                            <Button
+                                                variant="outline"
+                                                size="icon"
+                                                className="rounded-full cursor-not-allowed opacity-50 transition-all duration-200 hover:scale-110 hover:opacity-70"
+                                                disabled
+                                            >
+                                                <Facebook className="h-4 w-4" />
+                                                <span className="sr-only">
+                                                    Facebook - Coming Soon
+                                                </span>
+                                            </Button>
+                                        </span>
                                     </TooltipTrigger>
-                                    <TooltipContent className="bg-zinc-900 px-3 py-2 text-sm font-medium text-white dark:bg-zinc-100 dark:text-zinc-900">
-                                        <div className="flex flex-col items-center gap-1">
-                                            <p className="font-semibold">Facebook</p>
-                                            <p className="text-xs opacity-80">Coming Soon</p>
-                                        </div>
+                                    <TooltipContent className="bg-zinc-900 px-3 py-1.5 text-xs font-medium text-white dark:bg-zinc-100 dark:text-zinc-900">
+                                        <p>Coming Soon!</p>
                                     </TooltipContent>
                                 </Tooltip>
-                            </TooltipProvider>
-                            <TooltipProvider>
                                 <Tooltip>
                                     <TooltipTrigger asChild>
-                                        <Button
-                                            variant="outline"
-                                            size="icon"
-                                            className="rounded-full cursor-default opacity-60 hover:opacity-70"
-                                            disabled
-                                        >
-                                            <Twitter className="h-4 w-4" />
-                                            <span className="sr-only">
-                                                Twitter - Coming Soon
-                                            </span>
-                                        </Button>
+                                        <span className="inline-block">
+                                            <Button
+                                                variant="outline"
+                                                size="icon"
+                                                className="rounded-full cursor-not-allowed opacity-50 transition-all duration-200 hover:scale-110 hover:opacity-70"
+                                                disabled
+                                            >
+                                                <Twitter className="h-4 w-4" />
+                                                <span className="sr-only">
+                                                    Twitter - Coming Soon
+                                                </span>
+                                            </Button>
+                                        </span>
                                     </TooltipTrigger>
-                                    <TooltipContent className="bg-zinc-900 px-3 py-2 text-sm font-medium text-white dark:bg-zinc-100 dark:text-zinc-900">
-                                        <div className="flex flex-col items-center gap-1">
-                                            <p className="font-semibold">Twitter</p>
-                                            <p className="text-xs opacity-80">Coming Soon</p>
-                                        </div>
+                                    <TooltipContent className="bg-zinc-900 px-3 py-1.5 text-xs font-medium text-white dark:bg-zinc-100 dark:text-zinc-900">
+                                        <p>Coming Soon!</p>
                                     </TooltipContent>
                                 </Tooltip>
-                            </TooltipProvider>
-                            <TooltipProvider>
                                 <Tooltip>
                                     <TooltipTrigger asChild>
-                                        <Button
-                                            variant="outline"
-                                            size="icon"
-                                            className="rounded-full cursor-default opacity-60 hover:opacity-70"
-                                            disabled
-                                        >
-                                            <Instagram className="h-4 w-4" />
-                                            <span className="sr-only">
-                                                Instagram - Coming Soon
-                                            </span>
-                                        </Button>
+                                        <span className="inline-block">
+                                            <Button
+                                                variant="outline"
+                                                size="icon"
+                                                className="rounded-full cursor-not-allowed opacity-50 transition-all duration-200 hover:scale-110 hover:opacity-70"
+                                                disabled
+                                            >
+                                                <Instagram className="h-4 w-4" />
+                                                <span className="sr-only">
+                                                    Instagram - Coming Soon
+                                                </span>
+                                            </Button>
+                                        </span>
                                     </TooltipTrigger>
-                                    <TooltipContent className="bg-zinc-900 px-3 py-2 text-sm font-medium text-white dark:bg-zinc-100 dark:text-zinc-900">
-                                        <div className="flex flex-col items-center gap-1">
-                                            <p className="font-semibold">Instagram</p>
-                                            <p className="text-xs opacity-80">Coming Soon</p>
-                                        </div>
+                                    <TooltipContent className="bg-zinc-900 px-3 py-1.5 text-xs font-medium text-white dark:bg-zinc-100 dark:text-zinc-900">
+                                        <p>Coming Soon!</p>
                                     </TooltipContent>
                                 </Tooltip>
-                            </TooltipProvider>
-                            <TooltipProvider>
                                 <Tooltip>
                                     <TooltipTrigger asChild>
-                                        <Button
-                                            variant="outline"
-                                            size="icon"
-                                            className="rounded-full cursor-default opacity-60 hover:opacity-70"
-                                            disabled
-                                        >
-                                            <Linkedin className="h-4 w-4" />
-                                            <span className="sr-only">
-                                                LinkedIn - Coming Soon
-                                            </span>
-                                        </Button>
+                                        <span className="inline-block">
+                                            <Button
+                                                variant="outline"
+                                                size="icon"
+                                                className="rounded-full cursor-not-allowed opacity-50 transition-all duration-200 hover:scale-110 hover:opacity-70"
+                                                disabled
+                                            >
+                                                <Linkedin className="h-4 w-4" />
+                                                <span className="sr-only">
+                                                    LinkedIn - Coming Soon
+                                                </span>
+                                            </Button>
+                                        </span>
                                     </TooltipTrigger>
-                                    <TooltipContent className="bg-zinc-900 px-3 py-2 text-sm font-medium text-white dark:bg-zinc-100 dark:text-zinc-900">
-                                        <div className="flex flex-col items-center gap-1">
-                                            <p className="font-semibold">LinkedIn</p>
-                                            <p className="text-xs opacity-80">Coming Soon</p>
-                                        </div>
+                                    <TooltipContent className="bg-zinc-900 px-3 py-1.5 text-xs font-medium text-white dark:bg-zinc-100 dark:text-zinc-900">
+                                        <p>Coming Soon!</p>
                                     </TooltipContent>
                                 </Tooltip>
-                            </TooltipProvider>
-                        </div>
+                            </div>
+                        </TooltipProvider>
                         <TooltipProvider>
                             <Tooltip>
                                 <TooltipTrigger asChild>
