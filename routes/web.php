@@ -76,6 +76,15 @@ Route::middleware(['auth', EnsureUserIsAdmin::class])->prefix('admin')->group(fu
     Route::post('/cotd/{user}/toggle', [CotdController::class, 'toggleFeatured'])->name('admin.cotd.toggle');
     Route::delete('/cotd/{user}', [CotdController::class, 'destroy'])->name('admin.cotd.destroy');
     
+    // Account Handler routes
+    Route::get('/accounts', [App\Http\Controllers\Admin\AccountHandlerController::class, 'index'])->name('admin.accounts');
+    Route::get('/accounts/{user}', [App\Http\Controllers\Admin\AccountHandlerController::class, 'show'])->name('admin.accounts.show');
+    Route::post('/accounts/{user}/toggle-admin', [App\Http\Controllers\Admin\AccountHandlerController::class, 'toggleAdmin'])->name('admin.accounts.toggle-admin');
+    Route::post('/accounts/{user}/toggle-verification', [App\Http\Controllers\Admin\AccountHandlerController::class, 'toggleVerification'])->name('admin.accounts.toggle-verification');
+    Route::post('/accounts/{user}/clear-otp', [App\Http\Controllers\Admin\AccountHandlerController::class, 'clearOtpAttempts'])->name('admin.accounts.clear-otp');
+    Route::post('/accounts/{user}/clear-2fa', [App\Http\Controllers\Admin\AccountHandlerController::class, 'clear2FA'])->name('admin.accounts.clear-2fa');
+    Route::delete('/accounts/{user}', [App\Http\Controllers\Admin\AccountHandlerController::class, 'destroy'])->name('admin.accounts.destroy');
+    
     Route::get('/contacts', [ContactController::class, 'index'])->name('admin.contacts');
     Route::post('/contacts/delete', [ContactController::class, 'deleteMultiple'])->name('admin.contacts.delete');
 });

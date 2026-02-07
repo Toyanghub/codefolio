@@ -9,12 +9,14 @@ import { Head, Link, router, usePage } from '@inertiajs/react';
 import {
     Calendar,
     ExternalLink,
+    Mail,
     Moon,
     Search,
     Star,
     StarOff,
     Sun,
     Trash2,
+    Users,
 } from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
 import { useState } from 'react';
@@ -603,23 +605,32 @@ export default function AdminCotd({
                                 </span>
                             </p>
                         </div>
-                        <Link
-                            href="/admin/contacts"
-                            className="inline-flex items-center gap-2 rounded-lg border border-zinc-200 bg-white px-4 py-2 text-sm font-medium text-zinc-700 transition-colors hover:bg-zinc-100 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700"
-                        >
-                            <svg
-                                className="h-4 w-4"
-                                fill="none"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                viewBox="0 0 24 24"
-                                stroke="currentColor"
+                        <div className="flex flex-col gap-3">
+                            <Link
+                                href="/admin/contacts"
+                                className="inline-flex items-center gap-2 rounded-lg border border-zinc-200 bg-white px-4 py-2 text-sm font-medium text-zinc-700 transition-colors hover:bg-zinc-100 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700"
                             >
-                                <path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                            </svg>
-                            Contact Messages
-                        </Link>
+                                <svg
+                                    className="h-4 w-4"
+                                    fill="none"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                >
+                                    <path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                                </svg>
+                                Contact Messages
+                            </Link>
+                            <Link
+                                href="/admin/accounts"
+                                className="inline-flex items-center gap-2 rounded-lg border border-zinc-200 bg-white px-4 py-2 text-sm font-medium text-zinc-700 transition-colors hover:bg-zinc-100 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700"
+                            >
+                                <Users className="h-4 w-4" />
+                                Account Handler
+                            </Link>
+                        </div>
                     </div>
 
                     {/* Filter Tabs */}
@@ -898,6 +909,24 @@ export default function AdminCotd({
                         portfolioName={portfolioToDelete?.name || ''}
                         isDeleting={isDeleting}
                     />
+
+                    {/* Admin Panel Links */}
+                    <div className="mt-8 flex flex-wrap gap-3">
+                        <Link
+                            href="/admin/accounts"
+                            className="inline-flex items-center gap-2 rounded-lg border border-zinc-200 bg-white px-4 py-2 text-sm font-medium text-zinc-900 transition-colors hover:bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-100 dark:hover:bg-zinc-800"
+                        >
+                            <Users className="h-4 w-4" />
+                            Account Handler
+                        </Link>
+                        <Link
+                            href="/admin/contacts"
+                            className="inline-flex items-center gap-2 rounded-lg border border-zinc-200 bg-white px-4 py-2 text-sm font-medium text-zinc-900 transition-colors hover:bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-100 dark:hover:bg-zinc-800"
+                        >
+                            <Mail className="h-4 w-4" />
+                            Contact Submissions
+                        </Link>
+                    </div>
                 </div>
 
                 <Footerdemo />
