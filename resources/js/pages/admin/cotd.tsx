@@ -180,30 +180,44 @@ function Navbar({ canRegister = true }: { canRegister?: boolean }) {
 
                                             <div className="border-t border-zinc-200 dark:border-zinc-800" />
 
-                                            {/* Admin Link - Only visible to admins */}
+                                            {/* Admin Links - Only visible to admins */}
                                             {!!auth.user.is_admin && (
                                                 <>
                                                     <Link
                                                         href="/admin/cotd"
-                                                        className="flex items-center gap-2 rounded-md bg-gradient-to-r from-amber-500 to-orange-500 px-3 py-2 text-sm font-medium text-white shadow-sm transition-all hover:from-amber-600 hover:to-orange-600 hover:shadow-md"
+                                                        className="flex items-center gap-2 rounded-md px-3 py-2 text-sm text-zinc-700 transition-colors hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-800"
                                                         onClick={() =>
                                                             setUserMenuOpen(
                                                                 false,
                                                             )
                                                         }
                                                     >
-                                                        <svg
-                                                            className="h-4 w-4"
-                                                            fill="none"
-                                                            strokeLinecap="round"
-                                                            strokeLinejoin="round"
-                                                            strokeWidth={2}
-                                                            viewBox="0 0 24 24"
-                                                            stroke="currentColor"
-                                                        >
-                                                            <path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                                                        </svg>
-                                                        Admin Panel
+                                                        <Star className="h-4 w-4" />
+                                                        COTD Panel
+                                                    </Link>
+                                                    <Link
+                                                        href="/admin/contacts"
+                                                        className="flex items-center gap-2 rounded-md px-3 py-2 text-sm text-zinc-700 transition-colors hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-800"
+                                                        onClick={() =>
+                                                            setUserMenuOpen(
+                                                                false,
+                                                            )
+                                                        }
+                                                    >
+                                                        <Mail className="h-4 w-4" />
+                                                        Contact Messages
+                                                    </Link>
+                                                    <Link
+                                                        href="/admin/accounts"
+                                                        className="flex items-center gap-2 rounded-md px-3 py-2 text-sm text-zinc-700 transition-colors hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-800"
+                                                        onClick={() =>
+                                                            setUserMenuOpen(
+                                                                false,
+                                                            )
+                                                        }
+                                                    >
+                                                        <Users className="h-4 w-4" />
+                                                        Account Handler
                                                     </Link>
                                                     <div className="border-t border-zinc-200 dark:border-zinc-800" />
                                                 </>
@@ -416,26 +430,38 @@ function Navbar({ canRegister = true }: { canRegister?: boolean }) {
                                 {/* Mobile Menu Items */}
                                 <div className="space-y-1">
                                     {!!auth.user.is_admin && (
-                                        <Link
-                                            href="/admin/cotd"
-                                            className="flex items-center gap-3 rounded-lg bg-gradient-to-r from-amber-500 to-orange-500 px-4 py-3 text-sm font-medium text-white shadow-sm transition-all hover:from-amber-600 hover:to-orange-600"
-                                            onClick={() =>
-                                                setMobileMenuOpen(false)
-                                            }
-                                        >
-                                            <svg
-                                                className="h-5 w-5"
-                                                fill="none"
-                                                strokeLinecap="round"
-                                                strokeLinejoin="round"
-                                                strokeWidth={2}
-                                                viewBox="0 0 24 24"
-                                                stroke="currentColor"
+                                        <>
+                                            <Link
+                                                href="/admin/cotd"
+                                                className="flex items-center gap-3 rounded-lg px-4 py-3 text-sm text-zinc-700 hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-800"
+                                                onClick={() =>
+                                                    setMobileMenuOpen(false)
+                                                }
                                             >
-                                                <path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                                            </svg>
-                                            Admin Panel
-                                        </Link>
+                                                <Star className="h-5 w-5" />
+                                                COTD Panel
+                                            </Link>
+                                            <Link
+                                                href="/admin/contacts"
+                                                className="flex items-center gap-3 rounded-lg px-4 py-3 text-sm text-zinc-700 hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-800"
+                                                onClick={() =>
+                                                    setMobileMenuOpen(false)
+                                                }
+                                            >
+                                                <Mail className="h-5 w-5" />
+                                                Contact Messages
+                                            </Link>
+                                            <Link
+                                                href="/admin/accounts"
+                                                className="flex items-center gap-3 rounded-lg px-4 py-3 text-sm text-zinc-700 hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-800"
+                                                onClick={() =>
+                                                    setMobileMenuOpen(false)
+                                                }
+                                            >
+                                                <Users className="h-5 w-5" />
+                                                Account Handler
+                                            </Link>
+                                        </>
                                     )}
 
                                     <button
@@ -604,32 +630,6 @@ export default function AdminCotd({
                                     featured
                                 </span>
                             </p>
-                        </div>
-                        <div className="flex flex-col gap-3">
-                            <Link
-                                href="/admin/contacts"
-                                className="inline-flex items-center gap-2 rounded-lg border border-zinc-200 bg-white px-4 py-2 text-sm font-medium text-zinc-700 transition-colors hover:bg-zinc-100 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700"
-                            >
-                                <svg
-                                    className="h-4 w-4"
-                                    fill="none"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth={2}
-                                    viewBox="0 0 24 24"
-                                    stroke="currentColor"
-                                >
-                                    <path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                                </svg>
-                                Contact Messages
-                            </Link>
-                            <Link
-                                href="/admin/accounts"
-                                className="inline-flex items-center gap-2 rounded-lg border border-zinc-200 bg-white px-4 py-2 text-sm font-medium text-zinc-700 transition-colors hover:bg-zinc-100 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700"
-                            >
-                                <Users className="h-4 w-4" />
-                                Account Handler
-                            </Link>
                         </div>
                     </div>
 
@@ -911,22 +911,7 @@ export default function AdminCotd({
                     />
 
                     {/* Admin Panel Links */}
-                    <div className="mt-8 flex flex-wrap gap-3">
-                        <Link
-                            href="/admin/accounts"
-                            className="inline-flex items-center gap-2 rounded-lg border border-zinc-200 bg-white px-4 py-2 text-sm font-medium text-zinc-900 transition-colors hover:bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-100 dark:hover:bg-zinc-800"
-                        >
-                            <Users className="h-4 w-4" />
-                            Account Handler
-                        </Link>
-                        <Link
-                            href="/admin/contacts"
-                            className="inline-flex items-center gap-2 rounded-lg border border-zinc-200 bg-white px-4 py-2 text-sm font-medium text-zinc-900 transition-colors hover:bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-100 dark:hover:bg-zinc-800"
-                        >
-                            <Mail className="h-4 w-4" />
-                            Contact Submissions
-                        </Link>
-                    </div>
+                    <div className="mt-8 flex flex-wrap gap-3"></div>
                 </div>
 
                 <Footerdemo />

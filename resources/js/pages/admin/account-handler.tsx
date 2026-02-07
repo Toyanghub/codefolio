@@ -16,6 +16,7 @@ import {
     Shield,
     ShieldCheck,
     ShieldOff,
+    Star,
     Sun,
     Trash2,
     User,
@@ -78,6 +79,7 @@ interface AccountHandlerProps {
 
 function Navbar({ canRegister = true }: { canRegister?: boolean }) {
     const { auth } = usePage<SharedData>().props;
+    const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const [userMenuOpen, setUserMenuOpen] = useState(false);
     const { appearance, updateAppearance } = useAppearance();
 
@@ -149,112 +151,430 @@ function Navbar({ canRegister = true }: { canRegister?: boolean }) {
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.3, delay: 0.2 }}
                 >
-                    <button
-                        onClick={toggleTheme}
-                        className="rounded-full p-2 text-zinc-700 transition-colors hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-800"
-                        aria-label="Toggle theme"
-                    >
-                        {isDark ? (
-                            <Sun className="h-5 w-5" />
-                        ) : (
-                            <Moon className="h-5 w-5" />
-                        )}
-                    </button>
-
                     {auth.user ? (
                         <div className="relative">
-                            <button
+                            <motion.button
                                 onClick={() => setUserMenuOpen(!userMenuOpen)}
-                                className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-zinc-900 transition-colors hover:bg-zinc-100 dark:text-zinc-100 dark:hover:bg-zinc-800"
+                                whileHover={{ scale: 1.05 }}
+                                className="flex items-center gap-2 rounded-full p-1 text-sm transition-colors hover:bg-zinc-100 dark:hover:bg-zinc-800"
                             >
-                                {auth.user.profile_picture ||
-                                auth.user.avatar ? (
-                                    <img
-                                        src={
-                                            auth.user.profile_picture
-                                                ? `/storage/${auth.user.profile_picture}`
-                                                : auth.user.avatar
-                                                  ? `/storage/${auth.user.avatar}`
-                                                  : undefined
-                                        }
-                                        alt={auth.user.name}
-                                        className="h-7 w-7 rounded-full"
-                                    />
-                                ) : (
-                                    <div className="flex h-7 w-7 items-center justify-center rounded-full bg-zinc-200 text-xs font-semibold text-zinc-700 dark:bg-zinc-700 dark:text-zinc-300">
-                                        {auth.user.name
-                                            .split(' ')
-                                            .map((n) => n[0])
-                                            .join('')
-                                            .toUpperCase()
-                                            .slice(0, 2)}
-                                    </div>
-                                )}
-                                <span className="hidden sm:inline">
-                                    {auth.user.name}
-                                </span>
-                            </button>
-
-                            {userMenuOpen && (
-                                <div className="absolute top-full right-0 mt-2 w-48 rounded-lg border border-zinc-200 bg-white py-2 shadow-lg dark:border-zinc-800 dark:bg-zinc-900">
-                                    {auth.user.is_admin && (
-                                        <>
-                                            <Link
-                                                href="/admin/cotd"
-                                                className="block px-4 py-2 text-sm text-zinc-700 hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-800"
-                                            >
-                                                COTD Management
-                                            </Link>
-                                            <Link
-                                                href="/admin/accounts"
-                                                className="block px-4 py-2 text-sm text-zinc-700 hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-800"
-                                            >
-                                                Account Handler
-                                            </Link>
-                                            <Link
-                                                href="/admin/contacts"
-                                                className="block px-4 py-2 text-sm text-zinc-700 hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-800"
-                                            >
-                                                Contact Submissions
-                                            </Link>
-                                            <div className="my-2 border-t border-zinc-200 dark:border-zinc-800" />
-                                        </>
+                                <div className="flex h-8 w-8 items-center justify-center overflow-hidden rounded-full bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900">
+                                    {auth.user.profile_picture ? (
+                                        <img
+                                            src={`/storage/${auth.user.profile_picture}`}
+                                            alt={auth.user.name}
+                                            className="h-full w-full object-cover"
+                                        />
+                                    ) : (
+                                        <span className="text-sm font-semibold">
+                                            {auth.user.name
+                                                .charAt(0)
+                                                .toUpperCase()}
+                                        </span>
                                     )}
-                                    <Link
-                                        href="/settings/profile"
-                                        className="block px-4 py-2 text-sm text-zinc-700 hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-800"
-                                    >
-                                        Settings
-                                    </Link>
-                                    <button
-                                        onClick={handleLogout}
-                                        className="block w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-950"
-                                    >
-                                        Logout
-                                    </button>
                                 </div>
+                            </motion.button>
+
+                            {/* Dropdown Menu */}
+                            {userMenuOpen && (
+                                <>
+                                    <div
+                                        className="fixed inset-0 z-10"
+                                        onClick={() => setUserMenuOpen(false)}
+                                    />
+                                    <div className="absolute right-0 z-20 mt-2 w-56 rounded-md border border-zinc-200 bg-white shadow-lg dark:border-zinc-800 dark:bg-zinc-950">
+                                        <div className="space-y-1 p-2">
+                                            {/* User Info Header */}
+                                            <div className="flex items-center gap-3 px-2 py-3">
+                                                <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center overflow-hidden rounded-full border-2 border-zinc-200 bg-zinc-900 text-white dark:border-zinc-700 dark:bg-zinc-100 dark:text-zinc-900">
+                                                    {auth.user
+                                                        .profile_picture ? (
+                                                        <img
+                                                            src={`/storage/${auth.user.profile_picture}`}
+                                                            alt={auth.user.name}
+                                                            className="h-full w-full object-cover"
+                                                        />
+                                                    ) : (
+                                                        <span className="text-base font-semibold">
+                                                            {auth.user.name
+                                                                .charAt(0)
+                                                                .toUpperCase()}
+                                                        </span>
+                                                    )}
+                                                </div>
+                                                <div className="flex flex-1 flex-col overflow-hidden">
+                                                    <span className="truncate text-sm font-semibold text-zinc-900 dark:text-zinc-100">
+                                                        {auth.user.name}
+                                                    </span>
+                                                    <span className="truncate text-xs text-zinc-500 dark:text-zinc-400">
+                                                        {auth.user.email}
+                                                    </span>
+                                                </div>
+                                            </div>
+
+                                            <div className="border-t border-zinc-200 dark:border-zinc-800" />
+
+                                            {/* Admin Links - Only visible to admins */}
+                                            {!!auth.user.is_admin && (
+                                                <>
+                                                    <Link
+                                                        href="/admin/cotd"
+                                                        className="flex items-center gap-2 rounded-md px-3 py-2 text-sm text-zinc-700 transition-colors hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-800"
+                                                        onClick={() =>
+                                                            setUserMenuOpen(
+                                                                false,
+                                                            )
+                                                        }
+                                                    >
+                                                        <Star className="h-4 w-4" />
+                                                        COTD Panel
+                                                    </Link>
+                                                    <Link
+                                                        href="/admin/contacts"
+                                                        className="flex items-center gap-2 rounded-md px-3 py-2 text-sm text-zinc-700 transition-colors hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-800"
+                                                        onClick={() =>
+                                                            setUserMenuOpen(
+                                                                false,
+                                                            )
+                                                        }
+                                                    >
+                                                        <Mail className="h-4 w-4" />
+                                                        Contact Messages
+                                                    </Link>
+                                                    <Link
+                                                        href="/admin/accounts"
+                                                        className="flex items-center gap-2 rounded-md px-3 py-2 text-sm text-zinc-700 transition-colors hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-800"
+                                                        onClick={() =>
+                                                            setUserMenuOpen(
+                                                                false,
+                                                            )
+                                                        }
+                                                    >
+                                                        <Users className="h-4 w-4" />
+                                                        Account Handler
+                                                    </Link>
+                                                    <div className="border-t border-zinc-200 dark:border-zinc-800" />
+                                                </>
+                                            )}
+
+                                            <button
+                                                onClick={toggleTheme}
+                                                className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm text-zinc-700 transition-colors hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-800"
+                                            >
+                                                {isDark ? (
+                                                    <>
+                                                        <Sun className="h-4 w-4" />
+                                                        Light Mode
+                                                    </>
+                                                ) : (
+                                                    <>
+                                                        <Moon className="h-4 w-4" />
+                                                        Dark Mode
+                                                    </>
+                                                )}
+                                            </button>
+
+                                            <div className="border-t border-zinc-200 dark:border-zinc-800" />
+
+                                            <Link
+                                                href="/settings/profile"
+                                                className="flex items-center gap-2 rounded-md px-3 py-2 text-sm text-zinc-700 transition-colors hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-800"
+                                                onClick={() =>
+                                                    setUserMenuOpen(false)
+                                                }
+                                            >
+                                                <svg
+                                                    className="h-4 w-4"
+                                                    fill="none"
+                                                    strokeLinecap="round"
+                                                    strokeLinejoin="round"
+                                                    strokeWidth={2}
+                                                    viewBox="0 0 24 24"
+                                                    stroke="currentColor"
+                                                >
+                                                    <path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                                                    <path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                                </svg>
+                                                Settings
+                                            </Link>
+
+                                            <button
+                                                onClick={() => {
+                                                    setUserMenuOpen(false);
+                                                    handleLogout();
+                                                }}
+                                                className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-left text-sm text-zinc-700 transition-colors hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-800"
+                                            >
+                                                <svg
+                                                    className="h-4 w-4"
+                                                    fill="none"
+                                                    strokeLinecap="round"
+                                                    strokeLinejoin="round"
+                                                    strokeWidth={2}
+                                                    viewBox="0 0 24 24"
+                                                    stroke="currentColor"
+                                                >
+                                                    <path d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                                                </svg>
+                                                Log out
+                                            </button>
+                                        </div>
+                                    </div>
+                                </>
                             )}
                         </div>
                     ) : (
                         <>
                             <Link
                                 href={login.url()}
-                                className="rounded-lg px-4 py-2 text-sm font-medium text-zinc-700 transition-colors hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-800"
+                                className="rounded-full px-5 py-2 text-sm font-medium text-zinc-700 transition-colors hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800 dark:hover:text-zinc-100"
                             >
                                 Log in
                             </Link>
                             {canRegister && (
-                                <Link
-                                    href={register.url()}
-                                    className="rounded-lg bg-zinc-900 px-4 py-2 text-sm font-medium text-white hover:bg-zinc-800 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200"
-                                >
-                                    Sign up
-                                </Link>
+                                <motion.div whileHover={{ scale: 1.05 }}>
+                                    <Link
+                                        href={register.url()}
+                                        className="inline-flex items-center justify-center rounded-full bg-zinc-900 px-5 py-2 text-sm font-medium text-white transition-colors hover:bg-zinc-800 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200"
+                                    >
+                                        Sign up
+                                    </Link>
+                                </motion.div>
                             )}
                         </>
                     )}
                 </motion.div>
+
+                {/* Mobile Menu Toggle */}
+                <div className="flex items-center gap-2 md:hidden">
+                    <motion.button
+                        className="rounded-md p-2 text-zinc-700 hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-800"
+                        onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                        whileTap={{ scale: 0.9 }}
+                    >
+                        <svg
+                            className="h-6 w-6"
+                            fill="none"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                        >
+                            {mobileMenuOpen ? (
+                                <path d="M6 18L18 6M6 6l12 12" />
+                            ) : (
+                                <path d="M4 6h16M4 12h16M4 18h16" />
+                            )}
+                        </svg>
+                    </motion.button>
+                </div>
             </nav>
+
+            {/* Mobile Menu Overlay */}
+            <AnimatePresence>
+                {mobileMenuOpen && (
+                    <motion.div
+                        className="fixed inset-0 z-50 bg-white px-6 pt-24 md:hidden dark:bg-zinc-950"
+                        initial={{ opacity: 0, x: '100%' }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: '100%' }}
+                        transition={{
+                            type: 'spring',
+                            damping: 25,
+                            stiffness: 300,
+                        }}
+                    >
+                        <motion.button
+                            className="absolute top-6 right-6 rounded-md p-2 text-zinc-700 hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-800"
+                            onClick={() => setMobileMenuOpen(false)}
+                            whileTap={{ scale: 0.9 }}
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            transition={{ delay: 0.2 }}
+                        >
+                            <svg
+                                className="h-6 w-6"
+                                fill="none"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                            >
+                                <path d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </motion.button>
+
+                        <div className="space-y-2">
+                            {[
+                                { href: '/', label: 'Lobby' },
+                                { href: '/observatory', label: 'Observatory' },
+                                { href: '/works', label: 'Works' },
+                            ].map((item, index) => (
+                                <motion.div
+                                    key={item.label}
+                                    initial={{ opacity: 0, x: -20 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    transition={{
+                                        duration: 0.3,
+                                        delay: index * 0.1,
+                                    }}
+                                >
+                                    <Link
+                                        href={item.href}
+                                        className="block rounded-lg px-4 py-3 text-base font-medium text-zinc-900 hover:bg-zinc-100 dark:text-zinc-100 dark:hover:bg-zinc-800"
+                                        onClick={() => setMobileMenuOpen(false)}
+                                    >
+                                        {item.label}
+                                    </Link>
+                                </motion.div>
+                            ))}
+                        </div>
+
+                        {auth.user ? (
+                            <div className="mt-8 border-t border-zinc-200 pt-8 dark:border-zinc-700">
+                                {/* User Info in Mobile Menu */}
+                                <div className="mb-4 flex items-center gap-3 rounded-lg bg-zinc-50 px-4 py-3 dark:bg-zinc-900">
+                                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900">
+                                        {auth.user.profile_picture ? (
+                                            <img
+                                                src={`/storage/${auth.user.profile_picture}`}
+                                                alt={auth.user.name}
+                                                className="h-full w-full rounded-full object-cover"
+                                            />
+                                        ) : (
+                                            <span className="font-semibold">
+                                                {auth.user.name
+                                                    .charAt(0)
+                                                    .toUpperCase()}
+                                            </span>
+                                        )}
+                                    </div>
+                                    <div className="flex-1">
+                                        <p className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
+                                            {auth.user.name}
+                                        </p>
+                                        <p className="text-xs text-zinc-500 dark:text-zinc-400">
+                                            {auth.user.email}
+                                        </p>
+                                    </div>
+                                </div>
+
+                                {/* Mobile Menu Items */}
+                                <div className="space-y-1">
+                                    {!!auth.user.is_admin && (
+                                        <>
+                                            <Link
+                                                href="/admin/cotd"
+                                                className="flex items-center gap-3 rounded-lg px-4 py-3 text-sm text-zinc-700 hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-800"
+                                                onClick={() =>
+                                                    setMobileMenuOpen(false)
+                                                }
+                                            >
+                                                <Star className="h-5 w-5" />
+                                                COTD Panel
+                                            </Link>
+                                            <Link
+                                                href="/admin/contacts"
+                                                className="flex items-center gap-3 rounded-lg px-4 py-3 text-sm text-zinc-700 hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-800"
+                                                onClick={() =>
+                                                    setMobileMenuOpen(false)
+                                                }
+                                            >
+                                                <Mail className="h-5 w-5" />
+                                                Contact Messages
+                                            </Link>
+                                            <Link
+                                                href="/admin/accounts"
+                                                className="flex items-center gap-3 rounded-lg px-4 py-3 text-sm text-zinc-700 hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-800"
+                                                onClick={() =>
+                                                    setMobileMenuOpen(false)
+                                                }
+                                            >
+                                                <Users className="h-5 w-5" />
+                                                Account Handler
+                                            </Link>
+                                        </>
+                                    )}
+
+                                    <button
+                                        onClick={toggleTheme}
+                                        className="flex w-full items-center gap-3 rounded-lg px-4 py-3 text-sm text-zinc-700 hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-800"
+                                    >
+                                        {isDark ? (
+                                            <>
+                                                <Sun className="h-5 w-5" />
+                                                Light Mode
+                                            </>
+                                        ) : (
+                                            <>
+                                                <Moon className="h-5 w-5" />
+                                                Dark Mode
+                                            </>
+                                        )}
+                                    </button>
+
+                                    <Link
+                                        href="/settings/profile"
+                                        className="flex items-center gap-3 rounded-lg px-4 py-3 text-sm text-zinc-700 hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-800"
+                                        onClick={() => setMobileMenuOpen(false)}
+                                    >
+                                        <svg
+                                            className="h-5 w-5"
+                                            fill="none"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            strokeWidth={2}
+                                            viewBox="0 0 24 24"
+                                            stroke="currentColor"
+                                        >
+                                            <path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                                            <path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                        </svg>
+                                        Settings
+                                    </Link>
+
+                                    <button
+                                        onClick={handleLogout}
+                                        className="flex w-full items-center gap-3 rounded-lg px-4 py-3 text-sm text-zinc-700 hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-800"
+                                    >
+                                        <svg
+                                            className="h-5 w-5"
+                                            fill="none"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            strokeWidth={2}
+                                            viewBox="0 0 24 24"
+                                            stroke="currentColor"
+                                        >
+                                            <path d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                                        </svg>
+                                        Log out
+                                    </button>
+                                </div>
+                            </div>
+                        ) : (
+                            <div className="mt-8 space-y-2 border-t border-zinc-200 pt-8 dark:border-zinc-700">
+                                <Link
+                                    href={login.url()}
+                                    className="block rounded-lg px-4 py-3 text-center text-base font-medium text-zinc-900 hover:bg-zinc-100 dark:text-zinc-100 dark:hover:bg-zinc-800"
+                                >
+                                    Log in
+                                </Link>
+                                {canRegister && (
+                                    <Link
+                                        href={register.url()}
+                                        className="block rounded-lg bg-zinc-900 px-4 py-3 text-center text-base font-medium text-white hover:bg-zinc-800 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200"
+                                    >
+                                        Sign up
+                                    </Link>
+                                )}
+                            </div>
+                        )}
+                    </motion.div>
+                )}
+            </AnimatePresence>
         </div>
     );
 }
