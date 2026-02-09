@@ -1,8 +1,7 @@
+import Navbar from '@/components/navbar';
 import { Footerdemo } from '@/components/ui/footer-section';
 import { InfiniteTextMarquee } from '@/components/ui/infinite-text-marquee';
-import { login, logout, register } from '@/routes';
-import { type SharedData } from '@/types';
-import { Head, Link, router, usePage } from '@inertiajs/react';
+import { Head } from '@inertiajs/react';
 import { ArrowUpRight } from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
 import { useState } from 'react';
@@ -26,330 +25,6 @@ interface Portfolio {
 interface PageProps {
     portfolio: Portfolio;
     canRegister?: boolean;
-}
-
-function Navbar({ canRegister = true }: { canRegister?: boolean }) {
-    const { auth } = usePage<SharedData>().props;
-    const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-    const [userMenuOpen, setUserMenuOpen] = useState(false);
-
-    const handleLogout = () => {
-        router.post(logout.url());
-    };
-
-    return (
-        <div className="flex w-full justify-center px-4 py-6">
-            <nav className="relative z-50 flex w-full max-w-6xl items-center justify-between rounded-full bg-white px-6 py-3 shadow-lg dark:border dark:border-zinc-800 dark:bg-zinc-950">
-                {/* Logo/Brand */}
-                <motion.div
-                    initial={{ scale: 0.8 }}
-                    animate={{ scale: 1 }}
-                    transition={{ duration: 0.3 }}
-                >
-                    <Link
-                        href="/"
-                        className="flex items-center space-x-2 text-xl font-semibold tracking-tight transition-colors"
-                    >
-                        <span>
-                            <span className="text-zinc-900 hover:text-zinc-700 dark:text-zinc-100 dark:hover:text-zinc-300">
-                                Code
-                            </span>
-                            <span className="text-zinc-400 hover:text-zinc-500 dark:text-zinc-500 dark:hover:text-zinc-400">
-                                folio
-                            </span>
-                        </span>
-                    </Link>
-                </motion.div>
-
-                {/* Navigation Links */}
-                <div className="hidden items-center space-x-1 md:flex">
-                    {[
-                        { href: '/', label: 'Lobby' },
-                        { href: '/observatory', label: 'Observatory' },
-                        { href: '/works', label: 'Works' },
-                    ].map((item, index) => (
-                        <motion.div
-                            key={item.label}
-                            initial={{ opacity: 0, y: -10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.3, delay: index * 0.1 }}
-                        >
-                            <Link
-                                href={item.href}
-                                className="rounded-full px-4 py-2 text-sm font-medium text-zinc-700 transition-all duration-300 hover:text-zinc-900 hover:drop-shadow-[0_0_8px_rgba(0,0,0,0.3)] dark:text-zinc-300 dark:hover:text-zinc-100 dark:hover:drop-shadow-[0_0_8px_rgba(255,255,255,0.5)]"
-                            >
-                                {item.label}
-                            </Link>
-                        </motion.div>
-                    ))}
-                </div>
-
-                {/* Auth Buttons */}
-                <div className="hidden items-center space-x-2 md:flex">
-                    {auth.user ? (
-                        <div className="relative">
-                            <motion.button
-                                onClick={() => setUserMenuOpen(!userMenuOpen)}
-                                className="flex items-center gap-2 rounded-full p-1 text-sm transition-colors hover:bg-zinc-100 dark:hover:bg-zinc-800"
-                                whileHover={{ scale: 1.05 }}
-                                whileTap={{ scale: 0.95 }}
-                            >
-                                <div className="flex h-8 w-8 items-center justify-center overflow-hidden rounded-full bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900">
-                                    {auth.user.avatar ||
-                                    auth.user.profile_picture ? (
-                                        <img
-                                            src={`/storage/${auth.user.avatar || auth.user.profile_picture}`}
-                                            alt={auth.user.name}
-                                            className="h-full w-full object-cover"
-                                        />
-                                    ) : (
-                                        <span className="text-sm font-semibold">
-                                            {auth.user.name
-                                                .charAt(0)
-                                                .toUpperCase()}
-                                        </span>
-                                    )}
-                                </div>
-                            </motion.button>
-
-                            <AnimatePresence>
-                                {userMenuOpen && (
-                                    <>
-                                        <div
-                                            className="fixed inset-0 z-10"
-                                            onClick={() =>
-                                                setUserMenuOpen(false)
-                                            }
-                                        />
-                                        <motion.div
-                                            className="absolute top-12 right-0 z-50 w-56 rounded-md border border-zinc-200 bg-white shadow-xl dark:border-zinc-800 dark:bg-zinc-950"
-                                            initial={{ opacity: 0, y: -10 }}
-                                            animate={{ opacity: 1, y: 0 }}
-                                            exit={{ opacity: 0, y: -10 }}
-                                            transition={{ duration: 0.2 }}
-                                        >
-                                            <div className="space-y-1 p-2">
-                                                {/* User Info Header */}
-                                                <div className="flex items-center gap-3 px-2 py-3">
-                                                    <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center overflow-hidden rounded-full border-2 border-zinc-200 bg-zinc-900 text-white dark:border-zinc-700 dark:bg-zinc-100 dark:text-zinc-900">
-                                                        {auth.user.avatar ||
-                                                        auth.user
-                                                            .profile_picture ? (
-                                                            <img
-                                                                src={`/storage/${auth.user.avatar || auth.user.profile_picture}`}
-                                                                alt={
-                                                                    auth.user
-                                                                        .name
-                                                                }
-                                                                className="h-full w-full object-cover"
-                                                            />
-                                                        ) : (
-                                                            <span className="text-base font-semibold">
-                                                                {auth.user.name
-                                                                    .charAt(0)
-                                                                    .toUpperCase()}
-                                                            </span>
-                                                        )}
-                                                    </div>
-                                                    <div className="flex flex-1 flex-col overflow-hidden">
-                                                        <span className="truncate text-sm font-semibold text-zinc-900 dark:text-zinc-100">
-                                                            {auth.user.name}
-                                                        </span>
-                                                        <span className="truncate text-xs text-zinc-500 dark:text-zinc-400">
-                                                            {auth.user.email}
-                                                        </span>
-                                                    </div>
-                                                </div>
-
-                                                <div className="border-t border-zinc-200 dark:border-zinc-800" />
-
-                                                <Link
-                                                    href="/settings/profile"
-                                                    className="block rounded-lg px-4 py-2 text-sm text-zinc-700 transition-colors hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-800"
-                                                >
-                                                    Settings
-                                                </Link>
-                                                <button
-                                                    onClick={handleLogout}
-                                                    className="w-full rounded-lg px-4 py-2 text-left text-sm text-red-600 transition-colors hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-950"
-                                                >
-                                                    Logout
-                                                </button>
-                                            </div>
-                                        </motion.div>
-                                    </>
-                                )}
-                            </AnimatePresence>
-                        </div>
-                    ) : (
-                        <>
-                            <motion.div whileHover={{ scale: 1.05 }}>
-                                <Link
-                                    href={login.url()}
-                                    className="rounded-full px-4 py-2 text-sm font-medium text-zinc-700 transition-colors hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-800"
-                                >
-                                    Login
-                                </Link>
-                            </motion.div>
-                            {canRegister && (
-                                <motion.div whileHover={{ scale: 1.05 }}>
-                                    <Link
-                                        href={register.url()}
-                                        className="rounded-full bg-zinc-900 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-zinc-800 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200"
-                                    >
-                                        Register
-                                    </Link>
-                                </motion.div>
-                            )}
-                        </>
-                    )}
-                </div>
-
-                {/* Mobile Menu Toggle */}
-                <motion.button
-                    className="rounded-md p-2 text-zinc-700 hover:bg-zinc-100 md:hidden dark:text-zinc-300 dark:hover:bg-zinc-800"
-                    onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                    whileTap={{ scale: 0.9 }}
-                >
-                    <svg
-                        className="h-6 w-6"
-                        fill="none"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                    >
-                        {mobileMenuOpen ? (
-                            <path d="M6 18L18 6M6 6l12 12" />
-                        ) : (
-                            <path d="M4 6h16M4 12h16M4 18h16" />
-                        )}
-                    </svg>
-                </motion.button>
-            </nav>
-
-            {/* Mobile Menu Overlay */}
-            <AnimatePresence>
-                {mobileMenuOpen && (
-                    <motion.div
-                        className="fixed inset-0 z-50 bg-white px-6 pt-24 md:hidden dark:bg-zinc-950"
-                        initial={{ opacity: 0, x: '100%' }}
-                        animate={{ opacity: 1, x: 0 }}
-                        exit={{ opacity: 0, x: '100%' }}
-                        transition={{
-                            type: 'spring',
-                            damping: 25,
-                            stiffness: 300,
-                        }}
-                    >
-                        <motion.button
-                            className="absolute top-6 right-6 rounded-md p-2 text-zinc-700 hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-800"
-                            onClick={() => setMobileMenuOpen(false)}
-                            whileTap={{ scale: 0.9 }}
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            transition={{ delay: 0.2 }}
-                        >
-                            <svg
-                                className="h-6 w-6"
-                                fill="none"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                viewBox="0 0 24 24"
-                                stroke="currentColor"
-                            >
-                                <path d="M6 18L18 6M6 6l12 12" />
-                            </svg>
-                        </motion.button>
-
-                        <div className="space-y-2">
-                            {[
-                                { href: '/', label: 'Lobby' },
-                                { href: '/observatory', label: 'Observatory' },
-                                { href: '/works', label: 'Works' },
-                            ].map((item, index) => (
-                                <motion.div
-                                    key={item.label}
-                                    initial={{ opacity: 0, x: -20 }}
-                                    animate={{ opacity: 1, x: 0 }}
-                                    transition={{
-                                        duration: 0.3,
-                                        delay: index * 0.1,
-                                    }}
-                                >
-                                    <Link
-                                        href={item.href}
-                                        className="block rounded-lg px-4 py-3 text-base font-medium text-zinc-900 transition-all duration-300 hover:text-zinc-900 hover:drop-shadow-[0_0_8px_rgba(0,0,0,0.3)] dark:text-zinc-100 dark:hover:text-zinc-100 dark:hover:drop-shadow-[0_0_8px_rgba(255,255,255,0.5)]"
-                                        onClick={() => setMobileMenuOpen(false)}
-                                    >
-                                        {item.label}
-                                    </Link>
-                                </motion.div>
-                            ))}
-                        </div>
-
-                        {auth.user ? (
-                            <div className="mt-8 border-t border-zinc-200 pt-8 dark:border-zinc-700">
-                                {/* User Info in Mobile Menu */}
-                                <div className="mb-4 flex items-center gap-3 rounded-lg bg-zinc-50 px-4 py-3 dark:bg-zinc-900">
-                                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900">
-                                        <span className="font-semibold">
-                                            {auth.user.name
-                                                .charAt(0)
-                                                .toUpperCase()}
-                                        </span>
-                                    </div>
-                                    <div className="flex flex-col">
-                                        <span className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
-                                            {auth.user.name}
-                                        </span>
-                                        <span className="text-xs text-zinc-500 dark:text-zinc-400">
-                                            {auth.user.email}
-                                        </span>
-                                    </div>
-                                </div>
-
-                                <Link
-                                    href="/settings/profile"
-                                    className="block rounded-lg px-4 py-3 text-base font-medium text-zinc-900 hover:bg-zinc-100 dark:text-zinc-100 dark:hover:bg-zinc-800"
-                                    onClick={() => setMobileMenuOpen(false)}
-                                >
-                                    Settings
-                                </Link>
-                                <button
-                                    onClick={handleLogout}
-                                    className="mt-2 w-full rounded-lg px-4 py-3 text-left text-base font-medium text-red-600 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-950"
-                                >
-                                    Logout
-                                </button>
-                            </div>
-                        ) : (
-                            <div className="mt-8 space-y-2 border-t border-zinc-200 pt-8 dark:border-zinc-700">
-                                <Link
-                                    href={login.url()}
-                                    className="block rounded-lg px-4 py-3 text-center text-base font-medium text-zinc-900 hover:bg-zinc-100 dark:text-zinc-100 dark:hover:bg-zinc-800"
-                                    onClick={() => setMobileMenuOpen(false)}
-                                >
-                                    Login
-                                </Link>
-                                {canRegister && (
-                                    <Link
-                                        href={register.url()}
-                                        className="block rounded-lg bg-zinc-900 px-4 py-3 text-center text-base font-medium text-white hover:bg-zinc-800 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200"
-                                        onClick={() => setMobileMenuOpen(false)}
-                                    >
-                                        Register
-                                    </Link>
-                                )}
-                            </div>
-                        )}
-                    </motion.div>
-                )}
-            </AnimatePresence>
-        </div>
-    );
 }
 
 export default function PortfolioDetail({ portfolio, canRegister }: PageProps) {
@@ -422,36 +97,18 @@ export default function PortfolioDetail({ portfolio, canRegister }: PageProps) {
 
                             {/* Profile Picture */}
                             {portfolio.profilePicture && (
-                                <motion.div
-                                    className="mb-6"
-                                    style={{
-                                        transform: isHovered
-                                            ? 'scale(1.05)'
-                                            : 'scale(1)',
-                                        transition:
-                                            'transform 0.7s cubic-bezier(0.16, 1, 0.3, 1)',
-                                    }}
-                                >
+                                <div className="mb-6">
                                     <img
                                         src={`/storage/${portfolio.profilePicture}`}
                                         alt={portfolio.name}
                                         className="h-20 w-20 rounded-full object-cover md:h-24 md:w-24"
                                     />
-                                </motion.div>
+                                </div>
                             )}
 
                             {/* Name - responsive text sizes */}
                             <h1 className="relative mb-2">
-                                <span
-                                    className="block text-4xl font-normal tracking-tight text-foreground transition-all duration-700 sm:text-5xl md:text-5xl lg:text-6xl"
-                                    style={{
-                                        transform: isHovered
-                                            ? 'translateY(-2px)'
-                                            : 'translateY(0)',
-                                        transitionTimingFunction:
-                                            'cubic-bezier(0.16, 1, 0.3, 1)',
-                                    }}
-                                >
+                                <span className="block text-4xl font-normal tracking-tight text-foreground transition-all duration-700 sm:text-5xl md:text-5xl lg:text-6xl">
                                     {portfolio.name}
                                 </span>
                             </h1>
@@ -461,9 +118,6 @@ export default function PortfolioDetail({ portfolio, canRegister }: PageProps) {
                                 className="mb-6 text-lg font-medium text-muted-foreground transition-all duration-700"
                                 style={{
                                     opacity: isHovered ? 1 : 0.7,
-                                    transform: isHovered
-                                        ? 'translateX(4px)'
-                                        : 'translateX(0)',
                                     transitionTimingFunction:
                                         'cubic-bezier(0.16, 1, 0.3, 1)',
                                 }}
@@ -479,9 +133,6 @@ export default function PortfolioDetail({ portfolio, canRegister }: PageProps) {
                                         color: isHovered
                                             ? 'hsl(var(--muted-foreground))'
                                             : 'hsl(var(--muted-foreground) / 0.6)',
-                                        transform: isHovered
-                                            ? 'translateY(-4px)'
-                                            : 'translateY(0)',
                                         transitionTimingFunction:
                                             'cubic-bezier(0.16, 1, 0.3, 1)',
                                     }}
@@ -496,9 +147,6 @@ export default function PortfolioDetail({ portfolio, canRegister }: PageProps) {
                                     className="mt-6 flex flex-wrap justify-center gap-2 md:mt-8 md:justify-start"
                                     style={{
                                         opacity: isHovered ? 1 : 0.8,
-                                        transform: isHovered
-                                            ? 'translateY(0)'
-                                            : 'translateY(4px)',
                                         transition:
                                             'all 0.7s cubic-bezier(0.16, 1, 0.3, 1)',
                                     }}
@@ -536,9 +184,6 @@ export default function PortfolioDetail({ portfolio, canRegister }: PageProps) {
                                             color: isHovered
                                                 ? 'hsl(var(--background))'
                                                 : 'hsl(var(--foreground))',
-                                            transform: isHovered
-                                                ? 'scale(1.05)'
-                                                : 'scale(1)',
                                             boxShadow: isHovered
                                                 ? '0 8px 32px hsl(var(--foreground) / 0.15)'
                                                 : '0 0 0 transparent',
@@ -546,24 +191,12 @@ export default function PortfolioDetail({ portfolio, canRegister }: PageProps) {
                                                 'cubic-bezier(0.16, 1, 0.3, 1)',
                                         }}
                                     >
-                                        <ArrowUpRight
-                                            className="h-3.5 w-3.5 transition-transform duration-500 md:h-4 md:w-4"
-                                            style={{
-                                                transform: isHovered
-                                                    ? 'rotate(45deg)'
-                                                    : 'rotate(0deg)',
-                                                transitionTimingFunction:
-                                                    'cubic-bezier(0.16, 1, 0.3, 1)',
-                                            }}
-                                        />
+                                        <ArrowUpRight className="h-3.5 w-3.5 transition-transform duration-500 md:h-4 md:w-4" />
                                     </div>
                                     <span
                                         className="text-[10px] font-medium tracking-widest uppercase transition-all duration-700 md:text-xs"
                                         style={{
                                             opacity: isHovered ? 1 : 0.5,
-                                            transform: isHovered
-                                                ? 'translateX(0)'
-                                                : 'translateX(-8px)',
                                             transitionTimingFunction:
                                                 'cubic-bezier(0.16, 1, 0.3, 1)',
                                             transitionDelay: isHovered
@@ -579,15 +212,13 @@ export default function PortfolioDetail({ portfolio, canRegister }: PageProps) {
                             {/* Image Toggle Buttons - Three Options */}
                             {portfolio.mobileImage && (
                                 <motion.div
-                                    initial={{ opacity: 0, y: 10 }}
-                                    animate={{ opacity: 1, y: 0 }}
+                                    initial={{ opacity: 0 }}
+                                    animate={{ opacity: 1 }}
                                     transition={{ delay: 0.4 }}
                                     className="mt-8 flex gap-1.5 rounded-lg bg-muted/50 p-1"
                                 >
-                                    <motion.button
+                                    <button
                                         onClick={() => setActiveImage('both')}
-                                        whileHover={{ scale: 1.02 }}
-                                        whileTap={{ scale: 0.98 }}
                                         className={`rounded-md px-4 py-2 text-xs font-medium tracking-wider uppercase transition-all duration-300 ${
                                             activeImage === 'both'
                                                 ? 'bg-foreground text-background shadow-sm'
@@ -595,13 +226,11 @@ export default function PortfolioDetail({ portfolio, canRegister }: PageProps) {
                                         }`}
                                     >
                                         Both
-                                    </motion.button>
-                                    <motion.button
+                                    </button>
+                                    <button
                                         onClick={() =>
                                             setActiveImage('desktop')
                                         }
-                                        whileHover={{ scale: 1.02 }}
-                                        whileTap={{ scale: 0.98 }}
                                         className={`rounded-md px-4 py-2 text-xs font-medium tracking-wider uppercase transition-all duration-300 ${
                                             activeImage === 'desktop'
                                                 ? 'bg-foreground text-background shadow-sm'
@@ -609,11 +238,9 @@ export default function PortfolioDetail({ portfolio, canRegister }: PageProps) {
                                         }`}
                                     >
                                         Desktop
-                                    </motion.button>
-                                    <motion.button
+                                    </button>
+                                    <button
                                         onClick={() => setActiveImage('mobile')}
-                                        whileHover={{ scale: 1.02 }}
-                                        whileTap={{ scale: 0.98 }}
                                         className={`rounded-md px-4 py-2 text-xs font-medium tracking-wider uppercase transition-all duration-300 ${
                                             activeImage === 'mobile'
                                                 ? 'bg-foreground text-background shadow-sm'
@@ -621,39 +248,22 @@ export default function PortfolioDetail({ portfolio, canRegister }: PageProps) {
                                         }`}
                                     >
                                         Mobile
-                                    </motion.button>
+                                    </button>
                                 </motion.div>
                             )}
                         </div>
 
                         {/* Right: Portfolio Screenshot Block */}
-                        <div
-                            className="relative flex w-full items-center justify-center transition-all duration-700"
-                            style={{
-                                transform: isHovered
-                                    ? 'translateX(4px) translateY(-4px)'
-                                    : 'translateX(0) translateY(0)',
-                                transitionTimingFunction:
-                                    'cubic-bezier(0.16, 1, 0.3, 1)',
-                            }}
-                        >
+                        <div className="relative flex w-full items-center justify-center transition-all duration-700">
                             {/* Image container - responsive sizing with support for both/desktop/mobile */}
                             <AnimatePresence mode="wait">
                                 {activeImage === 'both' ? (
                                     /* Both Images Side by Side */
                                     <motion.div
                                         key="both"
-                                        initial={{
-                                            opacity: 0,
-                                            y: 20,
-                                            scale: 0.96,
-                                        }}
-                                        animate={{ opacity: 1, y: 0, scale: 1 }}
-                                        exit={{
-                                            opacity: 0,
-                                            y: -20,
-                                            scale: 0.96,
-                                        }}
+                                        initial={{ opacity: 0 }}
+                                        animate={{ opacity: 1 }}
+                                        exit={{ opacity: 0 }}
                                         transition={{
                                             duration: 0.35,
                                             ease: [0.16, 1, 0.3, 1],
@@ -663,8 +273,8 @@ export default function PortfolioDetail({ portfolio, canRegister }: PageProps) {
                                         {/* Desktop Image */}
                                         <motion.div
                                             className="relative flex-1"
-                                            initial={{ opacity: 0, x: -20 }}
-                                            animate={{ opacity: 1, x: 0 }}
+                                            initial={{ opacity: 0 }}
+                                            animate={{ opacity: 1 }}
                                             transition={{
                                                 duration: 0.35,
                                                 delay: 0.1,
@@ -687,8 +297,8 @@ export default function PortfolioDetail({ portfolio, canRegister }: PageProps) {
                                         {portfolio.mobileImage && (
                                             <motion.div
                                                 className="relative w-[140px] sm:w-[160px] md:w-[180px] lg:w-[200px]"
-                                                initial={{ opacity: 0, x: 20 }}
-                                                animate={{ opacity: 1, x: 0 }}
+                                                initial={{ opacity: 0 }}
+                                                animate={{ opacity: 1 }}
                                                 transition={{
                                                     duration: 0.35,
                                                     delay: 0.15,
@@ -712,17 +322,9 @@ export default function PortfolioDetail({ portfolio, canRegister }: PageProps) {
                                     /* Single Image View - Centered */
                                     <motion.div
                                         key={activeImage}
-                                        initial={{
-                                            opacity: 0,
-                                            y: 20,
-                                            scale: 0.96,
-                                        }}
-                                        animate={{ opacity: 1, y: 0, scale: 1 }}
-                                        exit={{
-                                            opacity: 0,
-                                            y: -20,
-                                            scale: 0.96,
-                                        }}
+                                        initial={{ opacity: 0 }}
+                                        animate={{ opacity: 1 }}
+                                        exit={{ opacity: 0 }}
                                         transition={{
                                             duration: 0.35,
                                             ease: [0.16, 1, 0.3, 1],
@@ -749,11 +351,9 @@ export default function PortfolioDetail({ portfolio, canRegister }: PageProps) {
                                                     className="h-full w-full object-contain"
                                                     initial={{
                                                         opacity: 0,
-                                                        scale: 1.05,
                                                     }}
                                                     animate={{
                                                         opacity: 1,
-                                                        scale: 1,
                                                     }}
                                                     transition={{
                                                         duration: 0.4,
@@ -763,8 +363,8 @@ export default function PortfolioDetail({ portfolio, canRegister }: PageProps) {
                                                 />
                                             </div>
                                             <motion.span
-                                                initial={{ opacity: 0, y: 10 }}
-                                                animate={{ opacity: 1, y: 0 }}
+                                                initial={{ opacity: 0 }}
+                                                animate={{ opacity: 1 }}
                                                 transition={{
                                                     duration: 0.3,
                                                     delay: 0.2,
