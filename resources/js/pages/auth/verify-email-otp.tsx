@@ -1,7 +1,7 @@
 import Navbar from '@/components/navbar';
 import { Footerdemo } from '@/components/ui/footer-section';
 import { resend, verify } from '@/routes/verify-otp';
-import { Head, router, useForm } from '@inertiajs/react';
+import { Head, router, useForm, usePage } from '@inertiajs/react';
 import { Mail, RefreshCw, ShieldCheck } from 'lucide-react';
 import { motion } from 'motion/react';
 import { FormEventHandler, useEffect, useRef, useState } from 'react';
@@ -27,6 +27,13 @@ export default function VerifyEmailOtp({
     const { processing, errors } = useForm({
         otp: '',
     });
+
+    // Get flash messages from Inertia
+    const { props } = usePage<{
+        flash?: { success?: string; error?: string };
+    }>();
+    const flashSuccess = props.flash?.success;
+    const flashError = props.flash?.error;
 
     useEffect(() => {
         // Focus first input on mount
@@ -238,14 +245,30 @@ export default function VerifyEmailOtp({
                                             />
                                         ))}
                                     </div>
-                                    {errors.otp && (
-                                        <motion.p
-                                            initial={{ opacity: 0 }}
-                                            animate={{ opacity: 1 }}
-                                            className="mt-3 text-center text-sm text-red-600 dark:text-red-400"
+                                    {/* Error Message */}
+                                    {(errors.otp || flashError) && (
+                                        <motion.div
+                                            initial={{ opacity: 0, y: -10 }}
+                                            animate={{ opacity: 1, y: 0 }}
+                                            className="mt-3 rounded-lg bg-red-50 p-3 dark:bg-red-900/20"
                                         >
-                                            {errors.otp}
-                                        </motion.p>
+                                            <p className="text-center text-sm font-medium text-red-600 dark:text-red-400">
+                                                {errors.otp || flashError}
+                                            </p>
+                                        </motion.div>
+                                    )}
+
+                                    {/* Success Message */}
+                                    {flashSuccess && (
+                                        <motion.div
+                                            initial={{ opacity: 0, y: -10 }}
+                                            animate={{ opacity: 1, y: 0 }}
+                                            className="mt-3 rounded-lg bg-green-50 p-3 dark:bg-green-900/20"
+                                        >
+                                            <p className="text-center text-sm font-medium text-green-600 dark:text-green-400">
+                                                {flashSuccess}
+                                            </p>
+                                        </motion.div>
                                     )}
                                 </div>
 
@@ -268,27 +291,23 @@ export default function VerifyEmailOtp({
 
                                 {/* Action Buttons */}
                                 <div className="flex flex-col gap-3">
-                                    <motion.button
+                                    <button
                                         type="submit"
                                         disabled={
                                             processing ||
                                             otp.some((d) => d === '')
                                         }
-                                        whileHover={{ scale: 1.02 }}
-                                        whileTap={{ scale: 0.98 }}
                                         className="flex w-full justify-center rounded-lg bg-zinc-900 px-4 py-3 text-sm font-medium text-white shadow-sm transition-colors hover:bg-zinc-800 focus:ring-2 focus:ring-zinc-900 focus:ring-offset-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200 dark:focus:ring-zinc-100"
                                     >
                                         {processing
                                             ? 'Verifying...'
                                             : 'Verify Email'}
-                                    </motion.button>
+                                    </button>
 
-                                    <motion.button
+                                    <button
                                         type="button"
                                         onClick={handleResend}
                                         disabled={resending || !canRequestOtp}
-                                        whileHover={{ scale: 1.02 }}
-                                        whileTap={{ scale: 0.98 }}
                                         className="flex w-full items-center justify-center gap-2 rounded-lg border-2 border-zinc-300 bg-white px-4 py-3 text-sm font-medium text-zinc-700 shadow-sm transition-colors hover:bg-zinc-50 focus:ring-2 focus:ring-zinc-900 focus:ring-offset-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700 dark:focus:ring-zinc-100"
                                     >
                                         <RefreshCw
@@ -297,7 +316,7 @@ export default function VerifyEmailOtp({
                                         {resending
                                             ? 'Sending...'
                                             : 'Resend Code'}
-                                    </motion.button>
+                                    </button>
                                 </div>
 
                                 {/* Rate Limit Message */}
