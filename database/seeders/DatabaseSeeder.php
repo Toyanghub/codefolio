@@ -13,6 +13,13 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        // Seed filter options first (required for portfolio functionality)
+        $this->call([
+            SkillSeeder::class,
+            TechStackSeeder::class,
+            ProfessionSeeder::class,
+        ]);
+
         // User::factory(10)->create();
 
         User::firstOrCreate(
