@@ -4,6 +4,7 @@ namespace App\Actions\Fortify;
 
 use App\Models\User;
 use App\Rules\NotDisposableEmail;
+use App\Rules\RecaptchaV3;
 use App\Services\OtpService;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
@@ -35,6 +36,7 @@ class CreateNewUser implements CreatesNewUsers
                 new NotDisposableEmail(),
             ],
             'password' => $this->passwordRules(),
+            'recaptcha_token' => ['required', new RecaptchaV3(0.5)],
         ])->validate();
 
         $user = User::create([
