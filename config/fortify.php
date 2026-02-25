@@ -101,7 +101,7 @@ return [
     |
     */
 
-    'middleware' => ['web'],
+    'middleware' => ['web', 'throttle.registration'],
 
     /*
     |--------------------------------------------------------------------------
@@ -117,6 +117,7 @@ return [
     'limiters' => [
         'login' => 'login',
         'two-factor' => 'two-factor',
+        'register' => 'register',
     ],
 
     /*

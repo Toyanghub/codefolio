@@ -1,6 +1,6 @@
 import { login } from '@/routes';
 import { Head, useForm } from '@inertiajs/react';
-import { useEffect, useState, FormEventHandler } from 'react';
+import { FormEventHandler } from 'react';
 
 import InputError from '@/components/input-error';
 import TextLink from '@/components/text-link';
@@ -10,109 +10,34 @@ import { Label } from '@/components/ui/label';
 import { Spinner } from '@/components/ui/spinner';
 import AuthLayout from '@/layouts/auth-layout';
 
-const RECAPTCHA_SITE_KEY = import.meta.env.VITE_RECAPTCHA_SITE_KEY || '';
-
 export default function Register() {
-    const [recaptchaReady, setRecaptchaReady] = useState(false);
-    const [recaptchaError, setRecaptchaError] = useState<string | null>(null);
-
     const { data, setData, post, processing, errors, reset } = useForm({
         name: '',
         email: '',
         password: '',
         password_confirmation: '',
-        recaptcha_token: '',
     });
 
-    useEffect(() => {
-        // Load reCAPTCHA script
-        if (!RECAPTCHA_SITE_KEY) {
-            console.error('reCAPTCHA site key is not configured');
-            setRecaptchaError('reCAPTCHA is not configured');
-            return;
-        }
-
-        const script = document.createElement('script');
-        script.src = `https://www.google.com/recaptcha/api.js?render=${RECAPTCHA_SITE_KEY}`;
-        script.async = true;
-        script.defer = true;
-        
-        script.onload = () => {
-            if (window.grecaptcha) {
-                window.grecaptcha.ready(() => {
-                    setRecaptchaReady(true);
-                    setRecaptchaError(null);
-                });
-            }
-        };
-
-        script.onerror = () => {
-            console.error('Failed to load reCAPTCHA script');
-            setRecaptchaError('Failed to load reCAPTCHA');
-        };
-
-        document.head.appendChild(script);
-
-        return () => {
-            // Cleanup script on unmount
-            const existingScript = document.querySelector(
-                `script[src^="https://www.google.com/recaptcha/api.js"]`
-            );
-            if (existingScript) {
-                existingScript.remove();
-            }
-        };
-    }, []);
-
-    const submit: FormEventHandler = async (e) => {
+    const submit: FormEventHandler = (e) => {
         e.preventDefault();
         
-        if (!recaptchaReady || !window.grecaptcha) {
-            setRecaptchaError('reCAPTCHA is not ready. Please wait or refresh the page.');
-            return;
-        }
-
-        try {
-            // Execute reCAPTCHA v3
-            const token = await window.grecaptcha.execute(RECAPTCHA_SITE_KEY, {
-                action: 'register',
-            });
-
-            // Update form data with reCAPTCHA token and submit
-            post('/register', {
-                data: {
-                    ...data,
-                    recaptcha_token: token,
-                },
-                onSuccess: () => {
-                    reset('password', 'password_confirmation');
-                },
-                onError: () => {
-                    setRecaptchaError(null);
-                },
-            });
-        } catch (error) {
-            console.error('reCAPTCHA error:', error);
-            setRecaptchaError('Failed to verify reCAPTCHA. Please try again.');
-        }
+        post('/register', {
+            onSuccess: () => {
+                reset('password', 'password_confirmation');
+            },
+        });
     };
 
     return (
         <AuthLayout
             title="Create an account"
-            description="Enter your details below to create your account"
+            description="Choose a method to create your account"
         >
             <Head title="Register" />
-            
-            {/* Display reCAPTCHA error if any */}
-            {recaptchaError && (
-                <div className="mb-4 rounded-md bg-red-50 p-4 text-sm text-red-800">
-                    {recaptchaError}
-                </div>
-            )}
 
             <form onSubmit={submit} className="flex flex-col gap-6">
                 <div className="grid gap-6">
+                    {/* Email/Password Registration Form */}
                     <div className="grid gap-2">
                         <Label htmlFor="name">Name</Label>
                         <Input
@@ -141,7 +66,7 @@ export default function Register() {
                             required
                             tabIndex={2}
                             autoComplete="email"
-                            name="email"
+                            name="name"
                             value={data.email}
                             onChange={(e) => setData('email', e.target.value)}
                             placeholder="email@example.com"
@@ -189,11 +114,11 @@ export default function Register() {
                         type="submit"
                         className="mt-2 w-full"
                         tabIndex={5}
-                        disabled={processing || !recaptchaReady}
+                        disabled={processing}
                         data-test="register-user-button"
                     >
                         {processing && <Spinner />}
-                        {!recaptchaReady ? 'Loading security...' : 'Create account'}
+                        Create account
                     </Button>
 
                     {/* Divider */}
@@ -274,11 +199,6 @@ export default function Register() {
                         Log in
                     </TextLink>
                 </div>
-                
-                {/* Display reCAPTCHA validation error if any */}
-                {errors.recaptcha_token && (
-                    <InputError message={errors.recaptcha_token} className="text-center" />
-                )}
             </form>
         </AuthLayout>
     );

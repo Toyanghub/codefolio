@@ -26,3 +26,10 @@ yarn-error.log
 /.nova
 /.vscode
 /.zed
+
+# Backup files
+*.tar.gz
+*.backup
+*.bak
+*-backup.*
+*-deploy.*

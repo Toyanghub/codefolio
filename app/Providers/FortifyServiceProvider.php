@@ -102,5 +102,16 @@ class FortifyServiceProvider extends ServiceProvider
 
             return Limit::perMinute(5)->by($throttleKey);
         });
+
+        // Aggressive rate limiting for registration to prevent bot floods
+        RateLimiter::for('register', function (Request $request) {
+            // Allow only 3 registration attempts per hour per IP
+            return Limit::perHour(3)->by($request->ip())
+                ->response(function (Request $request, array $headers) {
+                    return response()->json([
+                        'message' => 'Too many registration attempts. Please try again in an hour.'
+                    ], 429, $headers);
+                });
+        });
     }
 }

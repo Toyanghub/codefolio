@@ -33,12 +33,22 @@ class GitHubAuthController extends Controller
         try {
             $githubUser = Socialite::driver('github')->user();
             
-            // Find user by GitHub ID or email
+            // Find user by GitHub ID or email (including soft-deleted users)
             $user = User::where('github_id', $githubUser->id)
                 ->orWhere('email', $githubUser->email)
+                ->withTrashed()
                 ->first();
 
             if ($user) {
+                // If user was soft-deleted, restore them
+                if ($user->trashed()) {
+                    $user->restore();
+                    \Log::info('Restored soft-deleted user via GitHub OAuth', [
+                        'user_id' => $user->id,
+                        'email' => $user->email
+                    ]);
+                }
+                
                 // Update GitHub ID if not already set
                 if (!$user->github_id) {
                     $user->github_id = $githubUser->id;

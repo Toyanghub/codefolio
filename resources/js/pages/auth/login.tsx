@@ -37,6 +37,7 @@ export default function Login({
                 {({ processing, errors }) => (
                     <>
                         <div className="grid gap-6">
+                            {/* Email/Password Login Form */}
                             <div className="grid gap-2">
                                 <Label htmlFor="email">Email address</Label>
                                 <Input
@@ -97,7 +98,7 @@ export default function Login({
                                 Log in
                             </Button>
 
-                            {/* Divider */}
+                            {/* Social Auth Buttons */}
                             <div className="relative my-4">
                                 <div className="absolute inset-0 flex items-center">
                                     <span className="w-full border-t border-border" />
@@ -109,9 +110,7 @@ export default function Login({
                                 </div>
                             </div>
 
-                            {/* Social Auth Buttons */}
                             <div className="space-y-2">
-                                {/* Google Sign In Button */}
                                 <Button
                                     type="button"
                                     variant="outline"
@@ -139,7 +138,6 @@ export default function Login({
                                     Sign in with Google
                                 </Button>
 
-                                {/* GitHub Sign In Button */}
                                 <Button
                                     type="button"
                                     variant="outline"

@@ -1,7 +1,7 @@
 import { type BreadcrumbItem } from '@/types';
 import { Head, router, useForm } from '@inertiajs/react';
-import { Monitor, Smartphone, Upload, Wand2, X } from 'lucide-react';
-import { useRef, useState } from 'react';
+import { Monitor, Smartphone, Upload, Wand2, X, Clipboard } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
 
 import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
@@ -57,6 +57,8 @@ export default function Portfolio({
     const [errors, setErrors] = useState<{ desktop?: string; mobile?: string }>(
         {},
     );
+    const [pasteTarget, setPasteTarget] = useState<'desktop' | 'mobile'>('desktop');
+    const [pasteIndicator, setPasteIndicator] = useState<string | null>(null);
 
     const desktopInputRef = useRef<HTMLInputElement>(null);
     const mobileInputRef = useRef<HTMLInputElement>(null);
@@ -100,6 +102,63 @@ export default function Portfolio({
 
     const [savingAll, setSavingAll] = useState(false);
     const [allSavedSuccessfully, setAllSavedSuccessfully] = useState(false);
+
+    // Handle paste events for clipboard images
+    useEffect(() => {
+        const handlePaste = (e: ClipboardEvent) => {
+            const items = e.clipboardData?.items;
+            if (!items) return;
+
+            // Find image in clipboard
+            for (let i = 0; i < items.length; i++) {
+                if (items[i].type.indexOf('image') !== -1) {
+                    e.preventDefault();
+                    const blob = items[i].getAsFile();
+                    if (!blob) continue;
+
+                    // Check file size (2MB limit)
+                    if (blob.size > 2 * 1024 * 1024) {
+                        setErrors((prev) => ({
+                            ...prev,
+                            [pasteTarget]: 'Image must be less than 2MB',
+                        }));
+                        return;
+                    }
+
+                    // Create a proper File object from Blob
+                    const file = new File(
+                        [blob],
+                        `pasted-screenshot-${Date.now()}.png`,
+                        { type: blob.type }
+                    );
+
+                    // Set the file to the appropriate field based on pasteTarget
+                    if (pasteTarget === 'desktop') {
+                        setDesktopFile(file);
+                        setDesktopPreview(URL.createObjectURL(file));
+                        setErrors((prev) => ({ ...prev, desktop: undefined }));
+                        setPasteIndicator('Desktop screenshot pasted! ✓');
+                        // Next paste goes to mobile
+                        setPasteTarget('mobile');
+                    } else {
+                        setMobileFile(file);
+                        setMobilePreview(URL.createObjectURL(file));
+                        setErrors((prev) => ({ ...prev, mobile: undefined }));
+                        setPasteIndicator('Mobile screenshot pasted! ✓');
+                        // Reset back to desktop for next cycle
+                        setPasteTarget('desktop');
+                    }
+
+                    // Clear indicator after 3 seconds
+                    setTimeout(() => setPasteIndicator(null), 3000);
+                    break;
+                }
+            }
+        };
+
+        window.addEventListener('paste', handlePaste);
+        return () => window.removeEventListener('paste', handlePaste);
+    }, [pasteTarget]);
 
     const handleSaveAll = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -318,9 +377,35 @@ export default function Portfolio({
                             Portfolio Screenshots
                         </h2>
                         <p className="mt-1 text-sm text-muted-foreground">
-                            Upload screenshots manually or generate them
+                            Upload screenshots manually, paste from clipboard (Ctrl+V), or generate them
                             automatically from your portfolio URL
                         </p>
+
+                        {/* Paste Indicator */}
+                        {pasteIndicator && (
+                            <div className="mt-3 rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-2 text-sm text-emerald-800 dark:border-emerald-800 dark:bg-emerald-950/20 dark:text-emerald-200">
+                                {pasteIndicator}
+                            </div>
+                        )}
+
+                        {/* Paste Instructions */}
+                        <div className="mt-3 rounded-lg border border-blue-200 bg-blue-50 px-4 py-3 dark:border-blue-800 dark:bg-blue-950/20">
+                            <div className="flex items-start gap-3">
+                                <Clipboard className="mt-0.5 h-5 w-5 text-blue-600 dark:text-blue-400" />
+                                <div className="flex-1">
+                                    <p className="text-sm text-blue-900 dark:text-blue-100">
+                                        <strong>Quick Paste:</strong> Copy any screenshot and press{' '}
+                                        <kbd className="rounded bg-blue-200 px-1.5 py-0.5 text-xs font-semibold dark:bg-blue-900">
+                                            Ctrl+V
+                                        </kbd>{' '}
+                                        to paste
+                                    </p>
+                                    <p className="mt-1 text-xs text-blue-700 dark:text-blue-300">
+                                        Next paste target: <strong>{pasteTarget === 'desktop' ? 'Desktop Version' : 'Mobile Version'}</strong>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
 
                         {/* Auto-Generate Button */}
                         <div className="mt-4 rounded-lg border border-amber-200 bg-amber-50 p-4 dark:border-amber-800 dark:bg-amber-950/20">
@@ -451,11 +536,17 @@ export default function Portfolio({
                                     >
                                         <Upload className="mb-4 h-12 w-12 text-muted-foreground" />
                                         <p className="text-sm font-medium">
-                                            Click to upload desktop screenshot
+                                            Click to upload or paste (Ctrl+V) desktop screenshot
                                         </p>
                                         <p className="mt-1 text-xs text-muted-foreground">
                                             PNG, JPG up to 2MB
                                         </p>
+                                        {pasteTarget === 'desktop' && (
+                                            <div className="mt-2 inline-flex items-center gap-1 rounded-full bg-blue-100 px-3 py-1 text-xs font-medium text-blue-700 dark:bg-blue-900/30 dark:text-blue-300">
+                                                <Clipboard className="h-3 w-3" />
+                                                Next paste target
+                                            </div>
+                                        )}
                                     </div>
                                 )}
 
@@ -556,11 +647,17 @@ export default function Portfolio({
                                     >
                                         <Upload className="mb-4 h-12 w-12 text-muted-foreground" />
                                         <p className="text-sm font-medium">
-                                            Click to upload mobile screenshot
+                                            Click to upload or paste (Ctrl+V) mobile screenshot
                                         </p>
                                         <p className="mt-1 text-xs text-muted-foreground">
                                             PNG, JPG up to 2MB
                                         </p>
+                                        {pasteTarget === 'mobile' && (
+                                            <div className="mt-2 inline-flex items-center gap-1 rounded-full bg-blue-100 px-3 py-1 text-xs font-medium text-blue-700 dark:bg-blue-900/30 dark:text-blue-300">
+                                                <Clipboard className="h-3 w-3" />
+                                                Next paste target
+                                            </div>
+                                        )}
                                     </div>
                                 )}
 

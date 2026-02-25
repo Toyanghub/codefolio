@@ -33,12 +33,22 @@ class GoogleAuthController extends Controller
         try {
             $googleUser = Socialite::driver('google')->user();
             
-            // Find user by Google ID or email
+            // Find user by Google ID or email (including soft-deleted users)
             $user = User::where('google_id', $googleUser->id)
                 ->orWhere('email', $googleUser->email)
+                ->withTrashed()
                 ->first();
 
             if ($user) {
+                // If user was soft-deleted, restore them
+                if ($user->trashed()) {
+                    $user->restore();
+                    \Log::info('Restored soft-deleted user via Google OAuth', [
+                        'user_id' => $user->id,
+                        'email' => $user->email
+                    ]);
+                }
+                
                 // Update Google ID if not already set
                 if (!$user->google_id) {
                     $user->google_id = $googleUser->id;
@@ -75,6 +85,7 @@ class GoogleAuthController extends Controller
                 }
 
                 // Create new user with email_verified = false
+                \Log::info('Creating new Google OAuth user', ['email' => $googleUser->email]);
                 $user = User::create([
                     'name' => $googleUser->name,
                     'email' => $googleUser->email,
@@ -84,16 +95,21 @@ class GoogleAuthController extends Controller
                     'email_verified_at' => now(), // Keep for compatibility
                     'email_verified' => false, // Require OTP verification
                 ]);
+                \Log::info('New Google OAuth user created', ['user_id' => $user->id]);
             }
 
             // Only generate and send OTP for unverified users (new or existing unverified)
             if (!$user->email_verified) {
+                \Log::info('Generating OTP for unverified user', ['user_id' => $user->id]);
                 $this->otpService->generateAndSendOtp($user);
+                \Log::info('OTP generated and queued', ['user_id' => $user->id]);
                 
                 // Log the user in
                 Auth::login($user, true);
+                \Log::info('User logged in via Google OAuth', ['user_id' => $user->id]);
                 
                 // Redirect to OTP verification page
+                \Log::info('Redirecting to OTP verification page', ['user_id' => $user->id]);
                 return redirect()->route('verify-otp')
                     ->with('success', 'Please verify your email with the code we just sent to ' . $user->email);
             }
@@ -103,6 +119,12 @@ class GoogleAuthController extends Controller
             return redirect()->intended('/');
             
         } catch (\Exception $e) {
+            // Log the full exception for debugging
+            \Log::error('Google OAuth failed: ' . $e->getMessage(), [
+                'exception' => $e,
+                'trace' => $e->getTraceAsString(),
+            ]);
+            
             return redirect('/login')->with('error', 'Unable to authenticate with Google. Please try again.');
         }
     }
