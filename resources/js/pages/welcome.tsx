@@ -659,7 +659,7 @@ export default function Welcome({
             <div className="relative overflow-hidden bg-gradient-to-br from-zinc-50 via-white to-zinc-100 dark:from-zinc-950 dark:via-zinc-950 dark:to-zinc-950">
                 <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px] dark:bg-[linear-gradient(to_right,#ffffff08_1px,transparent_1px),linear-gradient(to_bottom,#ffffff08_1px,transparent_1px)]"></div>
 
-                <div className="relative flex flex-col items-center justify-start px-4 pt-16 pb-12 md:pt-20 md:pb-16">
+                <div className="relative mx-auto flex max-w-7xl flex-col items-center justify-start px-4 pt-16 pb-12 sm:px-6 md:pt-20 md:pb-16 lg:px-8">
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -900,7 +900,9 @@ export default function Welcome({
 
             {/* FAQ Section */}
             <div className="bg-white py-12 md:py-16 dark:bg-zinc-950">
-                <FaqSection />
+                <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                    <FaqSection />
+                </div>
             </div>
 
             {/* Footer */}

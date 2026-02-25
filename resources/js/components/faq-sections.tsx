@@ -46,7 +46,7 @@ const App = () => {
                     font-family: 'Poppins', sans-serif;
                 }
             `}</style>
-            <div className="mx-auto flex max-w-4xl flex-col items-start justify-center gap-8 px-4 md:flex-row md:px-0">
+            <div className="mx-auto flex max-w-4xl flex-col items-start justify-center gap-8">
                 {/* <img
                     className="max-w-sm w-full rounded-xl h-auto"
                     src="https://images.unsplash.com/photo-1555212697-194d092e3b8f?q=80&w=830&h=844&auto=format&fit=crop"
