@@ -71,6 +71,7 @@ class WorksController extends Controller
                     'techStack' => $user->techStacks->pluck('name')->toArray(),
                     'description' => $user->portfolio_description ?? '',
                     'profession' => $user->professions->pluck('name')->toArray(),
+                    'views' => $user->portfolio_views ?? 0,
                 ];
             });
 

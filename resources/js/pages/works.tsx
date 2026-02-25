@@ -593,6 +593,7 @@ interface Portfolio {
     techStack: string[];
     description: string;
     profession: string[];
+    views?: number;
 }
 
 interface WorksPageProps {
@@ -807,6 +808,16 @@ function COTDCard({
                                 )}
                             </div>
                         )}
+
+                        {/* View Counter */}
+                        <div className="flex items-center gap-1.5 text-xs text-muted-foreground transition-all duration-700" style={{
+                            opacity: isHovered ? 1 : 0.7,
+                            transform: isHovered ? 'translateY(0)' : 'translateY(2px)',
+                            transitionTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)',
+                        }}>
+                            <Eye className="h-3.5 w-3.5" />
+                            <span>{portfolio.views?.toLocaleString() ?? 0} views</span>
+                        </div>
 
                         {/* View Arrow - Bottom Right */}
                         <div className="flex justify-end">

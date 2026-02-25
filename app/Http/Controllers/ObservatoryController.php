@@ -77,6 +77,7 @@ class ObservatoryController extends Controller
                 'created_at' => $user->created_at,
                 'is_featured' => $user->is_featured ?? false,
                 'featured_at' => $user->featured_at,
+                'views' => $user->portfolio_views ?? 0,
             ];
         });
 

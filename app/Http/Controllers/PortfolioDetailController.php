@@ -23,6 +23,9 @@ class PortfolioDetailController extends Controller
             abort(404, 'Portfolio not found or not published');
         }
 
+        // Increment portfolio views
+        $user->increment('portfolio_views');
+
         // Prioritize Google avatar, fall back to profile_picture
         $profilePicture = $user->avatar ?? $user->profile_picture;
 
@@ -40,6 +43,7 @@ class PortfolioDetailController extends Controller
             'professions' => $user->professions->pluck('name')->toArray(),
             'createdAt' => $user->created_at->format('F Y'),
             'isFeatured' => $user->is_featured ?? false,
+            'views' => $user->portfolio_views,
         ];
 
         return Inertia::render('portfolio-detail', [
