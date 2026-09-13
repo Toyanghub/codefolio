@@ -1,4 +1,5 @@
 import Navbar from '@/components/navbar';
+import { CommentSection } from '@/components/comments/CommentSection';
 import { Footerdemo } from '@/components/ui/footer-section';
 import { InfiniteTextMarquee } from '@/components/ui/infinite-text-marquee';
 import { Head } from '@inertiajs/react';
@@ -24,10 +25,15 @@ interface Portfolio {
 
 interface PageProps {
     portfolio: Portfolio;
+    portfolioOwnerId: number;
     canRegister?: boolean;
 }
 
-export default function PortfolioDetail({ portfolio, canRegister }: PageProps) {
+export default function PortfolioDetail({
+    portfolio,
+    portfolioOwnerId,
+    canRegister,
+}: PageProps) {
     const [isHovered, setIsHovered] = useState(false);
     const [activeImage, setActiveImage] = useState<
         'both' | 'desktop' | 'mobile'
@@ -495,6 +501,10 @@ export default function PortfolioDetail({ portfolio, canRegister }: PageProps) {
                             </div>
                         </motion.div>
                     )}
+
+                    <div className="mt-16 mb-16">
+                        <CommentSection portfolioOwnerId={portfolioOwnerId} />
+                    </div>
                 </div>
 
                 <Footerdemo />

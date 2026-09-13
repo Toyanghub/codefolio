@@ -44,6 +44,7 @@ class PortfolioDetailController extends Controller
 
         return Inertia::render('portfolio-detail', [
             'portfolio' => $portfolio,
+            'portfolioOwnerId' => $user->id,
         ]);
     }
 }

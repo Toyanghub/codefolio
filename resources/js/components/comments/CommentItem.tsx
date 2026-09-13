@@ -3,7 +3,6 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import type { Comment } from '@/types/comment';
-import { router, useForm } from '@inertiajs/react';
 import { useState } from 'react';
 
 interface CommentItemProps {
@@ -53,9 +52,9 @@ export function CommentItem({
     const [isEditing, setIsEditing] = useState(false);
     const [isReplying, setIsReplying] = useState(false);
     const [error, setError] = useState<string | null>(null);
-    const { data, setData, put, processing, errors } = useForm({
-        content: comment.content,
-    });
+    const [content, setContent] = useState(comment.content);
+    const [processing, setProcessing] = useState(false);
+    const [validationError, setValidationError] = useState<string | null>(null);
     const replies = comment.replies ?? [];
     const avatar = getAvatarUrl(
         comment.user.avatar ?? comment.user.profile_picture,
@@ -63,24 +62,68 @@ export function CommentItem({
 
     const saveEdit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        put(`/comments/${comment.id}`, {
-            preserveScroll: true,
-            onSuccess: () => {
+        setProcessing(true);
+        setError(null);
+        setValidationError(null);
+
+        fetch(`/comments/${comment.id}`, {
+            method: 'PUT',
+            credentials: 'same-origin',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-XSRF-TOKEN': decodeURIComponent(
+                    document.cookie
+                        .split('; ')
+                        .find((cookie) => cookie.startsWith('XSRF-TOKEN='))
+                        ?.split('=')[1] ?? '',
+                ),
+            },
+            body: JSON.stringify({ content }),
+        })
+            .then(async (response) => {
+                if (response.status === 422) {
+                    const result = await response.json();
+                    setValidationError(
+                        result.errors?.content?.[0] ?? result.message,
+                    );
+                    return;
+                }
+
+                if (!response.ok) {
+                    throw new Error('Unable to update this comment.');
+                }
+
                 setIsEditing(false);
                 window.dispatchEvent(new Event('comments:updated'));
-            },
-            onError: () => setError('Unable to update this comment.'),
-        });
+            })
+            .catch(() => setError('Unable to update this comment.'))
+            .finally(() => setProcessing(false));
     };
 
     const deleteComment = () => {
         if (!window.confirm('Delete this comment?')) return;
-        router.delete(`/comments/${comment.id}`, {
-            preserveScroll: true,
-            onSuccess: () =>
-                window.dispatchEvent(new Event('comments:updated')),
-            onError: () => setError('Unable to delete this comment.'),
-        });
+        fetch(`/comments/${comment.id}`, {
+            method: 'DELETE',
+            credentials: 'same-origin',
+            headers: {
+                Accept: 'application/json',
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-XSRF-TOKEN': decodeURIComponent(
+                    document.cookie
+                        .split('; ')
+                        .find((cookie) => cookie.startsWith('XSRF-TOKEN='))
+                        ?.split('=')[1] ?? '',
+                ),
+            },
+        })
+            .then((response) => {
+                if (!response.ok)
+                    throw new Error('Unable to delete this comment.');
+                window.dispatchEvent(new Event('comments:updated'));
+            })
+            .catch(() => setError('Unable to delete this comment.'));
     };
 
     return (
@@ -112,25 +155,23 @@ export function CommentItem({
                     {isEditing ? (
                         <form onSubmit={saveEdit} className="mt-3 space-y-3">
                             <Textarea
-                                value={data.content}
+                                value={content}
                                 onChange={(event) =>
-                                    setData('content', event.target.value)
+                                    setContent(event.target.value)
                                 }
                                 maxLength={1000}
                                 disabled={processing}
                             />
-                            {errors.content && (
+                            {validationError && (
                                 <p className="text-sm text-destructive">
-                                    {errors.content}
+                                    {validationError}
                                 </p>
                             )}
                             <div className="flex gap-2">
                                 <Button
                                     type="submit"
                                     size="sm"
-                                    disabled={
-                                        processing || !data.content.trim()
-                                    }
+                                    disabled={processing || !content.trim()}
                                 >
                                     {processing ? 'Saving...' : 'Save'}
                                 </Button>
