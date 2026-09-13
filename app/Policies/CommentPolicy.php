@@ -3,12 +3,11 @@
 namespace App\Policies;
 
 use App\Models\Comment;
-use App\Models\PortfolioItem;
 use App\Models\User;
 
 class CommentPolicy
 {
-    public function viewAny(User $user, PortfolioItem $portfolio): bool
+    public function viewAny(?User $user, User $portfolioOwner): bool
     {
         return true;
     }

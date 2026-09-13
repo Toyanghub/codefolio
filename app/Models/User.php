@@ -60,9 +60,14 @@ class User extends Authenticatable
     }
 
     public function comments(): HasMany
-    {
-        return $this->hasMany(Comment::class);
-    }
+{
+    return $this->hasMany(Comment::class, 'user_id');
+}
+
+public function portfolioComments(): HasMany
+{
+    return $this->hasMany(Comment::class, 'portfolio_owner_id');
+}
 
     /**
      * The attributes that should be hidden for serialization.

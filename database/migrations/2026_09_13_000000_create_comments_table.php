@@ -13,13 +13,13 @@ return new class extends Migration
     {
         Schema::create('comments', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('portfolio_id')->constrained('portfolio_items')->onDelete('cascade');
+            $table->foreignId('portfolio_owner_id')->constrained('users')->onDelete('cascade');
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->foreignId('parent_id')->nullable()->constrained('comments')->onDelete('cascade');
             $table->text('content');
             $table->timestamps();
             $table->softDeletes();
-            $table->index(['portfolio_id', 'created_at']);
+            $table->index(['portfolio_owner_id', 'created_at']);  
             $table->index('parent_id');
         });
     }

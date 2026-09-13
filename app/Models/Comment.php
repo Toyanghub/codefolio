@@ -13,7 +13,7 @@ class Comment extends Model
     use SoftDeletes;
 
     protected $fillable = [
-        'portfolio_id',
+        'portfolio_owner_id',
         'user_id',
         'parent_id',
         'content',
@@ -24,9 +24,9 @@ class Comment extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function portfolio(): BelongsTo
+    public function portfolioOwner(): BelongsTo
     {
-        return $this->belongsTo(PortfolioItem::class);
+        return $this->belongsTo(User::class, 'portfolio_owner_id');
     }
 
     public function parent(): BelongsTo

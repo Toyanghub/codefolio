@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Comment;
-use App\Models\PortfolioItem;
+use App\Models\User;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -13,9 +13,9 @@ class CommentController extends Controller
 {
     use AuthorizesRequests;
 
-    public function index(PortfolioItem $portfolio): JsonResponse
+    public function index(User $portfolioOwner): JsonResponse
     {
-        $comments = $portfolio->comments()
+        $comments = $portfolioOwner->portfolioComments()
             ->topLevel()
             ->with(['user', 'replies.user'])
             ->latest()
@@ -32,7 +32,7 @@ class CommentController extends Controller
         return response()->json($comments);
     }
 
-    public function store(Request $request, PortfolioItem $portfolio): JsonResponse
+    public function store(Request $request, User $portfolioOwner): JsonResponse
     {
         $this->authorize('create', Comment::class);
 
@@ -43,7 +43,7 @@ class CommentController extends Controller
 
         if (isset($validated['parent_id']) && ! Comment::query()
             ->whereKey($validated['parent_id'])
-            ->where('portfolio_id', $portfolio->id)
+            ->where('portfolio_owner_id', $portfolioOwner->id)
             ->exists()) {
             return response()->json([
                 'message' => 'The selected parent comment does not belong to this portfolio.',
@@ -53,7 +53,7 @@ class CommentController extends Controller
             ], 422);
         }
 
-        $comment = $portfolio->comments()->create([
+        $comment = $portfolioOwner->portfolioComments()->create([
             'user_id' => $request->user()->id,
             'parent_id' => $validated['parent_id'] ?? null,
             'content' => $validated['content'],

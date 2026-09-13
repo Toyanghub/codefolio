@@ -63,12 +63,12 @@ Route::post('/newsletter/unsubscribe', [NewsletterController::class, 'unsubscrib
     ->middleware('throttle:6,1')
     ->name('newsletter.unsubscribe');
 
-// Comments routes
-Route::get('/portfolios/{portfolio}/comments', [CommentController::class, 'index'])
+// Comments routes - portfolioOwner is a User (portfolio stored on users table)
+Route::get('/users/{portfolioOwner}/comments', [CommentController::class, 'index'])
     ->name('comments.index');
 
 Route::middleware(['auth'])->group(function () {
-    Route::post('/portfolios/{portfolio}/comments', [CommentController::class, 'store'])
+    Route::post('/users/{portfolioOwner}/comments', [CommentController::class, 'store'])
         ->name('comments.store');
     Route::put('/comments/{comment}', [CommentController::class, 'update'])
         ->name('comments.update');
