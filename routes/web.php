@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\CotdController;
 use App\Http\Controllers\Auth\GoogleAuthController;
 use App\Http\Controllers\Auth\GitHubAuthController;
+use App\Http\Controllers\CommentController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\EmailVerificationController;
 use App\Http\Controllers\NewsletterController;
@@ -61,6 +62,19 @@ Route::post('/newsletter/subscribe', [NewsletterController::class, 'subscribe'])
 Route::post('/newsletter/unsubscribe', [NewsletterController::class, 'unsubscribe'])
     ->middleware('throttle:6,1')
     ->name('newsletter.unsubscribe');
+
+// Comments routes
+Route::get('/portfolios/{portfolio}/comments', [CommentController::class, 'index'])
+    ->name('comments.index');
+
+Route::middleware(['auth'])->group(function () {
+    Route::post('/portfolios/{portfolio}/comments', [CommentController::class, 'store'])
+        ->name('comments.store');
+    Route::put('/comments/{comment}', [CommentController::class, 'update'])
+        ->name('comments.update');
+    Route::delete('/comments/{comment}', [CommentController::class, 'destroy'])
+        ->name('comments.destroy');
+});
 
 // Sitemap route
 Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
