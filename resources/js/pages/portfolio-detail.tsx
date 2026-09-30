@@ -1,5 +1,6 @@
-import Navbar from '@/components/navbar';
 import { CommentSection } from '@/components/comments/CommentSection';
+import Navbar from '@/components/navbar';
+import { ReactionDisplay } from '@/components/reactions';
 import { Footerdemo } from '@/components/ui/footer-section';
 import { InfiniteTextMarquee } from '@/components/ui/infinite-text-marquee';
 import { Head } from '@inertiajs/react';
@@ -169,6 +170,13 @@ export default function PortfolioDetail({
                                         ))}
                                 </div>
                             )}
+
+                            <div className="mt-4">
+                                <ReactionDisplay
+                                    reactableType="portfolio"
+                                    reactableId={portfolioOwnerId}
+                                />
+                            </div>
 
                             {/* Visit Website CTA */}
                             {portfolio.websiteUrl && (

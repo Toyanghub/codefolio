@@ -1,4 +1,5 @@
 import { CommentReplyForm } from '@/components/comments/CommentReplyForm';
+import { ReactionDisplay } from '@/components/reactions';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
@@ -191,6 +192,13 @@ export function CommentItem({
                             {comment.content}
                         </p>
                     )}
+
+                    <div className="mt-2">
+                        <ReactionDisplay
+                            reactableType="comment"
+                            reactableId={comment.id}
+                        />
+                    </div>
 
                     {error && (
                         <p className="mt-2 text-sm text-destructive">{error}</p>
