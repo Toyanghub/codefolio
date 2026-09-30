@@ -9,6 +9,7 @@ use App\Http\Controllers\EmailVerificationController;
 use App\Http\Controllers\NewsletterController;
 use App\Http\Controllers\ObservatoryController;
 use App\Http\Controllers\PortfolioDetailController;
+use App\Http\Controllers\ReactionController;
 use App\Http\Controllers\SitemapController;
 use App\Http\Controllers\WorksController;
 use App\Http\Middleware\EnsureEmailIsVerified;
@@ -74,6 +75,17 @@ Route::middleware(['auth'])->group(function () {
         ->name('comments.update');
     Route::delete('/comments/{comment}', [CommentController::class, 'destroy'])
         ->name('comments.destroy');
+});
+
+// Reactions routes
+Route::get('/comments/{comment}/reactions', [ReactionController::class, 'forComment'])
+    ->name('reactions.comment');
+Route::get('/users/{portfolioOwner}/reactions', [ReactionController::class, 'forPortfolio'])
+    ->name('reactions.portfolio');
+
+Route::middleware(['auth'])->group(function () {
+    Route::post('/reactions/toggle', [ReactionController::class, 'toggle'])
+        ->name('reactions.toggle');
 });
 
 // Sitemap route
